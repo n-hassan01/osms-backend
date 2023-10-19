@@ -2,12 +2,15 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+import SendOtpService from '../osms-backend/controllers/sendOtpService';
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
 // routing middleware
+app.use('/send-otp', SendOtpService);
 
 // error handling middlewares
 app.use((req, res, next) => {
