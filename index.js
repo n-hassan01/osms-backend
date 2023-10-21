@@ -2,17 +2,20 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+const SignupService = require("./Controllers/signupService");
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
 // routing middleware
+app.use("/signup", SignupService);
 
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
-  
+
   next("Requested url not found!");
 });
 
