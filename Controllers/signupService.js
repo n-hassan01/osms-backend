@@ -37,7 +37,6 @@ router.post("/", async (req, res, next) => {
           // if the employee has official email provided by remark, authentication will be done through otp sent to their email
           // otherwise his official phone number will be sent to the admin to manually authenticate him  
           const flag = email ? email : phone;
-          console.log(flag);
 
           const newUser = {
             id: req.body.id,
