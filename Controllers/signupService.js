@@ -28,15 +28,16 @@ router.post("/", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        // only remark employee is authorized for signing up 
+        // only remark employee is authorized for signing up
         if (result.rowCount === 0) {
           res.status(401).send({ message: "Unauthorized!" });
         } else {
           const { email, phone } = result.rows[0];
 
           // if the employee has official email provided by remark, authentication will be done through otp sent to their email
-          // otherwise his official phone number will be sent to the admin to manually authenticate him  
-          const flag = email ? email : phone;
+          // otherwise his official phone number will be sent to the admin to manually authenticate him
+          const authMethod = email ? "email" : "phone";
+          const authValue = email ? email : phone;
 
           const newUser = {
             id: req.body.id,
@@ -50,7 +51,13 @@ router.post("/", async (req, res, next) => {
               try {
                 if (error) throw error;
 
-                res.status(200).send({ message: "Sign up complete!", authenticationMethod: flag });
+                res.status(200).send({
+                  message: "Sign up complete!",
+                  authenticationMethod: {
+                    flag: authMethod,
+                    value: authValue,
+                  },
+                });
               } catch (err) {
                 next(err);
               }
