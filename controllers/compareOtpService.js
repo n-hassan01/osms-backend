@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   console.log(req.body);
+  console.log("Alif");
 
   const { verificationcode } = req.body;
   console.log(verificationcode);
