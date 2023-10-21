@@ -4,10 +4,9 @@ const cors = require("cors");
 const app = express();
 
 //routing api
-const sendOtpService = require("./controllers/sendOtpService");
-const sendOtpMiddleware = require("../osms-backend/middlewares/sendOtpMiddleware");
-const compareOtp = require("./controllers/compareOtpService");
-const signUp = require("../osms-backend/controllers/signUp");
+const SendOtpService = require("./controllers/sendOtpService");
+const SignupService = require("../osms-backend/middlewares/sendOtpMiddleware");
+const CompareOtpService = require("./controllers/compareOtpService");
 
 //app using middlewares
 app.use(express.json());
@@ -15,14 +14,9 @@ app.use(cors());
 
 
 // routing middleware
-
-
-app.use("/sendOtp", sendOtpService);
-app.use("/compareOtp", compareOtp);
-
-
-
-
+app.use("/signup", SignupService);
+app.use("/send-otp", SendOtpService);
+app.use("/compare-otp", CompareOtpService);
 
 // error handling middlewares
 app.use((req, res, next) => {
