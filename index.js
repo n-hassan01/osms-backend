@@ -1,21 +1,33 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
-import SendOtpService from '../osms-backend/controllers/sendOtpService';
-
 const app = express();
 
+//routing api
+const sendOtpService = require("./controllers/sendOtpService");
+const sendOtpMiddleware = require("../osms-backend/middlewares/sendOtpMiddleware");
+const compareOtp = require("./controllers/compareOtpService");
+const signUp = require("../osms-backend/controllers/signUp");
+
+//app using middlewares
 app.use(express.json());
 app.use(cors());
 
+
 // routing middleware
-app.use('/send-otp', SendOtpService);
+
+
+app.use("/sendOtp", sendOtpService);
+app.use("/compareOtp", compareOtp);
+
+
+
+
 
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
-  
+
   next("Requested url not found!");
 });
 
