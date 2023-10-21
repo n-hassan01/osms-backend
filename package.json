@@ -1,20 +1,24 @@
 {
-  "name": "osms-backend",
+  "name": "osms-backend-api",
   "version": "1.0.0",
-  "description": "This is a web base application for the management of stationary items for the organization of Remark HB Limited internal uses",
+  "description": "This is our osms software backend",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Ahmed Raihan",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "joi": "^17.11.0",
+    "nodemailer": "^6.9.6",
     "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
