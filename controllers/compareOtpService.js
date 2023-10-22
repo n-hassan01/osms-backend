@@ -20,7 +20,7 @@ router.post("/", async (req, res, next) => {
       }
     );
   } else {
-    res.status(200).json({ success: false, message: "Can not Sign Up" });
+    next("Signup failed!")
   }
 });
 
