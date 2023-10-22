@@ -4,8 +4,8 @@ const cors = require("cors");
 const app = express();
 
 //routing api
+const SignupService = require("../osms-backend/Controllers/signupService");
 const SendOtpService = require("./controllers/sendOtpService");
-const SignupService = require("../osms-backend/middlewares/sendOtpMiddleware");
 const CompareOtpService = require("./controllers/compareOtpService");
 
 //app using middlewares
