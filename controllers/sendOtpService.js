@@ -8,7 +8,6 @@ function generateOTP() {
 router.post("/", async (req, res, next) => {
   try {
     const email = req.body.email;
-    console.log(email);
     const otpp = generateOTP();
 
     // Create an email message
@@ -25,7 +24,7 @@ router.post("/", async (req, res, next) => {
     // You can save the OTP in a database for validation later
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
-    console.error("Error sending OTP:", error);
+    next(error);
   }
 });
 
