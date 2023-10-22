@@ -5,9 +5,10 @@ const transporter = require("../Configurations/transporter");
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
-router.get("/", async (req, res, next) => {
+router.post("/", async (req, res, next) => {
   try {
     const email = req.body.email;
+    console.log(email);
     const otpp = generateOTP();
 
     // Create an email message
