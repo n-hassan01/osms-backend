@@ -3,24 +3,23 @@ const pool = require("../dbConnection");
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
-  const { verificationcode, compareOtpp, id } = req.body;
-  // compareOtpp = req.generatedOtp;
+  const { verificationCode, generatedOtpp, id, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  if (verificationcode === compareOtpp) {
+  if (verificationCode === generatedOtpp) {
     await pool.query(
-      "UPDATE user SET status = 'approved' where id=$1;", [id],
+      'insert into "user"(id, password, status) values($1, $2, $3) RETURNING *',
+      [id, hashedPassword, "approved"],
       (error, result) => {
         if (error) {
           throw error;
         }
-        console.log(result);
-        res
-          .status(200)
-          .json({ success: true, message: "Successfully Sign Up" });
+        
+        res.status(200).json({ message: "Signup completed!" });
       }
     );
   } else {
-    next("Signup failed!")
+    next("Invalid otp!");
   }
 });
 
