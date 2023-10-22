@@ -8,6 +8,7 @@ function generateOTP() {
 router.get("/", async (req, res, next) => {
   try {
     const email = req.body.email;
+    console.log(email);
     const otpp = generateOTP();
 
     // Create an email message
