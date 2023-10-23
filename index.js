@@ -8,6 +8,8 @@ const SignupService = require("../osms-backend/Controllers/signupService");
 const SendOtpService = require("./controllers/sendOtpService");
 const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
+const GetOtpService = require("./Controllers/getOtpService");
+const DeleteOtpService = require("./Controllers/deleteOtpService");
 
 //app using middlewares
 app.use(express.json());
@@ -18,11 +20,12 @@ app.use("/signup", SignupService);
 app.use("/send-otp", SendOtpService);
 app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
+app.use("/get-otp", GetOtpService);
+app.use("/delete-otp", DeleteOtpService);
 
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
-
   next("Requested url not found!");
 });
 
