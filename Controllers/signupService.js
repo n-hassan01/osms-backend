@@ -48,7 +48,6 @@ router.post("/", async (req, res, next) => {
                   result.rows[0].status === "approved"
                 ) {
                   res.status(401).send({ message: "Unauthorized!" });
-                  next();
                 } else {
                   // if the employee has official email provided by remark, authentication will be done through otp sent to their email
                   // otherwise his official phone number will be sent to the admin to manually authenticate him
@@ -63,38 +62,39 @@ router.post("/", async (req, res, next) => {
                   } else {
                     if (
                       result.rowCount > 0 &&
-                      result.rows[0].status === "approved"
+                      result.rows[0].status === "pending"
                     ) {
                       res.status(400).send({ message: "Signup is pending for admin verification!" });
-                      next();
-                    }
+                    } else {
+                      console.log('aaaa');
+                      console.log(result.rows);
 
-                    const newUser = {
-                      id: req.body.id,
-                      password: hashedPassword,
-                    };
+                      const newUser = {
+                        id: req.body.id,
+                        password: hashedPassword,
+                      };
 
-                    pool.query(
-                      'insert into "user"(id, password, status) values($1, $2, $3) RETURNING *',
-                      [newUser.id, newUser.password, "pending"],
-                      (error) => {
-                        try {
-                          if (error) throw error;
+                      pool.query(
+                        'insert into "user"(id, password, status) values($1, $2, $3) RETURNING *',
+                        [newUser.id, newUser.password, "pending"],
+                        (error) => {
+                          try {
+                            if (error) throw error;
 
-                          res.status(200).send({
-                            message: "Sign up complete!",
-                            authenticationMethod: {
-                              flag: "phone",
-                              value: phone,
-                            },
-                            user: newUser.id,
-                          });
-                          next();
-                        } catch (err) {
-                          next(err);
+                            res.status(200).send({
+                              message: "Sign up complete!",
+                              authenticationMethod: {
+                                flag: "phone",
+                                value: phone,
+                              },
+                              user: newUser.id,
+                            });
+                          } catch (err) {
+                            next(err);
+                          }
                         }
-                      }
-                    );
+                      );
+                    }
                   }
                 }
               } catch (err) {
