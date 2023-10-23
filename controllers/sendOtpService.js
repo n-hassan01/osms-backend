@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const transporter = require("../Configurations/transporter");
+const nodemailer = require('nodemailer');
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -10,7 +10,17 @@ router.post("/", async (req, res, next) => {
     const email = req.body.email;
     const otpp = generateOTP();
 
-    // Create an email message
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "ahmedraihanalif@gmail.com",
+        pass: "xrkv mokm rbrz zqpb",
+      },
+    });
+
     const mailOptions = {
       from: "ahmedraihanalif@gmail.com",
       to: email,
@@ -18,10 +28,12 @@ router.post("/", async (req, res, next) => {
       text: `Your OTP code is: ${otpp}`,
     };
 
-    // Send the email
-    await transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) throw error;
 
-    // You can save the OTP in a database for validation later
+      console.log("Email sent: ", info.response);
+    });
+
     res.json({ message: "OTP sent successfully" });
   } catch (error) {
     next(error);
