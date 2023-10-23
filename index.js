@@ -7,12 +7,11 @@ const app = express();
 const SignupService = require("../osms-backend/Controllers/signupService");
 const SendOtpService = require("./controllers/sendOtpService");
 const CompareOtpService = require("./Controllers/compareOtpService");
-const StoreOtpService=require("../osms-backend/Controllers/storeOtpService");
+const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 
 //app using middlewares
 app.use(express.json());
 app.use(cors());
-
 
 // routing middleware
 app.use("/signup", SignupService);
