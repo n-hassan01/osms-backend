@@ -14,7 +14,6 @@ router.post("/", async (req, res, next) => {
       createdBy: Joi.string().required(),
       creationDate: Joi.string().required(),
       lastUpdateLogin: Joi.number(),
-      disableDate: Joi.string(),
       description: Joi.string().max(50),
     });
     const validation = schema.validate(req.body);
