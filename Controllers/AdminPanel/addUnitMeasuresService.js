@@ -14,7 +14,6 @@ router.post("/", async (req, res, next) => {
       createdBy: Joi.string().required(),
       creationDate: Joi.string().required(),
       lastUpdateLogin: Joi.number(),
-      disableDate: Joi.string(),
       description: Joi.string().max(50),
     });
     const validation = schema.validate(req.body);
@@ -37,7 +36,7 @@ router.post("/", async (req, res, next) => {
       description,
     } = req.body;
 
-    const result = await pool.query(
+    await pool.query(
       "SELECT COUNT(*) FROM mtl_units_of_measure WHERE unit_of_measure = $1",
       [unitOfMeasure],
       (error, result) => {
