@@ -12,11 +12,14 @@ const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
 
 //routing api for admin
-const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsAll");
+const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
 const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
-const GetHrLocationAll = require("./Controllers/AdminPanel/getHrLocationsAll");
-const UpdateHrLocationAll = require("../osms-backend/Controllers/AdminPanel/updateHrLocationsAll");
-const DeleteHrLocationAll = require("../osms-backend/Controllers/AdminPanel/deleteHrLocations");
+const GetHrLocationAll = require("./Controllers/AdminPanel/getHrLocationsService");
+const UpdateHrLocationAll = require("./Controllers/AdminPanel/updateHrLocationsService");
+const DeleteHrLocationAll = require("./Controllers/AdminPanel/deleteHrLocationsService");
+const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
+const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitMeasureService");
+const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
 
 //app using middlewares
 app.use(express.json());
@@ -36,6 +39,9 @@ app.use("/add-hr-locations-all", AddHrLocationsAll);
 app.use("/get-hr-locations-all", GetHrLocationAll);
 app.use("/update-hr-locations-all", UpdateHrLocationAll);
 app.use("/delete-hr-locations-all", DeleteHrLocationAll);
+app.use("/get-unit-measure", GetUnitMeasureService);
+app.use("/disable-unit-measure", DisableUnitMeasureService);
+app.use("/update-unit-measure", UpdateUnitMeasureService);
 
 // error handling middlewares
 app.use((req, res, next) => {

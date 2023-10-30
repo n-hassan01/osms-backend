@@ -6,8 +6,8 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
     locationId: Joi.number().max(15).required(),
-    locationCode: Joi.string().max(60), //for varchar
-    businessGroupId: Joi.number().max(6), //for numeric
+    locationCode: Joi.string().max(60),
+    businessGroupId: Joi.number().max(6),
     description: Joi.string().max(240),
     shipToLocationId: Joi.number().max(15),
     inventoryOrganizationId: Joi.number().max(15),
@@ -30,7 +30,6 @@ router.post("/", async (req, res, next) => {
   const validation = schema.validate(req.body);
   if (validation.error) {
     res.status(400).send("Invalid inputs");
-    next();
   } else {
     const {
       locationId,
