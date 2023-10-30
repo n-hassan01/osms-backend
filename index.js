@@ -10,6 +10,7 @@ const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
+const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 
 //routing api for admin
 const AddHrLocationsAll=require("./Controllers/AdminPanel/addHrLocationsAll");
@@ -25,6 +26,7 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
+app.use("/add-unit-measure", AddUnitMeasureService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all",AddHrLocationsAll);
