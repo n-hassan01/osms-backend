@@ -10,26 +10,32 @@ const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
-const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 
 //routing api for admin
-const AddHrLocationsAll=require("./Controllers/AdminPanel/addHrLocationsAll");
+const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsAll");
+const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
+const GetHrLocationAll = require("./Controllers/AdminPanel/getHrLocationsAll");
+const UpdateHrLocationAll = require("../osms-backend/Controllers/AdminPanel/updateHrLocationsAll");
+const DeleteHrLocationAll = require("../osms-backend/Controllers/AdminPanel/deleteHrLocations");
 
 //app using middlewares
 app.use(express.json());
 app.use(cors());
 
-// routing middleware for user 
+// routing middleware for user
 app.use("/signup", SignupService);
 app.use("/send-otp", SendOtpService);
 app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
-app.use("/add-unit-measure", AddUnitMeasureService);
 
 // routing middleware for admin
-app.use("/add-hr-locations-all",AddHrLocationsAll);
+app.use("/add-unit-measure", AddUnitMeasureService);
+app.use("/add-hr-locations-all", AddHrLocationsAll);
+app.use("/get-hr-locations-all", GetHrLocationAll);
+app.use("/update-hr-locations-all", UpdateHrLocationAll);
+app.use("/delete-hr-locations-all", DeleteHrLocationAll);
 
 // error handling middlewares
 app.use((req, res, next) => {
