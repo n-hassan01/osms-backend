@@ -13,6 +13,7 @@ const DeleteOtpService = require("./Controllers/deleteOtpService");
 const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
 const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitMeasureService");
+const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
 
 //app using middlewares
 app.use(express.json());
@@ -28,6 +29,7 @@ app.use("/delete-otp", DeleteOtpService);
 app.use("/add-unit-measure", AddUnitMeasureService);
 app.use("/get-unit-measure", GetUnitMeasureService);
 app.use("/disable-unit-measure", DisableUnitMeasureService);
+app.use("/update-unit-measure", UpdateUnitMeasureService);
 
 // error handling middlewares
 app.use((req, res, next) => {
