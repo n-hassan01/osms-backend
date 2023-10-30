@@ -6,7 +6,7 @@ const app = express();
 //routing api
 const SignupService = require("../osms-backend/Controllers/signupService");
 const SendOtpService = require("./controllers/sendOtpService");
-const CompareOtpService = require("./controllers/compareOtpService");
+const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
