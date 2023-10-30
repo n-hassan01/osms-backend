@@ -10,6 +10,7 @@ const CompareOtpService = require("./controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
+const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 
 //app using middlewares
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
+app.use("/add-unit-measure", AddUnitMeasureService);
 
 // error handling middlewares
 app.use((req, res, next) => {
