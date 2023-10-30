@@ -7,7 +7,6 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 router.post("/", async (req, res, next) => {
-  // try {
   const { email, userId } = req.body;
   const otp = generateOTP();
 
