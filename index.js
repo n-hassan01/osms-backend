@@ -20,10 +20,9 @@ const DeleteHrLocationAll = require("./Controllers/AdminPanel/deleteHrLocationsS
 const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
 const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitMeasureService");
 const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
-const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizationUnitsService");
-const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
-const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrganizationUnitsService");
-const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
+const AddItemMasterService = require("./Controllers/AdminPanel/addItemMasterService");
+const GetItemMasterService = require("./Controllers/AdminPanel/getItemMasterService");
+const DeleteItemMasterService = require("./Controllers/AdminPanel/deleteItemMasterService");
 
 //app using middlewares
 app.use(express.json());
@@ -46,10 +45,9 @@ app.use("/add-unit-measure", AddUnitMeasureService);
 app.use("/get-unit-measure", GetUnitMeasureService);
 app.use("/disable-unit-measure", DisableUnitMeasureService);
 app.use("/update-unit-measure", UpdateUnitMeasureService);
-app.use("/add-hr-organization-units", AddHrOrganizationUnits);
-app.use("/get-hr-organization-units", GetHrOrganizationUnits);
-app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
-app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
+app.use("/add-item-master", AddItemMasterService);
+app.use("/get-item-master", GetItemMasterService);
+app.use("/delete-item-master", DeleteItemMasterService);
 
 // error handling middlewares
 app.use((req, res, next) => {
