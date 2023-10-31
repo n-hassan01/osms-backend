@@ -4,8 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM hr_locations_all ",
-
+    "SELECT * FROM mtl_system_items ORDER BY inventory_item_id ASC, organization_id ASC ",
     (error, result) => {
       try {
         if (error) throw error;

@@ -20,6 +20,8 @@ const DeleteHrLocationAll = require("./Controllers/AdminPanel/deleteHrLocationsS
 const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
 const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitMeasureService");
 const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
+const AddItemMasterService = require("./Controllers/AdminPanel/addItemMasterService");
+const GetItemMasterService = require("./Controllers/AdminPanel/getItemMasterService");
 
 //app using middlewares
 app.use(express.json());
@@ -42,6 +44,8 @@ app.use("/delete-hr-locations-all", DeleteHrLocationAll);
 app.use("/get-unit-measure", GetUnitMeasureService);
 app.use("/disable-unit-measure", DisableUnitMeasureService);
 app.use("/update-unit-measure", UpdateUnitMeasureService);
+app.use("/add-item-master", AddItemMasterService);
+app.use("/get-item-master", GetItemMasterService);
 
 // error handling middlewares
 app.use((req, res, next) => {
