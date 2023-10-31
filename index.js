@@ -22,6 +22,7 @@ const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitM
 const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
 const AddItemMasterService = require("./Controllers/AdminPanel/addItemMasterService");
 const GetItemMasterService = require("./Controllers/AdminPanel/getItemMasterService");
+const DeleteItemMasterService = require("./Controllers/AdminPanel/deleteItemMasterService");
 
 //app using middlewares
 app.use(express.json());
@@ -46,6 +47,7 @@ app.use("/disable-unit-measure", DisableUnitMeasureService);
 app.use("/update-unit-measure", UpdateUnitMeasureService);
 app.use("/add-item-master", AddItemMasterService);
 app.use("/get-item-master", GetItemMasterService);
+app.use("/delete-item-master", DeleteItemMasterService);
 
 // error handling middlewares
 app.use((req, res, next) => {
