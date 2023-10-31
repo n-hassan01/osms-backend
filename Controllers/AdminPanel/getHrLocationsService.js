@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("/Project Work/OSMS/osms-backend/dbConnection");
+const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
