@@ -22,6 +22,7 @@ const DisableUnitMeasureService = require("./Controllers/AdminPanel/disableUnitM
 const UpdateUnitMeasureService = require("./Controllers/AdminPanel/updateUnitMeasureService");
 const AddItemMasterService = require("./Controllers/AdminPanel/addItemMasterService");
 const GetItemMasterService = require("./Controllers/AdminPanel/getItemMasterService");
+const UpdateItemMasterService = require("./Controllers/AdminPanel/updateItemMasterService");
 const DeleteItemMasterService = require("./Controllers/AdminPanel/deleteItemMasterService");
 const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizationUnitsService");
 const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
@@ -51,6 +52,7 @@ app.use("/disable-unit-measure", DisableUnitMeasureService);
 app.use("/update-unit-measure", UpdateUnitMeasureService);
 app.use("/add-item-master", AddItemMasterService);
 app.use("/get-item-master", GetItemMasterService);
+app.use("/update-item-master", UpdateItemMasterService);
 app.use("/delete-item-master", DeleteItemMasterService);
 app.use("/add-hr-organization-units", AddHrOrganizationUnits);
 app.use("/get-hr-organization-units", GetHrOrganizationUnits);
