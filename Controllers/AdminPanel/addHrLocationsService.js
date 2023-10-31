@@ -83,7 +83,6 @@ router.post("/", async (req, res, next) => {
       (error, result) => {
         try {
           if (error) throw error;
-          console.log("Insert");
 
           res.status(200).json({ message: "Successfully completed adding" });
         } catch (err) {
