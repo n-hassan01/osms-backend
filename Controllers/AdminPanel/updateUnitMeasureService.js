@@ -36,29 +36,27 @@ router.put("/", async (req, res, next) => {
     description,
   } = req.body;
 
-  try {
-    await pool.query(
-      "UPDATE mtl_units_of_measure SET uom_code=$1, uom_class=$2, last_update_date=$3, last_updated_by=$4, created_by=$5, creation_date=$6, last_update_login=$7, description=$8 WHERE unit_of_measure = $9;",
-      [
-        uomCode,
-        uomClass,
-        lastUpdateDate,
-        lastUpdatedBy,
-        createdBy,
-        creationDate,
-        lastUpdateLogin,
-        description,
-        unitOfMeasure,
-      ],
-      (error) => {
+  await pool.query(
+    "UPDATE mtl_units_of_measure SET uom_code=$1, uom_class=$2, last_update_date=$3, last_updated_by=$4, created_by=$5, creation_date=$6, last_update_login=$7, description=$8 WHERE unit_of_measure = $9;",
+    [
+      uomCode,
+      uomClass,
+      lastUpdateDate,
+      lastUpdatedBy,
+      createdBy,
+      creationDate,
+      lastUpdateLogin,
+      description,
+      unitOfMeasure,
+    ],
+    (error) => {
+      try {
         if (error) throw error;
 
         res.status(200).send({ message: "Successfully updated!" });
-      }
-    );
-  } catch (error) {
-    next(error);
-  }
+      } catch (error) {}
+    }
+  );
 });
 
 module.exports = router;
