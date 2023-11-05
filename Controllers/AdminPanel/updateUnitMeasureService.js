@@ -49,9 +49,10 @@ router.put("/", async (req, res, next) => {
       description,
       unitOfMeasure,
     ],
-    (error) => {
+    (error, result) => {
       try {
         if (error) throw error;
+        console.log(result);
 
         res.status(200).send({ message: "Successfully updated!" });
       } catch (error) {}
