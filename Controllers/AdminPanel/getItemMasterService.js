@@ -9,7 +9,11 @@ router.get("/", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        res.status(200).json(result.rows);
+        const response = {
+          columnHeaders: Object.keys(result.rows[0]),
+          results: result.rows
+        }
+        res.status(200).json(response);
       } catch (err) {
         next(err);
       }
