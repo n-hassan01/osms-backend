@@ -8,7 +8,7 @@ router.post("/", async (req, res, next) => {
     organizationId: Joi.number().max(15).required(),
     businessGroupId: Joi.number().max(15).required(),
     locationId: Joi.number().max(15),
-    dateForm: Joi.string().max(240).required(),
+    dateFrom: Joi.string().max(240).required(),
     name: Joi.string().max(240).required(),
     dateTo: Joi.string().min(0),
     lastUpdateDate: Joi.string().min(0),
@@ -19,13 +19,14 @@ router.post("/", async (req, res, next) => {
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
+    console.log(validation.error.message);
     res.status(400).send("Invalid inputs");
   } else {
     const {
       organizationId,
       businessGroupId,
       locationId,
-      dateForm,
+      dateFrom,
       name,
       dateTo,
       lastUpdateDate,
@@ -41,7 +42,7 @@ router.post("/", async (req, res, next) => {
         organizationId,
         businessGroupId,
         locationId,
-        dateForm,
+        dateFrom,
         name,
         dateTo,
         lastUpdateDate,
