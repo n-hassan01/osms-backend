@@ -12,7 +12,6 @@ router.post('/', (req, res, next) => {
         async (error, result) => {
             try {
                 if (error) throw error;
-                console.log(result.rows);
                 
                 const status = result.rows[0].status;
                 if (result.rowCount > 0 && status === 'approved') {
