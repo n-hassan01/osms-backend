@@ -10,6 +10,7 @@ const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
+const LoginService = require("./Controllers/loginService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -34,12 +35,14 @@ app.use(express.json());
 app.use(cors());
 
 // routing middleware for user
+// authentication and authorization
 app.use("/signup", SignupService);
 app.use("/send-otp", SendOtpService);
 app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
+app.use("/login", LoginService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
