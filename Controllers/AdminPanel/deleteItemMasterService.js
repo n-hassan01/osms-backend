@@ -5,7 +5,6 @@ const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.put("/", async (req, res, next) => {
-  //   try {
   const schema = Joi.object({
     inventoryItemId: Joi.number().max(999999999999999).required(),
     organizationId: Joi.number().max(999999999999999).required(),
