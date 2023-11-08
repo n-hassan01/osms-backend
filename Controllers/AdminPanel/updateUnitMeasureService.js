@@ -14,7 +14,7 @@ router.put("/", async (req, res, next) => {
     createdBy: Joi.string().required(),
     creationDate: Joi.string().required(),
     lastUpdateLogin: Joi.number(),
-    description: Joi.string().max(50),
+    description: Joi.string().max(50).min(0),
   });
   const validation = schema.validate(req.body);
 
@@ -36,29 +36,28 @@ router.put("/", async (req, res, next) => {
     description,
   } = req.body;
 
-  try {
-    await pool.query(
-      "UPDATE mtl_units_of_measure SET uom_code=$1, uom_class=$2, last_update_date=$3, last_updated_by=$4, created_by=$5, creation_date=$6, last_update_login=$7, description=$8 WHERE unit_of_measure = $9;",
-      [
-        uomCode,
-        uomClass,
-        lastUpdateDate,
-        lastUpdatedBy,
-        createdBy,
-        creationDate,
-        lastUpdateLogin,
-        description,
-        unitOfMeasure,
-      ],
-      (error) => {
+  await pool.query(
+    "UPDATE mtl_units_of_measure SET uom_code=$1, uom_class=$2, last_update_date=$3, last_updated_by=$4, created_by=$5, creation_date=$6, last_update_login=$7, description=$8 WHERE unit_of_measure = $9;",
+    [
+      uomCode,
+      uomClass,
+      lastUpdateDate,
+      lastUpdatedBy,
+      createdBy,
+      creationDate,
+      lastUpdateLogin,
+      description,
+      unitOfMeasure,
+    ],
+    (error, result) => {
+      try {
         if (error) throw error;
+        console.log(result);
 
         res.status(200).send({ message: "Successfully updated!" });
-      }
-    );
-  } catch (error) {
-    next(error);
-  }
+      } catch (error) {}
+    }
+  );
 });
 
 module.exports = router;

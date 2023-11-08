@@ -14,7 +14,7 @@ router.post("/", async (req, res, next) => {
       createdBy: Joi.string().required(),
       creationDate: Joi.string().required(),
       lastUpdateLogin: Joi.number(),
-      description: Joi.string().max(50),
+      description: Joi.string().max(50).min(0),
     });
     const validation = schema.validate(req.body);
 
@@ -40,10 +40,8 @@ router.post("/", async (req, res, next) => {
       "SELECT COUNT(*) FROM mtl_units_of_measure WHERE unit_of_measure = $1",
       [unitOfMeasure],
       (error, result) => {
-        try {
-          if (error) throw error;
-
           const countExistUserId = result.rows[0].count;
+
           if (countExistUserId === "0") {
             pool.query(
               "INSERT INTO mtl_units_of_measure( unit_of_measure, uom_code, uom_class, last_update_date, last_updated_by, created_by, creation_date, last_update_login, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);",
@@ -67,9 +65,6 @@ router.post("/", async (req, res, next) => {
           } else {
             res.status(400).json({ message: "Bad request!" });
           }
-        } catch (err) {
-          next(err);
-        }
       }
     );
   } catch (error) {
