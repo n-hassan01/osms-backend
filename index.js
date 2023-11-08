@@ -16,6 +16,7 @@ const LoginService = require("./Controllers/loginService");
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
 const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 const GetHrLocationAll = require("./Controllers/AdminPanel/getHrLocationsService");
+const GetPerHrLocationsDetailsService=require("./Controllers/AdminPanel/getPerHrLocationsService");
 const UpdateHrLocationAll = require("./Controllers/AdminPanel/updateHrLocationsService");
 const DeleteHrLocationAll = require("./Controllers/AdminPanel/deleteHrLocationsService");
 const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
@@ -29,6 +30,7 @@ const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizati
 const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
 const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrganizationUnitsService");
 const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
+const GetPerHrOrganizationUnits=require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 
 //app using middlewares
@@ -48,6 +50,7 @@ app.use("/login", LoginService);
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
 app.use("/get-hr-locations-all", GetHrLocationAll);
+app.use("/get-per-hr-locations-all", GetPerHrLocationsDetailsService);
 app.use("/update-hr-locations-all", UpdateHrLocationAll);
 app.use("/delete-hr-locations-all", DeleteHrLocationAll);
 app.use("/add-unit-measure", AddUnitMeasureService);
@@ -60,6 +63,7 @@ app.use("/update-item-master", UpdateItemMasterService);
 app.use("/delete-item-master", DeleteItemMasterService);
 app.use("/add-hr-organization-units", AddHrOrganizationUnits);
 app.use("/get-hr-organization-units", GetHrOrganizationUnits);
+app.use("/get-per-hr-organization-units", GetPerHrOrganizationUnits);
 app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
 app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
 app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
