@@ -30,7 +30,7 @@ const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizati
 const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
 const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrganizationUnitsService");
 const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
-const GetPerHrOrganizationUnits=require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
+const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
@@ -74,7 +74,6 @@ app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
-
 
 // error handling middlewares
 app.use((req, res, next) => {
