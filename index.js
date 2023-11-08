@@ -29,6 +29,7 @@ const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizati
 const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
 const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrganizationUnitsService");
 const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
+const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 
 //app using middlewares
 app.use(express.json());
@@ -61,6 +62,7 @@ app.use("/add-hr-organization-units", AddHrOrganizationUnits);
 app.use("/get-hr-organization-units", GetHrOrganizationUnits);
 app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
 app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
+app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
 
 // error handling middlewares
 app.use((req, res, next) => {
