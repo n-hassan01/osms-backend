@@ -16,7 +16,7 @@ const LoginService = require("./Controllers/loginService");
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
 const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
 const GetHrLocationAll = require("./Controllers/AdminPanel/getHrLocationsService");
-const GetPerHrLocationsDetailsService=require("./Controllers/AdminPanel/getPerHrLocationsService");
+const GetPerHrLocationsDetailsService = require("./Controllers/AdminPanel/getPerHrLocationsService");
 const UpdateHrLocationAll = require("./Controllers/AdminPanel/updateHrLocationsService");
 const DeleteHrLocationAll = require("./Controllers/AdminPanel/deleteHrLocationsService");
 const GetUnitMeasureService = require("./Controllers/AdminPanel/getUnitMeasureService");
@@ -30,7 +30,11 @@ const AddHrOrganizationUnits = require("./Controllers/AdminPanel/addHrOrganizati
 const GetHrOrganizationUnits = require("./Controllers/AdminPanel/getHrOrganizationUnitsService");
 const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrganizationUnitsService");
 const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
-const GetPerHrOrganizationUnits=require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
+const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
+const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
+const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
+const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
+const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 
 //app using middlewares
 app.use(express.json());
@@ -65,6 +69,10 @@ app.use("/get-hr-organization-units", GetHrOrganizationUnits);
 app.use("/get-per-hr-organization-units", GetPerHrOrganizationUnits);
 app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
 app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
+app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
+app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
+app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
+app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
 
 // error handling middlewares
 app.use((req, res, next) => {
