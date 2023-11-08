@@ -4,17 +4,20 @@ const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
+  console.log(req.body);
   const schema = Joi.object({
-    lastUpdateDate: Joi.string().min(0),
-    lastUpdatedBy: Joi.number().min(0),
-    creationDate: Joi.string().min(0),
-    createdBy: Joi.number().min(0),
+    lastUpdateDate: Joi.string().required(),
+    lastUpdatedBy: Joi.number().required(),
+    creationDate: Joi.string().required(),
+    createdBy: Joi.number().required(),
     transactionTypeName: Joi.string().max(88).required(),
     description: Joi.string().max(240),
-    transactionActionId: Joi.number().min(0),
-    transactionSourceTypeId: Joi.number().min(0),
+    transactionActionId: Joi.number().required(),
+    transactionSourceTypeId: Joi.number().required(),
   });
+
   const validation = schema.validate(req.body);
+
   if (validation.error) {
     console.log(validation.error.message);
     res.status(400).send("Invalid inputs");
