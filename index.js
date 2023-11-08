@@ -36,6 +36,8 @@ const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTr
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
+
+
 //app using middlewares
 app.use(express.json());
 app.use(cors());
