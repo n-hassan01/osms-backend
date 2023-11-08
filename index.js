@@ -32,12 +32,11 @@ const UpdateHrOrganizationUnits = require("./Controllers/AdminPanel/updateHrOrga
 const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrganizationUnitsService");
 const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
+const GetMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/getTxnRequestHeaders");
 const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
-
-
 //app using middlewares
 app.use(express.json());
 app.use(cors());
@@ -72,11 +71,11 @@ app.use("/get-per-hr-organization-units", GetPerHrOrganizationUnits);
 app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
 app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
 app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
+app.use("/get-txn-header", GetMtlTxnRequestHeadersService);
 app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
-
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
