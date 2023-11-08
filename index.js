@@ -3,6 +3,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+//app using middlewares
+app.use(express.json());
+app.use(cors());
+
 //routing api for users
 const SignupService = require("../osms-backend/Controllers/signupService");
 const SendOtpService = require("./controllers/sendOtpService");
@@ -33,13 +37,11 @@ const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrga
 const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 const GetMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/getTxnRequestHeaders");
+const UpdateMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/updateTxnRequestHeader");
 const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
-//app using middlewares
-app.use(express.json());
-app.use(cors());
 
 // routing middleware for user
 // authentication and authorization
@@ -72,10 +74,12 @@ app.use("/update-hr-organization-units", UpdateHrOrganizationUnits);
 app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
 app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
 app.use("/get-txn-header", GetMtlTxnRequestHeadersService);
+app.use("/update-txn-header", UpdateMtlTxnRequestHeadersService);
 app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
+
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
