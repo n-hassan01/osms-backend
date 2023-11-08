@@ -55,7 +55,9 @@ router.put("/", async (req, res, next) => {
         console.log(result);
 
         res.status(200).send({ message: "Successfully updated!" });
-      } catch (error) {}
+      } catch (err) {
+        next(err)
+      }
     }
   );
 });
