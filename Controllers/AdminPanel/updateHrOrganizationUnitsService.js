@@ -7,7 +7,7 @@ router.put("/:organization_id", async (req, res, next) => {
   const {
     businessGroupId,
     locationId,
-    dateForm,
+    dateFrom,
     name,
     dateTo,
     lastUpdateDate,
@@ -22,7 +22,7 @@ router.put("/:organization_id", async (req, res, next) => {
     [
       businessGroupId,
       locationId,
-      dateForm,
+      dateFrom,
       name,
       dateTo,
       lastUpdateDate,
