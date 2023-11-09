@@ -37,6 +37,7 @@ const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrga
 const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 const GetMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/getTxnRequestHeaders");
+const DeleteMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/deleteTxnRequestHeader");
 const UpdateMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/updateTxnRequestHeader");
 const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
@@ -75,6 +76,7 @@ app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
 app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
 app.use("/get-txn-header", GetMtlTxnRequestHeadersService);
 app.use("/update-txn-header", UpdateMtlTxnRequestHeadersService);
+app.use("/delete-txn-header", DeleteMtlTxnRequestHeadersService);
 app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
