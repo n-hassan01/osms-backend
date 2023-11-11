@@ -42,6 +42,10 @@ const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTr
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
+const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
+
+
+
 //app using middlewaresconst GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 app.use(express.json());
 app.use(cors());
@@ -83,6 +87,16 @@ app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
 app.use("/get-per-mtl-transaction-types", GetPerMtlTransactionTypesService);
+
+
+
+
+
+
+
+
+
+
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
