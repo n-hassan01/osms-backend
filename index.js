@@ -43,6 +43,7 @@ const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTr
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
+const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 
 // routing middleware for user
 // authentication and authorization
@@ -81,6 +82,7 @@ app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
+app.use("/add-txn-line", AddMtlTxnRequestLineService);
 
 // error handling middlewares
 app.use((req, res, next) => {
