@@ -43,7 +43,7 @@ const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTr
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
-
+const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
 
 
 //app using middlewaresconst GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -87,6 +87,8 @@ app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
 app.use("/get-per-mtl-transaction-types", GetPerMtlTransactionTypesService);
+app.use("/get-mtl-material-transactions", GetMtlMaterialTransactionsService);
+
 
 
 

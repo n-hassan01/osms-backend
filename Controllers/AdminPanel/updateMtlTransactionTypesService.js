@@ -6,6 +6,7 @@ const router = express.Router();
 router.put("/:transaction_type_id", async (req, res, next) => {
   const transactionTypeId = req.params.transaction_type_id;
   const schema = Joi.object({
+    transactionTypeId: Joi.number().min(0),
     lastUpdateDate: Joi.string().required(),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().required(),
@@ -29,6 +30,7 @@ router.put("/:transaction_type_id", async (req, res, next) => {
       description,
       transactionActionId,
       transactionSourceTypeId,
+      transactionTypeId,
     } = req.body;
 
     await pool.query(
