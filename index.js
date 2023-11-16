@@ -44,6 +44,17 @@ const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/delet
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
+const GetPerAllPeoplesService = require("./Controllers/AdminPanel/getPerAllPeoplesService");
+const AddPerAllPeoplesService = require("./Controllers/AdminPanel/addPerAllPeoplesService");
+const UpdatePerAllPeoplesService = require("./Controllers/AdminPanel/updatePerAllPeoplesService");
+const GetperPerAllPeoplesService = require("./Controllers/AdminPanel/getperPerAllPeoplesService");
+const DeletePerAllPeoplesService= require ("./Controllers/AdminPanel/deletePerAllPeoplesService");
+const GetDataForFndUserService=require("./Controllers/AdminPanel/getDataForFndUserService");
+const AddFndUserService = require("./Controllers/AdminPanel/addFndUserService");
+const GetFndUserService = require("./Controllers/AdminPanel/getFndUserService");
+const UpdateFndUserService =require("./Controllers/AdminPanel/updateFndUserService");
+const GetPerFndUserService= require("./Controllers/AdminPanel/getPerFndUserService");
+const DeleteFndUserService= require("./Controllers/AdminPanel/deleteFndUserService");
 
 
 //app using middlewaresconst GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -88,10 +99,17 @@ app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
 app.use("/get-per-mtl-transaction-types", GetPerMtlTransactionTypesService);
 app.use("/get-mtl-material-transactions", GetMtlMaterialTransactionsService);
-
-
-
-
+app.use("/get-per-all-peoples", GetPerAllPeoplesService);
+app.use("/add-per-all-peoples",AddPerAllPeoplesService);
+app.use("/update-per-all-peoples",UpdatePerAllPeoplesService);
+app.use("/getper-per-all-peoples",GetperPerAllPeoplesService);
+app.use("/delete-per-all-peoples",DeletePerAllPeoplesService);
+app.use("/getdata-for-fnd-user",GetDataForFndUserService);
+app.use("/add-fnd-user",AddFndUserService);
+app.use("/get-fnd-user",GetFndUserService);
+app.use("/update-fnd-user",UpdateFndUserService);
+app.use("/get-per-fnd-user",GetPerFndUserService);
+app.use("/delete-fnd-user",DeleteFndUserService);
 
 
 
