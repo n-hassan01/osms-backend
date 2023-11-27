@@ -15,6 +15,9 @@ const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
 const LoginService = require("./Controllers/loginService");
+const GetLoggedInUserDetailsService = require("./Controllers/getLoggedInUserDetails");
+const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsService");
+const GetUserMenusService = require("./Controllers/getUserMenusService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -37,11 +40,17 @@ const DeleteHrOrganizationUnits = require("./Controllers/AdminPanel/deleteHrOrga
 const GetPerHrOrganizationUnits = require("./Controllers/AdminPanel/getPerHrOrganizationUnitsService");
 const AddMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/addTxnRequestHeaders");
 const GetMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/getTxnRequestHeaders");
+const DeleteMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/deleteTxnRequestHeader");
 const UpdateMtlTxnRequestHeadersService = require("./Controllers/AdminPanel/updateTxnRequestHeader");
 const AddMtlTransactionTypesService = require("./Controllers/AdminPanel/addMtlTransactionTypesService");
 const GetMtlTransactionTypesService = require("./Controllers/AdminPanel/getMtlTransactionTypesService");
 const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/deleteMtlTransactionTypesService");
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
+const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
+const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
+
+// middlewares api
+const AuthGuard = require("./middlewares/authGuard")
 
 // routing middleware for user
 // authentication and authorization
@@ -52,6 +61,9 @@ app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
 app.use("/login", LoginService);
+app.use("/get-menus", GetUserMenusService);
+app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
+app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
@@ -75,10 +87,13 @@ app.use("/delete-hr-organization-units", DeleteHrOrganizationUnits);
 app.use("/add-txn-header", AddMtlTxnRequestHeadersService);
 app.use("/get-txn-header", GetMtlTxnRequestHeadersService);
 app.use("/update-txn-header", UpdateMtlTxnRequestHeadersService);
+app.use("/delete-txn-header", DeleteMtlTxnRequestHeadersService);
 app.use("/add-mtl-transaction-types", AddMtlTransactionTypesService);
 app.use("/get-mtl-transaction-types", GetMtlTransactionTypesService);
 app.use("/delete-mtl-transaction-types", DeleteMtlTransactionTypesService);
 app.use("/update-mtl-transaction-types", UpdateMtlTransactionTypesService);
+app.use("/add-txn-line", AddMtlTxnRequestLineService);
+app.use("/delete-txn-lines", DeleteMtlTxnRequestLineService);
 
 // error handling middlewares
 app.use((req, res, next) => {

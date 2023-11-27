@@ -5,21 +5,20 @@ const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
-    requestNumber: Joi.string().max(30).required(),
     transactionTypeId: Joi.number().allow(null),
     moveOrderType: Joi.number().allow(null),
     organizationId: Joi.number().required(),
     description: Joi.string().max(240).min(0),
-    dateRequired: Joi.string().allow(null, ''),
+    dateRequired: Joi.string().allow(null, ""),
     fromSubinventoryCode: Joi.string().max(10).min(0),
     toSubinventoryCode: Joi.string().max(10).min(0),
-    headerStatus: Joi.number().allow(null),
+    // headerStatus: Joi.number().allow(null),
     statusDate: Joi.string().min(0),
-    lastUpdatedBy: Joi.number().required(),
+    // lastUpdatedBy: Joi.number().required(),
     lastUpdateLogin: Joi.number().allow(null),
-    lastUpdateDate: Joi.string().required(),
+    // lastUpdateDate: Joi.string().required(),
     createdBy: Joi.number().allow(null),
-    creationDate: Joi.string().min(0),
+    // creationDate: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -31,7 +30,7 @@ router.post("/", async (req, res, next) => {
   }
 
   const {
-    requestNumber,
+    // requestNumber,
     transactionTypeId,
     moveOrderType,
     organizationId,
@@ -39,19 +38,19 @@ router.post("/", async (req, res, next) => {
     dateRequired,
     fromSubinventoryCode,
     toSubinventoryCode,
-    headerStatus,
     statusDate,
     lastUpdatedBy,
     lastUpdateLogin,
-    lastUpdateDate,
+    // lastUpdateDate,
     createdBy,
-    creationDate,
+    // creationDate,
   } = req.body;
 
-  pool.query(
-    "INSERT INTO mtl_txn_request_headers(request_number, transaction_type_id, move_order_type, organization_id, description, date_required, from_subinventory_code, to_subinventory_code, header_status, status_date, last_updated_by, last_update_login, last_update_date, created_by, creation_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);",
+  const date = new Date();
+
+  const result = await pool.query(
+    "INSERT INTO mtl_txn_request_headers(transaction_type_id, move_order_type, organization_id, description, date_required, from_subinventory_code, to_subinventory_code, header_status, status_date, last_updated_by, last_update_login, last_update_date, created_by, creation_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING header_id, request_number, created_by, header_status, organization_id;",
     [
-      requestNumber,
       transactionTypeId,
       moveOrderType,
       organizationId,
@@ -59,19 +58,21 @@ router.post("/", async (req, res, next) => {
       dateRequired,
       fromSubinventoryCode,
       toSubinventoryCode,
-      headerStatus,
+      "Incomplete",
       statusDate,
       lastUpdatedBy,
       lastUpdateLogin,
-      lastUpdateDate,
+      date,
       createdBy,
-      creationDate,
+      date,
     ],
     (error, result) => {
       try {
         if (error) throw error;
 
-        res.status(200).json({ message: "Successfully added!" });
+        res
+          .status(200)
+          .json({ message: "Successfully added!", headerInfo: result.rows });
       } catch (err) {
         next(err);
       }
