@@ -18,9 +18,11 @@ router.post("/", async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (verificationCode === generatedOtp) {
+      const currentDate = new Date().toJSON();
+
       await pool.query(
-        'insert into "user"(id, password, status) values($1, $2, $3) RETURNING *',
-        [id, hashedPassword, "approved"],
+        'insert into "fnd_user"(user_name, user_password, start_date, status) values($1, $2, $3, $4) RETURNING *',
+        [id, hashedPassword, currentDate, "approved"],
         (error, result) => {
           if (error) {
             throw error;
