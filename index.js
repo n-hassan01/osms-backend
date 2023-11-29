@@ -51,6 +51,7 @@ const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteM
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard")
+const LoginToken = require("./middlewares/getLoginTokenMiddleware")
 
 // routing middleware for user
 // authentication and authorization
@@ -60,10 +61,10 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
-app.use("/login", LoginService);
+app.use("/login", LoginToken, LoginService);
 app.use("/get-menus", GetUserMenusService);
-app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
-app.use("/profile", AuthGuard, GetUserProfileDetailsService);
+app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
+app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
