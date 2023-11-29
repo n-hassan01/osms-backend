@@ -11,9 +11,24 @@ router.get("/", async (req, res, next) => {
 
         const response = {
           columnHeaders: Object.keys(result.rows[0]),
-          results: result.rows
-        }
+          results: result.rows,
+        };
         res.status(200).json(response);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/inventory_item_id", async (req, res, next) => {
+  await pool.query(
+    "SELECT inventory_item_id, inventory_item_code FROM public.mtl_system_items;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
       } catch (err) {
         next(err);
       }

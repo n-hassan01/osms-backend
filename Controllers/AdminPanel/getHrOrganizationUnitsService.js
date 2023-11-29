@@ -18,4 +18,19 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/list", async (req, res, next) => {
+  await pool.query(
+    "SELECT organization_id, name FROM public.hr_all_organization_units;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;

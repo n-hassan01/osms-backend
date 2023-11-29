@@ -21,7 +21,7 @@ router.post("/", async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
   await pool.query(
-    "select * from employee where id=$1",
+    "select * from per_all_peoples where employee_number=$1",
     [req.body.id],
     (error, result) => {
       try {
@@ -31,11 +31,12 @@ router.post("/", async (req, res, next) => {
         if (result.rowCount === 0) {
           res.status(401).send({ message: "Unauthorized!" });
         } else {
-          const { id, email, phone } = result.rows[0];
+          const { employee_number, email_address, work_telephone } =
+            result.rows[0];
 
           pool.query(
-            'select * from "user" where id=$1',
-            [id],
+            'select * from "fnd_user" where user_name=$1',
+            [employee_number],
             (error, result) => {
               try {
                 if (error) throw error;
@@ -49,12 +50,12 @@ router.post("/", async (req, res, next) => {
                 } else {
                   // if the employee has official email provided by remark, authentication will be done through otp sent to their email
                   // otherwise his official phone number will be sent to the admin to manually authenticate him
-                  if (email) {
+                  if (email_address) {
                     res.status(200).send({
                       message: "Sign up complete!",
                       authenticationMethod: {
                         flag: "email",
-                        value: email,
+                        value: email_address,
                       },
                     });
                   } else {
@@ -62,11 +63,9 @@ router.post("/", async (req, res, next) => {
                       result.rowCount > 0 &&
                       result.rows[0].status === "pending"
                     ) {
-                      res
-                        .status(400)
-                        .send({
-                          message: "Signup is pending for admin verification!",
-                        });
+                      res.status(400).send({
+                        message: "Signup is pending for admin verification!",
+                      });
                     } else {
                       console.log("aaaa");
                       console.log(result.rows);
@@ -76,9 +75,11 @@ router.post("/", async (req, res, next) => {
                         password: hashedPassword,
                       };
 
+                      const currentDate = new Date().toJSON();
+
                       pool.query(
-                        'insert into "user"(id, password, status) values($1, $2, $3) RETURNING *',
-                        [newUser.id, newUser.password, "pending"],
+                        'insert into "fnd_user"(user_name, user_password, start_date, status) values($1, $2, $3, $4) RETURNING *',
+                        [newUser.id, newUser.password, currentDate, "pending"],
                         (error) => {
                           try {
                             if (error) throw error;
@@ -87,7 +88,7 @@ router.post("/", async (req, res, next) => {
                               message: "Sign up complete!",
                               authenticationMethod: {
                                 flag: "phone",
-                                value: phone,
+                                value: work_telephone,
                               },
                               user: newUser.id,
                             });
