@@ -2,9 +2,11 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/:menu_id", async (req, res, next) => {
+    const menuId = req.params.menu_id;
   await pool.query(
-    "SELECT user_name FROM fnd_user ",
+    "SELECT * FROM menus where menu_id= $1",
+    [menuId],
 
     (error, result) => {
       try {

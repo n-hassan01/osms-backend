@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT user_name FROM fnd_user ",
+    "SELECT * FROM sub_menu ",
 
     (error, result) => {
       try {

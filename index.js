@@ -55,6 +55,23 @@ const GetFndUserService = require("./Controllers/AdminPanel/getFndUserService");
 const UpdateFndUserService =require("./Controllers/AdminPanel/updateFndUserService");
 const GetPerFndUserService= require("./Controllers/AdminPanel/getPerFndUserService");
 const DeleteFndUserService= require("./Controllers/AdminPanel/deleteFndUserService");
+const GetMainSystemMenuService= require("./Controllers/AdminPanel/getMainSystemMenuService");
+const AddMainSystemMenuService = require("./Controllers/AdminPanel/addMainSystemMenuService");
+const GetperMainSystemMenuService=require("./Controllers/AdminPanel/getperMainSystemMenuService");
+const UpdateMainSystemMenuService = require ("./Controllers/AdminPanel/UpdateMainSystemMenuService");
+const DeleteMainSystemMenuService = require ("./Controllers/AdminPanel/deleteMainSystemMenuService");
+const GetMenusService = require("./Controllers/AdminPanel/getMenusService");
+const AddMenusService = require ("./Controllers/AdminPanel/addMenusService");
+const UpdateMenusService = require ("./Controllers/AdminPanel/updateMenusService");
+const DeleteMenusService = require ("./Controllers/AdminPanel/deleteMenusService");
+const GetPerMenusService = require ("./Controllers/AdminPanel/getPerMenusService");
+const AddSubMenuService = require ("./Controllers/AdminPanel/addSubMenuService");
+const GetSubMenuService = require ("./Controllers/AdminPanel/getSubMenuService");
+const GetPerSubMenuService =require ("./Controllers/AdminPanel/getPerSubMenuService");
+const UpdateSubMenuService = require ("./Controllers/AdminPanel/updateSubMenuService");
+const DeleteSubMenuService = require ("./Controllers/AdminPanel/deleteSubMenuService");
+const GetMenuIdService = require ("./Controllers/AdminPanel/getMenuIdService");
+const AddUserAssignService = require ("./Controllers/AdminPanel/addUserAssignService");
 
 
 //app using middlewaresconst GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -110,7 +127,23 @@ app.use("/get-fnd-user",GetFndUserService);
 app.use("/update-fnd-user",UpdateFndUserService);
 app.use("/get-per-fnd-user",GetPerFndUserService);
 app.use("/delete-fnd-user",DeleteFndUserService);
-
+app.use("/get-main-system-menu",GetMainSystemMenuService);
+app.use("/add-main-system-menu",AddMainSystemMenuService);
+app.use("/get-per-main-system-menu",GetperMainSystemMenuService);
+app.use("/update-main-system-menu",UpdateMainSystemMenuService);
+app.use("/delete-main-system-menu",DeleteMainSystemMenuService);
+app.use("/get-menus",GetMenusService);
+app.use("/add-menus",AddMenusService);
+app.use("/update-menus",UpdateMenusService);
+app.use("/delete-menus",DeleteMenusService);
+app.use("/get-per-menus",GetPerMenusService);
+app.use("/add-sub-menu",AddSubMenuService);
+app.use("/get-sub-menu",GetSubMenuService);
+app.use("/get-menu-ids",GetMenuIdService);
+app.use("/get-per-sub-menu",GetPerSubMenuService);
+app.use("/update-sub-menu",UpdateSubMenuService);
+app.use("/delete-sub-menu",DeleteSubMenuService);
+app.use("/add-user-assign",AddUserAssignService);
 
 
 

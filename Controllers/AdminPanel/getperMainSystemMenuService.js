@@ -2,9 +2,11 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/:system_menu_id", async (req, res, next) => {
+    const systemMenuId = req.params.system_menu_id;
   await pool.query(
-    "SELECT user_name FROM fnd_user ",
+    "SELECT * FROM main_system_menu where system_menu_id= $1",
+    [systemMenuId],
 
     (error, result) => {
       try {
