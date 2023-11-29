@@ -1,5 +1,5 @@
 let data = {
-    _value: 'Initial Value',
+    _value: '',
   
     get value() {
       return this._value;
