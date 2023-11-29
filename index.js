@@ -18,6 +18,7 @@ const LoginService = require("./Controllers/loginService");
 const GetLoggedInUserDetailsService = require("./Controllers/getLoggedInUserDetails");
 const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsService");
 const GetUserMenusService = require("./Controllers/getUserMenusService");
+const LogoutService = require("./Controllers/logoutService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -96,6 +97,7 @@ app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
 app.use("/login", LoginToken, LoginService);
+app.use("/logout", LoginToken, LogoutService);
 app.use("/get-menus", GetUserMenusService);
 app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
