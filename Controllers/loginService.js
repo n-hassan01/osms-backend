@@ -31,6 +31,8 @@ router.post("/", (req, res, next) => {
               }
             );
 
+            req.setValue(token);
+
             res.status(200).json({
               value: token,
               message: "Login successful",
