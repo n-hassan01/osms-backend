@@ -1,28 +1,29 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const authGuard = (req, res, next) => {
-    const { authorization } = req.headers;
-    console.log(authorization);
-    
-    
-    try {
-        const token = authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
-        console.log(decodedToken);
+  const { authorization } = req.headers;
+  console.log(authorization);
+  const value = req.getValue();
+  console.log("auth..", value);
 
-        if (!decodedToken) {
-            res.status(403).send('Forbidden!');
-        }
+  try {
+    // const token = authorization.split(' ')[1];
+    const decodedToken = jwt.verify(value, process.env.SECRET_KEY);
+    console.log(decodedToken);
 
-        const { id, role } = decodedToken;
-        req.id = id;
-        req.role = role;
-        next();
-    } catch (err) {
-        console.log(err.message);
-        
-        next('Authorization failed!');
+    if (!decodedToken) {
+      res.status(403).send("Forbidden!");
     }
+
+    const { id, role } = decodedToken;
+    req.id = id;
+    req.role = role;
+    next();
+  } catch (err) {
+    console.log(err.message);
+
+    next({ message: "Authorization failed!" });
+  }
 };
 
 module.exports = authGuard;
