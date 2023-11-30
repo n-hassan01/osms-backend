@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
-    locationId: Joi.number().max(15).required(),
+    
     locationCode: Joi.string().max(60),
     businessGroupId: Joi.number().max(6),
     description: Joi.string().max(240),
@@ -32,7 +32,7 @@ router.post("/", async (req, res, next) => {
     res.status(400).send("Invalid inputs");
   } else {
     const {
-      locationId,
+      
       locationCode,
       businessGroupId,
       description,
@@ -56,9 +56,9 @@ router.post("/", async (req, res, next) => {
     } = req.body;
 
     await pool.query(
-      "INSERT INTO hr_locations_all (location_id,location_code,business_group_id,description,ship_to_location_id,inventory_organization_id,inactive_date,address_line_1,address_line_2,address_line_3,town_or_city,country,postal_code,telephone_number_1,telephone_number_2,telephone_number_3,last_update_date,last_updated_by,last_update_login,created_by,creation_date) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)",
+      "INSERT INTO hr_locations_all (location_code,business_group_id,description,ship_to_location_id,inventory_organization_id,inactive_date,address_line_1,address_line_2,address_line_3,town_or_city,country,postal_code,telephone_number_1,telephone_number_2,telephone_number_3,last_update_date,last_updated_by,last_update_login,created_by,creation_date) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)",
       [
-        locationId,
+       
         locationCode,
         businessGroupId,
         description,

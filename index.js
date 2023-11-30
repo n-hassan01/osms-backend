@@ -83,9 +83,9 @@ const UpdateSubMenuService = require ("./Controllers/AdminPanel/updateSubMenuSer
 const DeleteSubMenuService = require ("./Controllers/AdminPanel/deleteSubMenuService");
 const GetMenuIdService = require ("./Controllers/AdminPanel/getMenuIdService");
 const AddUserAssignService = require ("./Controllers/AdminPanel/addUserAssignService");
+// const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 
-
-//app using middlewaresconst GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
+//app using middlewares  
 app.use(express.json());
 app.use(cors());
 // routing middleware for user
