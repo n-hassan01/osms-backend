@@ -57,7 +57,7 @@ router.post("/", async (req, res, next) => {
   if (validation.error) {
     console.log(validation.error);
 
-    res.status(400).send("Invalid inputs");
+    return res.status(400).send("Invalid inputs");
   }
 
   const {
@@ -163,7 +163,7 @@ router.post("/", async (req, res, next) => {
         try {
           if (error) throw error;
 
-          res.status(200).json({ message: "Successfully added!", lineInfo: result.rows[0] });
+          return res.status(200).json({ message: "Successfully added!", lineInfo: result.rows[0] });
         } catch (err) {
           next(err);
         }
