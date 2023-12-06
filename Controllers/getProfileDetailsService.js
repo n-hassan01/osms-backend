@@ -7,7 +7,7 @@ router.get("/", async (req, res, next) => {
   const id = req.id;
 
   await pool.query(
-    "select * from per_all_peoples where employee_number = $1",
+    "select * from per_all_peoples p INNER JOIN fnd_user f on p.employee_number = f.user_name where  p.employee_number = $1",
     [id],
     (error, result) => {
       try {
