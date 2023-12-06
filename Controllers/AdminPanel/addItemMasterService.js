@@ -17,8 +17,8 @@ router.post("/", async (req, res, next) => {
     createdBy: Joi.string().required(),
     lastUpdateLogin: Joi.number().allow(null),
     enabledFlag: Joi.string().max(1).required(),
-    startDateActive: Joi.date().allow(null, ''),
-    endDateActive: Joi.date().allow(null, ''),
+    startDateActive: Joi.date().allow(null, ""),
+    endDateActive: Joi.date().allow(null, ""),
     buyerId: Joi.number().max(999999999).allow(null),
     segment1: Joi.string().max(40).min(0),
     segment2: Joi.string().max(40).min(0),
@@ -55,7 +55,7 @@ router.post("/", async (req, res, next) => {
   if (validation.error) {
     console.log(validation.error);
 
-    res.status(400).send("Invalid inputs");
+    return res.status(400).send("Invalid inputs");
   }
 
   const {
@@ -159,20 +159,12 @@ router.post("/", async (req, res, next) => {
               minimumOrderQuantity,
               maximumOrderQuantity,
               paymentTermsId,
-            ],
-            (error, result) => {
-              try {
-                if (error) throw error;
-              } catch (err) {
-                console.log(err.message);
-                next(err);
-              }
-            }
+            ]
           );
         }
-        res.status(200).json({ message: "Successfully added!" });
+        return res.status(200).json({ message: "Successfully added!" });
       } else {
-        res.status(400).json({ message: "Bad request!" });
+        return res.status(400).json({ message: "Bad request!" });
       }
     }
   );

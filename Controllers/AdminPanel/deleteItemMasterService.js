@@ -14,7 +14,7 @@ router.put("/", async (req, res, next) => {
   if (validation.error) {
     console.log(validation.error);
 
-    res.status(400).send("Invalid inputs");
+    return res.status(400).send("Invalid inputs");
   }
 
   const { inventoryItemId, organizationId } = req.body;
@@ -26,7 +26,7 @@ router.put("/", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        res.status(200).send({ message: "Successfully disabled!" });
+        return res.status(200).send({ message: "Successfully disabled!" });
       } catch (error) {
         next(error);
       }
