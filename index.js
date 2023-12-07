@@ -19,6 +19,7 @@ const GetLoggedInUserDetailsService = require("./Controllers/getLoggedInUserDeta
 const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsService");
 const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
+const AddSalesOrderService = require("./Controllers/addSalesOrderHeaderService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -99,6 +100,7 @@ app.use("/delete-otp", DeleteOtpService);
 app.use("/login", LoginToken, LoginService);
 app.use("/logout", LoginToken, LogoutService);
 app.use("/get-menus", GetUserMenusService);
+app.use("/add-sales-order", AddSalesOrderService);
 app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
 
@@ -161,10 +163,6 @@ app.use("/get-per-sub-menu",GetPerSubMenuService);
 app.use("/update-sub-menu",UpdateSubMenuService);
 app.use("/delete-sub-menu",DeleteSubMenuService);
 app.use("/add-user-assign",AddUserAssignService);
-
-
-
-
 
 // error handling middlewares
 app.use((req, res, next) => {
