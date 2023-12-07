@@ -1,6 +1,6 @@
 const express = require("express");
 const Joi = require("joi");
-const pool = require("../dbConnection");
+const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
@@ -8,6 +8,9 @@ router.post("/", async (req, res, next) => {
     orderedDate: Joi.string().required(),
     requestDate: Joi.string().min(0),
     paymentTermId: Joi.number().allow(null),
+    createdBy: Joi.number().required(),
+    orderTypeId: Joi.number().required(),
+    lastUpdatedBy: Joi.number().required(),
     shippingMethodCode: Joi.string().max(30).min(0),
     cancelledFlag: Joi.string().max(1).min(0),
     bookedFlag: Joi.string().max(1).min(1),
@@ -34,14 +37,21 @@ router.post("/", async (req, res, next) => {
     salesrepId,
     salesChannelCode,
     bookedDate,
+    createdBy,
+    lastUpdatedBy,
+    orderTypeId,
   } = req.body;
 
   const date = new Date();
 
-  const result = await pool.query(
-    "INSERT INTO oe_order_headers_all(order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING order_number;",
+  await pool.query(
+    "INSERT INTO oe_order_headers_all(last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15) RETURNING order_number, header_id;",
     [
-      101,
+      date,
+      lastUpdatedBy,
+      createdBy,
+      date,
+      orderTypeId,
       orderedDate,
       requestDate,
       paymentTermId,
@@ -57,7 +67,7 @@ router.post("/", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        res
+        return res
           .status(200)
           .json({ message: "Successfully added!", headerInfo: result.rows });
       } catch (err) {
