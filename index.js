@@ -57,12 +57,7 @@ const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updat
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
 
-
-
-
 // middlewares api
-const AuthGuard = require("./middlewares/authGuard");
-const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
 const GetPerAllPeoplesService = require("./Controllers/AdminPanel/getPerAllPeoplesService");
@@ -71,14 +66,8 @@ const UpdatePerAllPeoplesService = require("./Controllers/AdminPanel/updatePerAl
 const GetperPerAllPeoplesService = require("./Controllers/AdminPanel/getperPerAllPeoplesService");
 const DeletePerAllPeoplesService = require("./Controllers/AdminPanel/deletePerAllPeoplesService");
 const GetDataForFndUserService = require("./Controllers/AdminPanel/getDataForFndUserService");
-const DeletePerAllPeoplesService = require("./Controllers/AdminPanel/deletePerAllPeoplesService");
-const GetDataForFndUserService = require("./Controllers/AdminPanel/getDataForFndUserService");
 const AddFndUserService = require("./Controllers/AdminPanel/addFndUserService");
 const GetFndUserService = require("./Controllers/AdminPanel/getFndUserService");
-const UpdateFndUserService = require("./Controllers/AdminPanel/updateFndUserService");
-const GetPerFndUserService = require("./Controllers/AdminPanel/getPerFndUserService");
-const DeleteFndUserService = require("./Controllers/AdminPanel/deleteFndUserService");
-const GetMainSystemMenuService = require("./Controllers/AdminPanel/getMainSystemMenuService");
 const UpdateFndUserService = require("./Controllers/AdminPanel/updateFndUserService");
 const GetPerFndUserService = require("./Controllers/AdminPanel/getPerFndUserService");
 const DeleteFndUserService = require("./Controllers/AdminPanel/deleteFndUserService");
@@ -87,11 +76,7 @@ const AddMainSystemMenuService = require("./Controllers/AdminPanel/addMainSystem
 const GetperMainSystemMenuService = require("./Controllers/AdminPanel/getperMainSystemMenuService");
 const UpdateMainSystemMenuService = require("./Controllers/AdminPanel/UpdateMainSystemMenuService");
 const DeleteMainSystemMenuService = require("./Controllers/AdminPanel/deleteMainSystemMenuService");
-const GetperMainSystemMenuService = require("./Controllers/AdminPanel/getperMainSystemMenuService");
-const UpdateMainSystemMenuService = require("./Controllers/AdminPanel/UpdateMainSystemMenuService");
-const DeleteMainSystemMenuService = require("./Controllers/AdminPanel/deleteMainSystemMenuService");
 const GetMenusService = require("./Controllers/AdminPanel/getMenusService");
-const AddMenusService = require("./Controllers/AdminPanel/addMenusService");
 const UpdateMenusService = require("./Controllers/AdminPanel/updateMenusService");
 const DeleteMenusService = require("./Controllers/AdminPanel/deleteMenusService");
 const GetPerMenusService = require("./Controllers/AdminPanel/getPerMenusService");
@@ -112,21 +97,6 @@ const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifica
 const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
 const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
 
-
-
-// const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
-const AddMenusService = require("./Controllers/AdminPanel/addMenusService");
-const UpdateMenusService = require("./Controllers/AdminPanel/updateMenusService");
-const DeleteMenusService = require("./Controllers/AdminPanel/deleteMenusService");
-const GetPerMenusService = require("./Controllers/AdminPanel/getPerMenusService");
-const AddSubMenuService = require("./Controllers/AdminPanel/addSubMenuService");
-const GetSubMenuService = require("./Controllers/AdminPanel/getSubMenuService");
-const GetPerSubMenuService = require("./Controllers/AdminPanel/getPerSubMenuService");
-const UpdateSubMenuService = require("./Controllers/AdminPanel/updateSubMenuService");
-const DeleteSubMenuService = require("./Controllers/AdminPanel/deleteSubMenuService");
-const GetMenuIdService = require("./Controllers/AdminPanel/getMenuIdService");
-const AddUserAssignService = require("./Controllers/AdminPanel/addUserAssignService");
-
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
@@ -134,6 +104,7 @@ const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 //app using middlewares
 app.use(express.json());
 app.use(cors());
+
 // routing middleware for user
 // authentication and authorization
 app.use("/signup", SignupService);
@@ -191,7 +162,6 @@ app.use("/get-per-all-peoples", GetPerAllPeoplesService);
 app.use("/add-per-all-peoples", AddPerAllPeoplesService);
 app.use("/update-per-all-peoples", UpdatePerAllPeoplesService);
 app.use("/getper-per-all-peoples", GetperPerAllPeoplesService);
-app.use("/delete-per-all-peoples", DeletePerAllPeoplesService);
 app.use("/getdata-for-fnd-user", GetDataForFndUserService);
 app.use("/add-fnd-user", AddFndUserService);
 app.use("/get-fnd-user", GetFndUserService);
@@ -209,54 +179,6 @@ app.use("/update-wf-notifications", UpdateWfNotifications);
 app.use("/get-wf-notifications", GetWfNotifications);
 app.use("/delete-wf-notifications", DeleteWfNotifications);
 
-
-app.use("/get-main-system-menu", GetMainSystemMenuService);
-app.use("/add-main-system-menu", AddMainSystemMenuService);
-app.use("/get-per-main-system-menu", GetperMainSystemMenuService);
-app.use("/update-main-system-menu", UpdateMainSystemMenuService);
-app.use("/delete-main-system-menu", DeleteMainSystemMenuService);
-app.use("/get-menus", GetMenusService);
-app.use("/add-menus", AddMenusService);
-app.use("/update-menus", UpdateMenusService);
-app.use("/delete-menus", DeleteMenusService);
-app.use("/get-per-menus", GetPerMenusService);
-app.use("/add-sub-menu", AddSubMenuService);
-app.use("/get-sub-menu", GetSubMenuService);
-app.use("/get-menu-ids", GetMenuIdService);
-app.use("/get-per-sub-menu", GetPerSubMenuService);
-app.use("/update-sub-menu", UpdateSubMenuService);
-app.use("/delete-sub-menu", DeleteSubMenuService);
-app.use("/add-user-assign", AddUserAssignService);
-
-
-
-app.use("/add-per-all-peoples", AddPerAllPeoplesService);
-app.use("/update-per-all-peoples", UpdatePerAllPeoplesService);
-app.use("/getper-per-all-peoples", GetperPerAllPeoplesService);
-app.use("/delete-per-all-peoples", DeletePerAllPeoplesService);
-app.use("/getdata-for-fnd-user", GetDataForFndUserService);
-app.use("/add-fnd-user", AddFndUserService);
-app.use("/get-fnd-user", GetFndUserService);
-app.use("/update-fnd-user", UpdateFndUserService);
-app.use("/get-per-fnd-user", GetPerFndUserService);
-app.use("/delete-fnd-user", DeleteFndUserService);
-app.use("/get-main-system-menu", GetMainSystemMenuService);
-app.use("/add-main-system-menu", AddMainSystemMenuService);
-app.use("/get-per-main-system-menu", GetperMainSystemMenuService);
-app.use("/update-main-system-menu", UpdateMainSystemMenuService);
-app.use("/delete-main-system-menu", DeleteMainSystemMenuService);
-app.use("/get-menus", GetMenusService);
-app.use("/add-menus", AddMenusService);
-app.use("/update-menus", UpdateMenusService);
-app.use("/delete-menus", DeleteMenusService);
-app.use("/get-per-menus", GetPerMenusService);
-app.use("/add-sub-menu", AddSubMenuService);
-app.use("/get-sub-menu", GetSubMenuService);
-app.use("/get-menu-ids", GetMenuIdService);
-app.use("/get-per-sub-menu", GetPerSubMenuService);
-app.use("/update-sub-menu", UpdateSubMenuService);
-app.use("/delete-sub-menu", DeleteSubMenuService);
-app.use("/add-user-assign", AddUserAssignService);
 
 // error handling middlewares
 app.use((req, res, next) => {
