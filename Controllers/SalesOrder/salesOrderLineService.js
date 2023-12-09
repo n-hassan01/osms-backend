@@ -1,0 +1,160 @@
+const express = require("express");
+const Joi = require("joi");
+const pool = require("../../dbConnection");
+const router = express.Router();
+
+router.post("/add", async (req, res, next) => {
+  const schema = Joi.object({
+    headerId: Joi.number().required(),
+    lineNumber: Joi.number().required(),
+    inventoryItemId: Joi.number().required(),
+    creationDate: Joi.string().required(),
+    createdBy: Joi.number().required(),
+    orderedItem: Joi.string().min(0).max(2000),
+    orderQuantityUom: Joi.string().min(0).max(3),
+    orderedQuantity: Joi.number().allow(null),
+    soldFromOrgId: Joi.number().allow(null),
+    unitSellingPrice: Joi.number().allow(null),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const {
+    headerId,
+    lineNumber,
+    inventoryItemId,
+    creationDate,
+    createdBy,
+    orderedItem,
+    orderQuantityUom,
+    orderedQuantity,
+    soldFromOrgId,
+    unitSellingPrice,
+  } = req.body;
+
+  const date = new Date();
+
+  await pool.query(
+    "INSERT INTO oe_order_lines_all(open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING line_number, line_id;",
+    [
+      "Y",
+      "Y",
+      headerId,
+      lineNumber,
+      inventoryItemId,
+      creationDate,
+      createdBy,
+      orderedItem,
+      orderQuantityUom,
+      orderedQuantity,
+      soldFromOrgId,
+      unitSellingPrice,
+    ],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        return res
+          .status(200)
+          .json({ message: "Successfully added!", headerInfo: result.rows });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/get", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM public.oe_order_lines_all ORDER BY line_id ASC;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows[0]);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.delete("/delete/:line_id", async (req, res, next) => {
+  const lineId = req.params.line_id;
+  await pool.query(
+    "DELETE FROM oe_order_lines_all WHERE line_id = $1",
+    [lineId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json({ message: "Successfully Deleted" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.put("/update/:line_id", async (req, res, next) => {
+  const lineId = req.params.line_id;
+
+  const schema = Joi.object({
+    inventoryItemId: Joi.number().required(),
+    orderedItem: Joi.string().min(0).max(2000),
+    orderQuantityUom: Joi.string().min(0).max(3),
+    orderedQuantity: Joi.number().allow(null),
+    soldFromOrgId: Joi.number().allow(null),
+    unitSellingPrice: Joi.number().allow(null),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const {
+    inventoryItemId,
+    orderedItem,
+    orderQuantityUom,
+    orderedQuantity,
+    soldFromOrgId,
+    unitSellingPrice,
+  } = req.body;
+
+  const date = new Date();
+
+  await pool.query(
+    "INSERT INTO oe_order_lines_all(inventory_item_id, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6) WHERE line_id=$7;",
+    [
+      inventoryItemId,
+      orderedItem,
+      orderQuantityUom,
+      orderedQuantity,
+      soldFromOrgId,
+      unitSellingPrice,
+      lineId,
+    ],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        return res
+          .status(200)
+          .json({ message: "Successfully edied!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+module.exports = router;

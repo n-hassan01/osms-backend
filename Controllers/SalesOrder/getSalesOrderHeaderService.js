@@ -1,19 +1,15 @@
 const express = require("express");
 const pool = require("../../dbConnection");
+
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM mtl_system_items ORDER BY inventory_item_id ASC, organization_id ASC ",
+    "SELECT * FROM public.oe_order_headers_all ORDER BY header_id ASC;",
     (error, result) => {
       try {
         if (error) throw error;
-
-        const response = {
-          columnHeaders: Object.keys(result.rows[0]),
-          results: result.rows,
-        };
-        res.status(200).json(response);
+        res.status(200).send(result.rows[0]);
       } catch (err) {
         next(err);
       }
@@ -21,14 +17,16 @@ router.get("/", async (req, res, next) => {
   );
 });
 
-router.get("/inventory_item_id", async (req, res, next) => {
+router.get("/:order_number", async (req, res, next) => {
+  const orderNumber = req.params.order_number;
+
   await pool.query(
-    "SELECT inventory_item_id, inventory_item_code, description, primary_uom_code FROM public.mtl_system_items;",
+    "SELECT * FROM public.oe_order_headers_all WHERE order_number=$1;",
+    [orderNumber],
     (error, result) => {
       try {
         if (error) throw error;
-
-        res.status(200).json(result.rows);
+        res.status(200).send(result.rows[0]);
       } catch (err) {
         next(err);
       }
