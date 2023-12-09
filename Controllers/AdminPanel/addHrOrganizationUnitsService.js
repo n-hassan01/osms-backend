@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
-    organizationId: Joi.number().max(15).required(),
+    
     businessGroupId: Joi.number().max(15).required(),
     locationId: Joi.number().max(15),
     dateFrom: Joi.string().max(240).required(),
@@ -23,7 +23,7 @@ router.post("/", async (req, res, next) => {
     res.status(400).send("Invalid inputs");
   } else {
     const {
-      organizationId,
+    
       businessGroupId,
       locationId,
       dateFrom,
@@ -37,9 +37,9 @@ router.post("/", async (req, res, next) => {
     } = req.body;
 
     await pool.query(
-      "INSERT INTO hr_all_organization_units (organization_id,business_group_id,location_id,date_from,name,date_to,last_update_date,last_updated_by,last_update_login,created_by,creation_date) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
+      "INSERT INTO hr_all_organization_units (business_group_id,location_id,date_from,name,date_to,last_update_date,last_updated_by,last_update_login,created_by,creation_date) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10)",
       [
-        organizationId,
+       
         businessGroupId,
         locationId,
         dateFrom,
