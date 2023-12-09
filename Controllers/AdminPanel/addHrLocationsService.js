@@ -11,7 +11,7 @@ router.post("/", async (req, res, next) => {
     description: Joi.string().max(240),
     shipToLocationId: Joi.number().max(15),
     inventoryOrganizationId: Joi.number().max(15),
-    inactiveDate: Joi.string().min(0),
+    inactiveDate: Joi.string().max(65),
     addressLine1: Joi.string().max(240),
     addressLine2: Joi.string().max(240),
     addressLine3: Joi.string().max(240),
@@ -25,11 +25,12 @@ router.post("/", async (req, res, next) => {
     lastUpdatedBy: Joi.number().max(15),
     lastUpdateLogin: Joi.number().max(15),
     createdBy: Joi.number().max(15),
-    creationDate: Joi.string().min(0),
+    creationDate: Joi.string(),
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
-    res.status(400).send("Invalid inputs");
+    console.log(validation.error.message);
+    res.status(400).send("asa");
   } else {
     const {
       
