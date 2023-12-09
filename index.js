@@ -50,6 +50,9 @@ const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updat
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
 
+
+
+
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
@@ -84,6 +87,16 @@ const DeleteSubMenuService = require("./Controllers/AdminPanel/deleteSubMenuServ
 const GetMenuIdService = require("./Controllers/AdminPanel/getMenuIdService");
 const AddUserAssignService = require("./Controllers/AdminPanel/addUserAssignService");
 const GetHrLocationsIdService = require("./Controllers/AdminPanel/getHrLocationsIdService");
+const AddPoActionHistory = require("./Controllers/AdminPanel/addPoActionHistory");
+const UpdatePoActionHistory = require ("./Controllers/AdminPanel/updatePoActionHistory.js");
+const GetPoActionHistory = require ("./Controllers/AdminPanel/getPoActionHistory");
+const DeletePoActionHistory = require ("./Controllers/AdminPanel/deletePoActionHistory");
+const AddWfNotifications = require("./Controllers/AdminPanel/addWfNotifications.js");
+const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifications.js");
+const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
+const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
+
+
 
 // const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 
@@ -147,6 +160,18 @@ app.use("/get-fnd-user", GetFndUserService);
 app.use("/update-fnd-user", UpdateFndUserService);
 app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
+
+///////////////////////// sap 
+app.use("/add-po-action-history", AddPoActionHistory);
+app.use("/update-po-action-history", UpdatePoActionHistory);
+app.use("/get-po-action-history", GetPoActionHistory);
+app.use("/delete-po-action-history", DeletePoActionHistory);
+app.use("/add-wf-notifications", AddWfNotifications);
+app.use("/update-wf-notifications", UpdateWfNotifications);
+app.use("/get-wf-notifications", GetWfNotifications);
+app.use("/delete-wf-notifications", DeleteWfNotifications);
+
+
 app.use("/get-main-system-menu", GetMainSystemMenuService);
 app.use("/add-main-system-menu", AddMainSystemMenuService);
 app.use("/get-per-main-system-menu", GetperMainSystemMenuService);
@@ -164,6 +189,9 @@ app.use("/get-per-sub-menu", GetPerSubMenuService);
 app.use("/update-sub-menu", UpdateSubMenuService);
 app.use("/delete-sub-menu", DeleteSubMenuService);
 app.use("/add-user-assign", AddUserAssignService);
+
+
+
 
 // error handling middlewares
 app.use((req, res, next) => {
