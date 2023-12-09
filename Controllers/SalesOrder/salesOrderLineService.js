@@ -87,7 +87,7 @@ router.get("/get", async (req, res, next) => {
 router.delete("/delete/:line_id", async (req, res, next) => {
   const lineId = req.params.line_id;
   await pool.query(
-    "DELETE FROM oe_order_headers_all WHERE line_id = $1",
+    "DELETE FROM oe_order_lines_all WHERE line_id = $1",
     [lineId],
     (error, result) => {
       try {

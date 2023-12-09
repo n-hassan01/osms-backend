@@ -9,7 +9,7 @@ router.post("/", async (req, res, next) => {
     requestDate: Joi.string().min(0),
     paymentTermId: Joi.number().allow(null),
     createdBy: Joi.number().required(),
-    orderTypeId: Joi.number().required(),
+    // orderTypeId: Joi.number().required(),
     lastUpdatedBy: Joi.number().required(),
     shippingMethodCode: Joi.string().max(30).min(0),
     cancelledFlag: Joi.string().max(1).min(0),
@@ -39,7 +39,7 @@ router.post("/", async (req, res, next) => {
     bookedDate,
     createdBy,
     lastUpdatedBy,
-    orderTypeId,
+    // orderTypeId,
   } = req.body;
 
   const date = new Date();
@@ -51,7 +51,7 @@ router.post("/", async (req, res, next) => {
       lastUpdatedBy,
       createdBy,
       date,
-      orderTypeId,
+      1,
       orderedDate,
       requestDate,
       paymentTermId,
