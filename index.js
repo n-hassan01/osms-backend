@@ -26,6 +26,7 @@ const GetSalesOrderService = require("./Controllers/SalesOrder/getSalesOrderHead
 const DeleteSalesOrderService = require("./Controllers/SalesOrder/deleteSalesOrderService");
 const UpdateSalesOrderHeaderService = require("./Controllers/SalesOrder/updateSalesOrderHeaderService");
 const SalesOrderLineService = require("./Controllers/SalesOrder/salesOrderLineService");
+const SoApprovalService = require("./Controllers/SalesOrder/soApprovalService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -125,6 +126,7 @@ app.use("/get-sales-order-header", GetSalesOrderService);
 app.use("/delete-sales-order-header", DeleteSalesOrderService);
 app.use("/update-sales-order-header", UpdateSalesOrderHeaderService);
 app.use("/sales-order-line", SalesOrderLineService);
+app.use("/so-approval", SoApprovalService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
