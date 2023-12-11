@@ -17,12 +17,12 @@ router.get("/", async (req, res, next) => {
   );
 });
 
-router.get("/:order_number", async (req, res, next) => {
-  const orderNumber = req.params.order_number;
+router.get("/:header_id", async (req, res, next) => {
+  const headerId = req.params.header_id;
 
   await pool.query(
-    "SELECT * FROM public.oe_order_headers_all WHERE order_number=$1;",
-    [orderNumber],
+    "SELECT * FROM public.oe_order_headers_all WHERE header_id=$1;",
+    [headerId],
     (error, result) => {
       try {
         if (error) throw error;

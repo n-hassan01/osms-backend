@@ -39,4 +39,72 @@ router.post("/call", async (req, res, next) => {
   );
 });
 
+router.get("/get-approval-seq", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM public.approval_action_history_v s order by sl asc;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.post("/submit-approval", async (req, res, next) => {
+  const schema = Joi.object({
+    pTransactionID: Joi.number().required(),
+    pTransactionNum: Joi.string().required(),
+    pAppsUsername: Joi.string().required(),
+    pNotificationID: Joi.number().required(),
+    pApprovalType: Joi.string().required(),
+    pEmpid: Joi.number().required(),
+    pNote: Joi.string().required(),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const {
+    pTransactionID,
+    pTransactionNum,
+    pAppsUsername,
+    pNotificationID,
+    pApprovalType,
+    pEmpid,
+    pNote,
+  } = req.body;
+
+  const date = new Date();
+
+  await pool.query(
+    "CALL proc_req_approval_from_panel($1,$2,$3,$4,$5,46);",
+    [
+      pTransactionID,
+      pTransactionNum,
+      pAppsUsername,
+      pNotificationID,
+      pApprovalType,
+      pEmpid,
+      pNote,
+    ],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        return res.status(200).json({ message: "Successfully updated!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;
