@@ -27,6 +27,7 @@ const DeleteSalesOrderService = require("./Controllers/SalesOrder/deleteSalesOrd
 const UpdateSalesOrderHeaderService = require("./Controllers/SalesOrder/updateSalesOrderHeaderService");
 const SalesOrderLineService = require("./Controllers/SalesOrder/salesOrderLineService");
 const SoApprovalService = require("./Controllers/SalesOrder/soApprovalService");
+const WfNotificationView = require("./Controllers/SalesOrder/wfNotificationViewService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -127,6 +128,7 @@ app.use("/delete-sales-order-header", DeleteSalesOrderService);
 app.use("/update-sales-order-header", UpdateSalesOrderHeaderService);
 app.use("/sales-order-line", SalesOrderLineService);
 app.use("/so-approval", SoApprovalService);
+app.use("/wf-notification-view", WfNotificationView);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
