@@ -17,6 +17,8 @@ router.post("/", async (req, res, next) => {
     salesrepId: Joi.number().allow(null),
     salesChannelCode: Joi.string().min(0).max(30),
     bookedDate: Joi.string().min(0),
+    bookedDate: Joi.string().min(0),
+    description: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -39,13 +41,13 @@ router.post("/", async (req, res, next) => {
     bookedDate,
     createdBy,
     lastUpdatedBy,
-    // orderTypeId,
+    description,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_headers_all(last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15) RETURNING order_number, header_id;",
+    "INSERT INTO oe_order_headers_all(last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16) RETURNING order_number, header_id;",
     [
       date,
       lastUpdatedBy,
@@ -62,6 +64,7 @@ router.post("/", async (req, res, next) => {
       salesrepId,
       salesChannelCode,
       bookedDate,
+      description,
     ],
     (error, result) => {
       try {

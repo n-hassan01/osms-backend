@@ -34,4 +34,21 @@ router.get("/:header_id", async (req, res, next) => {
   );
 });
 
+router.get("/by-user/:user_id", async (req, res, next) => {
+  const userId = req.params.user_id;
+  
+  await pool.query(
+    "SELECT * FROM public.oe_order_headers_all WHERE created_by=$1 ORDER BY header_id ASC;",
+    [userId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;
