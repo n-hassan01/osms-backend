@@ -58,6 +58,7 @@ router.get("/get-approval-seq/:header_id", async (req, res, next) => {
 
 router.post("/submit-approval", async (req, res, next) => {
   const schema = Joi.object({
+    pHierarchyId: Joi.number().required(),
     pTransactionID: Joi.number().required(),
     pTransactionNum: Joi.string().required(),
     pAppsUsername: Joi.string().required(),
@@ -76,6 +77,7 @@ router.post("/submit-approval", async (req, res, next) => {
   }
 
   const {
+    pHierarchyId,
     pTransactionID,
     pTransactionNum,
     pAppsUsername,
@@ -88,8 +90,9 @@ router.post("/submit-approval", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "CALL proc_req_approval_from_panel($1,$2,$3,$4,$5,46);",
+    "CALL proc_req_approval_from_panel($1,$2,$3,$4,$5,$6,$7,$8);",
     [
+      pHierarchyId,
       pTransactionID,
       pTransactionNum,
       pAppsUsername,
