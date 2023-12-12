@@ -39,9 +39,12 @@ router.post("/call", async (req, res, next) => {
   );
 });
 
-router.get("/get-approval-seq", async (req, res, next) => {
+router.get("/get-approval-seq/:header_id", async (req, res, next) => {
+  const headerId = req.params.header_id;
+
   await pool.query(
-    "SELECT * FROM public.approval_action_history_v s order by sl asc;",
+    "SELECT * FROM public.approval_action_history_v WHERE object_id=$1 order by sl asc;",
+    [headerId],
     (error, result) => {
       try {
         if (error) throw error;
