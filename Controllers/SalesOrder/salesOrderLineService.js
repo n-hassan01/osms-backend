@@ -70,13 +70,16 @@ router.post("/add", async (req, res, next) => {
   );
 });
 
-router.get("/get", async (req, res, next) => {
+router.get("/get/:header_id", async (req, res, next) => {
+  const headerId = req.params.header_id;
+
   await pool.query(
-    "SELECT * FROM public.oe_order_lines_all ORDER BY line_id ASC;",
+    "SELECT * FROM public.oe_order_lines_all WHERE header_id=$1;",
+    [headerId],
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows[0]);
+        res.status(200).send(result.rows);
       } catch (err) {
         next(err);
       }
@@ -147,9 +150,7 @@ router.put("/update/:line_id", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        return res
-          .status(200)
-          .json({ message: "Successfully edied!" });
+        return res.status(200).json({ message: "Successfully edied!" });
       } catch (err) {
         next(err);
       }

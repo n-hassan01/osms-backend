@@ -3,13 +3,16 @@ const pool = require("../../dbConnection");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/:notification_id", async (req, res, next) => {
+  const notificationId = req.params.notification_id;
+
   await pool.query(
-    "SELECT * FROM public.wf_notifications_v;",
+    "SELECT * FROM public.wf_notifications_v WHERE notification_id=$1;",
+    [notificationId],
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows);
+        res.status(200).send(result.rows[0]);
       } catch (err) {
         next(err);
       }
