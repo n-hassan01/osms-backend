@@ -90,7 +90,7 @@ router.post("/submit-approval", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "CALL proc_req_approval_from_panel($1,$2,$3,$4,$5,$6,$7,$8);",
+    "CALL proc_so_approval_from_panel($1,$2,$3,$4,$5,$6,$7,$8);",
     [
       pHierarchyId,
       pTransactionID,
