@@ -20,6 +20,15 @@ const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsSer
 const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
 
+//routing api for sales order module
+const AddSalesOrderService = require("./Controllers/SalesOrder/addSalesOrderHeaderService");
+const GetSalesOrderService = require("./Controllers/SalesOrder/getSalesOrderHeaderService");
+const DeleteSalesOrderService = require("./Controllers/SalesOrder/deleteSalesOrderService");
+const UpdateSalesOrderHeaderService = require("./Controllers/SalesOrder/updateSalesOrderHeaderService");
+const SalesOrderLineService = require("./Controllers/SalesOrder/salesOrderLineService");
+const SoApprovalService = require("./Controllers/SalesOrder/soApprovalService");
+const WfNotificationView = require("./Controllers/SalesOrder/wfNotificationViewService");
+
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
 const AddUnitMeasureService = require("./Controllers/AdminPanel/addUnitMeasuresService");
@@ -50,12 +59,7 @@ const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updat
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
 
-
-
-
 // middlewares api
-const AuthGuard = require("./middlewares/authGuard");
-const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
 const GetPerAllPeoplesService = require("./Controllers/AdminPanel/getPerAllPeoplesService");
@@ -75,7 +79,6 @@ const GetperMainSystemMenuService = require("./Controllers/AdminPanel/getperMain
 const UpdateMainSystemMenuService = require("./Controllers/AdminPanel/UpdateMainSystemMenuService");
 const DeleteMainSystemMenuService = require("./Controllers/AdminPanel/deleteMainSystemMenuService");
 const GetMenusService = require("./Controllers/AdminPanel/getMenusService");
-const AddMenusService = require("./Controllers/AdminPanel/addMenusService");
 const UpdateMenusService = require("./Controllers/AdminPanel/updateMenusService");
 const DeleteMenusService = require("./Controllers/AdminPanel/deleteMenusService");
 const GetPerMenusService = require("./Controllers/AdminPanel/getPerMenusService");
@@ -96,13 +99,14 @@ const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifica
 const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
 const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
 
-
-
-// const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
+// middlewares api
+const AuthGuard = require("./middlewares/authGuard");
+const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 
 //app using middlewares
 app.use(express.json());
 app.use(cors());
+
 // routing middleware for user
 // authentication and authorization
 app.use("/signup", SignupService);
@@ -116,6 +120,15 @@ app.use("/logout", LoginToken, LogoutService);
 app.use("/get-menus", GetUserMenusService);
 app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
+
+// routing middleware for sales order module
+app.use("/add-sales-order-header", AddSalesOrderService);
+app.use("/get-sales-order-header", GetSalesOrderService);
+app.use("/delete-sales-order-header", DeleteSalesOrderService);
+app.use("/update-sales-order-header", UpdateSalesOrderHeaderService);
+app.use("/sales-order-line", SalesOrderLineService);
+app.use("/so-approval", SoApprovalService);
+app.use("/wf-notification-view", WfNotificationView);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
@@ -153,7 +166,6 @@ app.use("/get-per-all-peoples", GetPerAllPeoplesService);
 app.use("/add-per-all-peoples", AddPerAllPeoplesService);
 app.use("/update-per-all-peoples", UpdatePerAllPeoplesService);
 app.use("/getper-per-all-peoples", GetperPerAllPeoplesService);
-app.use("/delete-per-all-peoples", DeletePerAllPeoplesService);
 app.use("/getdata-for-fnd-user", GetDataForFndUserService);
 app.use("/add-fnd-user", AddFndUserService);
 app.use("/get-fnd-user", GetFndUserService);
@@ -170,27 +182,6 @@ app.use("/add-wf-notifications", AddWfNotifications);
 app.use("/update-wf-notifications", UpdateWfNotifications);
 app.use("/get-wf-notifications", GetWfNotifications);
 app.use("/delete-wf-notifications", DeleteWfNotifications);
-
-
-app.use("/get-main-system-menu", GetMainSystemMenuService);
-app.use("/add-main-system-menu", AddMainSystemMenuService);
-app.use("/get-per-main-system-menu", GetperMainSystemMenuService);
-app.use("/update-main-system-menu", UpdateMainSystemMenuService);
-app.use("/delete-main-system-menu", DeleteMainSystemMenuService);
-app.use("/get-menus", GetMenusService);
-app.use("/add-menus", AddMenusService);
-app.use("/update-menus", UpdateMenusService);
-app.use("/delete-menus", DeleteMenusService);
-app.use("/get-per-menus", GetPerMenusService);
-app.use("/add-sub-menu", AddSubMenuService);
-app.use("/get-sub-menu", GetSubMenuService);
-app.use("/get-menu-ids", GetMenuIdService);
-app.use("/get-per-sub-menu", GetPerSubMenuService);
-app.use("/update-sub-menu", UpdateSubMenuService);
-app.use("/delete-sub-menu", DeleteSubMenuService);
-app.use("/add-user-assign", AddUserAssignService);
-
-
 
 
 // error handling middlewares
