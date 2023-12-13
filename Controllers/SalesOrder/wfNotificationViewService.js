@@ -1,14 +1,14 @@
 const express = require("express");
-const pool = require("../dbConnection");
+const pool = require("../../dbConnection");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const id = req.id;
+router.get("/:notification_id", async (req, res, next) => {
+  const notificationId = req.params.notification_id;
 
   await pool.query(
-    "select * from per_all_peoples p INNER JOIN fnd_user f on p.person_id = f.employee_id where  f.user_name = $1",
-    [id],
+    "SELECT * FROM public.wf_notifications_v WHERE notification_id=$1;",
+    [notificationId],
     (error, result) => {
       try {
         if (error) throw error;
