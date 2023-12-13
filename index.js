@@ -95,7 +95,7 @@ const AddWfNotifications = require("./Controllers/AdminPanel/addWfNotifications.
 const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifications.js");
 const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
 const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
-
+const GetOrderNumberService = require("./Controllers/AdminPanel/getOrderNumberService.js");
 
 
 // const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -170,6 +170,7 @@ app.use("/add-wf-notifications", AddWfNotifications);
 app.use("/update-wf-notifications", UpdateWfNotifications);
 app.use("/get-wf-notifications", GetWfNotifications);
 app.use("/delete-wf-notifications", DeleteWfNotifications);
+app.use("/get-order-number",GetOrderNumberService);
 
 
 app.use("/get-main-system-menu", GetMainSystemMenuService);
