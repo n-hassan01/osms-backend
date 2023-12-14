@@ -173,6 +173,7 @@ app.use("/get-fnd-user", GetFndUserService);
 app.use("/update-fnd-user", UpdateFndUserService);
 app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
+app.use("/get-menu-ids",GetMenuIdService);
 
 ///////////////////////// sap 
 app.use("/add-po-action-history", AddPoActionHistory);
