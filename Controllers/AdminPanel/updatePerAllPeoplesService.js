@@ -1,9 +1,11 @@
 const express = require("express");
 const pool = require("../../dbConnection");
 const Joi = require("joi");
+const loginTokenMiddleware = require("../../middlewares/getLoginTokenMiddleware");
 const router = express.Router();
 
 router.put("/:person_id", async (req, res, next) => {
+
   const personId = req.params.person_id;
   const schema = Joi.object({
     effectiveStartDate: Joi.string().required(),
