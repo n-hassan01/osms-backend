@@ -5,15 +5,15 @@ const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
-    orderedDate: Joi.string().required(),
     requestDate: Joi.string().min(0),
     paymentTermId: Joi.number().allow(null),
+    orderNumber: Joi.number().required(),
     createdBy: Joi.number().required(),
     // orderTypeId: Joi.number().required(),
     lastUpdatedBy: Joi.number().required(),
     shippingMethodCode: Joi.string().max(30).min(0),
-    cancelledFlag: Joi.string().max(1).min(0),
-    bookedFlag: Joi.string().max(1).min(1),
+    // cancelledFlag: Joi.string().max(1).min(0),
+    // bookedFlag: Joi.string().max(1).min(1),
     salesrepId: Joi.number().allow(null),
     salesChannelCode: Joi.string().min(0).max(30),
     bookedDate: Joi.string().min(0),
@@ -30,37 +30,38 @@ router.post("/", async (req, res, next) => {
   }
 
   const {
-    orderedDate,
     requestDate,
     paymentTermId,
     shippingMethodCode,
-    cancelledFlag,
-    bookedFlag,
+    // cancelledFlag,
+    // bookedFlag,
     salesrepId,
     salesChannelCode,
     bookedDate,
     createdBy,
     lastUpdatedBy,
     description,
+    orderNumber,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_headers_all(last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16) RETURNING order_number, header_id;",
+    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17) RETURNING order_number, header_id;",
     [
+      orderNumber,
       date,
       lastUpdatedBy,
       createdBy,
       date,
       1,
-      orderedDate,
+      date,
       requestDate,
       paymentTermId,
       shippingMethodCode,
-      cancelledFlag,
+      "N",
       "Y",
-      bookedFlag,
+      "N",
       salesrepId,
       salesChannelCode,
       bookedDate,
