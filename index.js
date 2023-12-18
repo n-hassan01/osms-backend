@@ -100,6 +100,8 @@ const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifica
 const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
 const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
 const GetOrderNumberService = require("./Controllers/AdminPanel/getOrderNumberService.js");
+const GetAuthorizationStatus= require("./Controllers/AdminPanel/getAuthorizationStatus.js");
+
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -176,6 +178,7 @@ app.use("/update-fnd-user", UpdateFndUserService);
 app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids",GetMenuIdService);
+app.use("/get-menus",GetMenusService);
 
 ///////////////////////// sap 
 app.use("/add-po-action-history", AddPoActionHistory);
@@ -187,6 +190,7 @@ app.use("/update-wf-notifications", UpdateWfNotifications);
 app.use("/get-wf-notifications", GetWfNotifications);
 app.use("/delete-wf-notifications", DeleteWfNotifications);
 app.use("/get-order-number",GetOrderNumberService);
+app.use("/get-auth-status",GetAuthorizationStatus);
 
 // error handling middlewares
 app.use((req, res, next) => {
