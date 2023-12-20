@@ -6,33 +6,34 @@ const bcrypt = require("bcrypt");
 router.post("/", async (req, res, next) => {
   const { verificationCode, id, password } = req.body;
 
-  let generatedOtp;
   try {
     const result = await pool.query("SELECT otp FROM otp WHERE id = $1", [id]);
-    if (result.rows.length > 0) {
-      generatedOtp = result.rows[0].otp;
-    } else {
-      res.status(404).json({ message: "OTP not found" });
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "OTP not found" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const generatedOtp = result.rows[0].otp;
+    const isOtpValid = await bcrypt.compare(verificationCode, generatedOtp);
 
-    if (verificationCode === generatedOtp) {
+    if (isOtpValid) {
       const currentDate = new Date().toJSON();
 
-      await pool.query(
-        'insert into "fnd_user"(user_name, user_password, start_date, status) values($1, $2, $3, $4) RETURNING *',
-        [id, hashedPassword, currentDate, "approved"],
-        (error, result) => {
-          if (error) {
-            throw error;
-          }
+      const insertQuery =
+        'INSERT INTO "fnd_user" (user_name, user_password, start_date, status) VALUES ($1, $2, $3, $4) RETURNING *';
 
-          res.status(200).json({ message: "OTP matched!" });
-        }
-      );
+      const insertedUser = await pool.query(insertQuery, [
+        id,
+        password,
+        currentDate,
+        "approved",
+      ]);
+
+      res
+        .status(200)
+        .json({ message: "OTP matched!", user: insertedUser.rows[0] });
     } else {
-      next("Invalid otp!");
+      return res.status(401).json({ message: "Invalid OTP" });
     }
   } catch (error) {
     next(error);
