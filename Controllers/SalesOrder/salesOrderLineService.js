@@ -8,13 +8,14 @@ router.post("/add", async (req, res, next) => {
     headerId: Joi.number().required(),
     lineNumber: Joi.number().required(),
     inventoryItemId: Joi.number().required(),
-    creationDate: Joi.string().required(),
+    // creationDate: Joi.string().required(),
     createdBy: Joi.number().required(),
     orderedItem: Joi.string().min(0).max(2000),
     orderQuantityUom: Joi.string().min(0).max(3),
     orderedQuantity: Joi.number().allow(null),
     soldFromOrgId: Joi.number().allow(null),
     unitSellingPrice: Joi.number().allow(null),
+    totalPrice: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -29,26 +30,28 @@ router.post("/add", async (req, res, next) => {
     headerId,
     lineNumber,
     inventoryItemId,
-    creationDate,
+    // creationDate,
     createdBy,
     orderedItem,
     orderQuantityUom,
     orderedQuantity,
     soldFromOrgId,
     unitSellingPrice,
+    totalPrice,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_lines_all(open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING line_number, line_id;",
+    "INSERT INTO oe_order_lines_all(total_price, open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING line_number, line_id;",
     [
+      totalPrice,
       "Y",
       "Y",
       headerId,
       lineNumber,
       inventoryItemId,
-      creationDate,
+      date,
       createdBy,
       orderedItem,
       orderQuantityUom,
@@ -112,8 +115,9 @@ router.put("/update/:line_id", async (req, res, next) => {
     orderedItem: Joi.string().min(0).max(2000),
     orderQuantityUom: Joi.string().min(0).max(3),
     orderedQuantity: Joi.number().allow(null),
-    soldFromOrgId: Joi.number().allow(null),
+    // soldFromOrgId: Joi.number().allow(null),
     unitSellingPrice: Joi.number().allow(null),
+    totalPrice: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -129,28 +133,30 @@ router.put("/update/:line_id", async (req, res, next) => {
     orderedItem,
     orderQuantityUom,
     orderedQuantity,
-    soldFromOrgId,
+    // soldFromOrgId,
     unitSellingPrice,
+    totalPrice,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_lines_all(inventory_item_id, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6) WHERE line_id=$7;",
+    "UPDATE oe_order_lines_all SET inventory_item_id=$1, ordered_item=$2, order_quantity_uom=$3, ordered_quantity=$4, unit_selling_price=$5, total_price=$6 WHERE line_id=$7;",
     [
       inventoryItemId,
       orderedItem,
       orderQuantityUom,
       orderedQuantity,
-      soldFromOrgId,
+      // soldFromOrgId,
       unitSellingPrice,
+      totalPrice,
       lineId,
     ],
     (error, result) => {
       try {
         if (error) throw error;
 
-        return res.status(200).json({ message: "Successfully edied!" });
+        return res.status(200).json({ message: "Successfully updated!" });
       } catch (err) {
         next(err);
       }

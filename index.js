@@ -28,6 +28,7 @@ const UpdateSalesOrderHeaderService = require("./Controllers/SalesOrder/updateSa
 const SalesOrderLineService = require("./Controllers/SalesOrder/salesOrderLineService");
 const SoApprovalService = require("./Controllers/SalesOrder/soApprovalService");
 const WfNotificationView = require("./Controllers/SalesOrder/wfNotificationViewService");
+const CreateSalesOrderNumberSevice = require("./Controllers/SalesOrder/getSalesOrderNumberService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -91,14 +92,19 @@ const GetMenuIdService = require("./Controllers/AdminPanel/getMenuIdService");
 const AddUserAssignService = require("./Controllers/AdminPanel/addUserAssignService");
 const GetHrLocationsIdService = require("./Controllers/AdminPanel/getHrLocationsIdService");
 const AddPoActionHistory = require("./Controllers/AdminPanel/addPoActionHistory");
-const UpdatePoActionHistory = require ("./Controllers/AdminPanel/updatePoActionHistory.js");
-const GetPoActionHistory = require ("./Controllers/AdminPanel/getPoActionHistory");
-const DeletePoActionHistory = require ("./Controllers/AdminPanel/deletePoActionHistory");
+const UpdatePoActionHistory = require("./Controllers/AdminPanel/updatePoActionHistory.js");
+const GetPoActionHistory = require("./Controllers/AdminPanel/getPoActionHistory");
+const DeletePoActionHistory = require("./Controllers/AdminPanel/deletePoActionHistory");
 const AddWfNotifications = require("./Controllers/AdminPanel/addWfNotifications.js");
 const UpdateWfNotifications = require("./Controllers/AdminPanel/updateWfNotifications.js");
-const GetWfNotifications = require ("./Controllers/AdminPanel/getWfNotifications.js");
+const GetWfNotifications = require("./Controllers/AdminPanel/getWfNotifications.js");
 const DeleteWfNotifications = require("./Controllers/AdminPanel/deleteWfNotifications.js");
 const GetOrderNumberService = require("./Controllers/AdminPanel/getOrderNumberService.js");
+const GetAuthorizationStatus = require("./Controllers/AdminPanel/getAuthorizationStatus.js");
+const AddHzCustAccounts = require("./Controllers/AdminPanel/addHzCustAccounts.js");
+const UpdateHzCustAccounts = require("./Controllers/AdminPanel/updateHzCustAccounts.js");
+const DeleteHzCustAccounts = require("./Controllers/AdminPanel/deleteHzCustAccounts.js");
+const GetHzCustAccounts = require("./Controllers/AdminPanel/getHzCustAccounts.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -130,6 +136,7 @@ app.use("/update-sales-order-header", UpdateSalesOrderHeaderService);
 app.use("/sales-order-line", SalesOrderLineService);
 app.use("/so-approval", SoApprovalService);
 app.use("/wf-notification-view", WfNotificationView);
+app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
@@ -173,9 +180,10 @@ app.use("/get-fnd-user", GetFndUserService);
 app.use("/update-fnd-user", UpdateFndUserService);
 app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
-app.use("/get-menu-ids",GetMenuIdService);
+app.use("/get-menu-ids", GetMenuIdService);
+app.use("/get-menus", GetMenusService);
 
-///////////////////////// sap 
+///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
 app.use("/update-po-action-history", UpdatePoActionHistory);
 app.use("/get-po-action-history", GetPoActionHistory);
@@ -184,7 +192,12 @@ app.use("/add-wf-notifications", AddWfNotifications);
 app.use("/update-wf-notifications", UpdateWfNotifications);
 app.use("/get-wf-notifications", GetWfNotifications);
 app.use("/delete-wf-notifications", DeleteWfNotifications);
-app.use("/get-order-number",GetOrderNumberService);
+app.use("/get-order-number", GetOrderNumberService);
+app.use("/get-auth-status", GetAuthorizationStatus);
+app.use("/add-hz-cust-accounts", AddHzCustAccounts);
+app.use("/update-hz-cust-accounts", UpdateHzCustAccounts);
+app.use("/delete-hz-cust-accounts", DeleteHzCustAccounts);
+app.use("/get-hz-cust-accounts", GetHzCustAccounts);
 
 // error handling middlewares
 app.use((req, res, next) => {

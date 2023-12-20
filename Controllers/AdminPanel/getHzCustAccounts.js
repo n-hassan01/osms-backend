@@ -1,18 +1,16 @@
 const express = require("express");
 const pool = require("../../dbConnection");
-
 const router = express.Router();
 
-router.get("/:notification_id", async (req, res, next) => {
-  const notificationId = req.params.notification_id;
-
+router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM public.wf_notifications_v WHERE notification_id=$1;",
-    [notificationId],
+    "SELECT * FROM hz_cust_accounts ",
+
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows[0]);
+
+        res.status(200).json(result.rows);
       } catch (err) {
         next(err);
       }
@@ -20,13 +18,14 @@ router.get("/:notification_id", async (req, res, next) => {
   );
 });
 
-router.get("/final/approved", async (req, res, next) => {
+router.get("/list", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM wf_notifications WHERE status='APPROVE';",
+    "SELECT organization_id, name FROM public.hr_all_organization_units;",
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows[0]);
+
+        res.status(200).json(result.rows);
       } catch (err) {
         next(err);
       }
