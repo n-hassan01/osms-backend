@@ -19,12 +19,15 @@ router.post("/", async (req, res, next) => {
     bookedDate: Joi.string().min(0),
     bookedDate: Joi.string().min(0),
     description: Joi.string().min(0),
+    shipTo: Joi.string().min(0),
+    specialDiscount: Joi.number().allow(null),
+    specialAdjustment: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
 
   if (validation.error) {
-    console.log(validation.error);
+    console.log(validation.error.message);
 
     return res.status(400).send("Invalid inputs");
   }
@@ -42,12 +45,15 @@ router.post("/", async (req, res, next) => {
     lastUpdatedBy,
     description,
     orderNumber,
+    shipTo,
+    specialDiscount,
+    specialAdjustment,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17) RETURNING order_number, header_id;",
+    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description,ship_to,special_discount,special_adjustment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17, $18, $19, $20) RETURNING order_number, header_id;",
     [
       orderNumber,
       date,
@@ -66,6 +72,9 @@ router.post("/", async (req, res, next) => {
       salesChannelCode,
       bookedDate,
       description,
+      shipTo,
+      specialDiscount,
+      specialAdjustment,
     ],
     (error, result) => {
       try {
