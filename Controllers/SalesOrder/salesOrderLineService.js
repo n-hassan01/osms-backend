@@ -15,6 +15,7 @@ router.post("/add", async (req, res, next) => {
     orderedQuantity: Joi.number().allow(null),
     soldFromOrgId: Joi.number().allow(null),
     unitSellingPrice: Joi.number().allow(null),
+    totalPrice: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -36,13 +37,15 @@ router.post("/add", async (req, res, next) => {
     orderedQuantity,
     soldFromOrgId,
     unitSellingPrice,
+    totalPrice,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_lines_all(open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING line_number, line_id;",
+    "INSERT INTO oe_order_lines_all(total_price, open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING line_number, line_id;",
     [
+      totalPrice,
       "Y",
       "Y",
       headerId,
@@ -114,6 +117,7 @@ router.put("/update/:line_id", async (req, res, next) => {
     orderedQuantity: Joi.number().allow(null),
     // soldFromOrgId: Joi.number().allow(null),
     unitSellingPrice: Joi.number().allow(null),
+    totalPrice: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -131,12 +135,13 @@ router.put("/update/:line_id", async (req, res, next) => {
     orderedQuantity,
     // soldFromOrgId,
     unitSellingPrice,
+    totalPrice,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE oe_order_lines_all SET inventory_item_id=$1, ordered_item=$2, order_quantity_uom=$3, ordered_quantity=$4, unit_selling_price=$5 WHERE line_id=$6;",
+    "UPDATE oe_order_lines_all SET inventory_item_id=$1, ordered_item=$2, order_quantity_uom=$3, ordered_quantity=$4, unit_selling_price=$5, total_price=$6 WHERE line_id=$7;",
     [
       inventoryItemId,
       orderedItem,
@@ -144,6 +149,7 @@ router.put("/update/:line_id", async (req, res, next) => {
       orderedQuantity,
       // soldFromOrgId,
       unitSellingPrice,
+      totalPrice,
       lineId,
     ],
     (error, result) => {
