@@ -2,14 +2,11 @@ const jwt = require("jsonwebtoken");
 
 const authGuard = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(authorization);
-  const value = req.getValue();
-  console.log("auth..", value);
 
   try {
-    // const token = authorization.split(' ')[1];
-    const decodedToken = jwt.verify(value, process.env.SECRET_KEY);
-    console.log(decodedToken);
+    const token = authorization.split(' ')[1];
+    console.log('token', token);
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
 
     if (!decodedToken) {
       res.status(403).send("Forbidden!");
