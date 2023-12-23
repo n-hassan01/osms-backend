@@ -31,7 +31,7 @@ router.post("/", (req, res, next) => {
               }
             );
 
-            req.setValue(token);
+            // req.setValue(token);
 
             res.status(200).json({
               value: token,
