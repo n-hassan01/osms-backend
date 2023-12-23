@@ -13,8 +13,11 @@ router.post("/", async (req, res, next) => {
     lastUpdateLogin: Joi.number(),
     customerType: Joi.string().max(30),
     customerClassCode: Joi.string().max(30),
+    accountName: Joi.string().max(240),
     primarySalesrepId: Joi.number(),
     salesChannelCode: Joi.string().max(30),
+    emailAddress:Joi.string().max(240),
+    workTelephone :Joi.string().max(30) 
   });
   const validation = schema.validate(req.body);
   if (validation.error) {
@@ -37,10 +40,12 @@ router.post("/", async (req, res, next) => {
       subcategoryCode,
       paymentTermId,
       accountName,
+      emailAddress,
+      workTelephone
     } = req.body;
 
     await pool.query(
-      "INSERT INTO hz_cust_accounts (last_update_date,account_number,last_updated_by,creation_date,created_by, last_update_login ,customer_type,customer_class_code,primary_salesrep_id,sales_channel_code,order_type_id,price_list_id,subcategory_code,payment_term_id,account_name) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
+      "INSERT INTO hz_cust_accounts (last_update_date,account_number,last_updated_by,creation_date,created_by, last_update_login ,customer_type,customer_class_code,primary_salesrep_id,sales_channel_code,order_type_id,price_list_id,subcategory_code,payment_term_id,account_name,email_address,work_telephone) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)",
       [
         lastUpdateDate,
         accountNumber,
@@ -57,6 +62,8 @@ router.post("/", async (req, res, next) => {
         subcategoryCode,
         paymentTermId,
         accountName,
+        emailAddress,
+        workTelephone
       ],
       (error, result) => {
         try {

@@ -105,6 +105,8 @@ const AddHzCustAccounts = require("./Controllers/AdminPanel/addHzCustAccounts.js
 const UpdateHzCustAccounts = require("./Controllers/AdminPanel/updateHzCustAccounts.js");
 const DeleteHzCustAccounts = require("./Controllers/AdminPanel/deleteHzCustAccounts.js");
 const GetHzCustAccounts = require("./Controllers/AdminPanel/getHzCustAccounts.js");
+const GetPerHzCustAccounts = require("./Controllers/AdminPanel/getPerHzCustAccounts.js");
+const GetAllWfNotifications = require("./Controllers/AdminPanel/getAllWfNotifications.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -122,11 +124,11 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
-app.use("/login", LoginToken, LoginService);
-app.use("/logout", LoginToken, LogoutService);
+app.use("/login", LoginService);
+app.use("/logout", LogoutService);
 app.use("/get-menus", GetUserMenusService);
-app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
-app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
+app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
+app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AddSalesOrderService);
@@ -198,6 +200,8 @@ app.use("/add-hz-cust-accounts", AddHzCustAccounts);
 app.use("/update-hz-cust-accounts", UpdateHzCustAccounts);
 app.use("/delete-hz-cust-accounts", DeleteHzCustAccounts);
 app.use("/get-hz-cust-accounts", GetHzCustAccounts);
+app.use("/get-all-wf-notifications", GetAllWfNotifications);
+app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
 
 // error handling middlewares
 app.use((req, res, next) => {
