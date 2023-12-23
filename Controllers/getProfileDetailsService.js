@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   const id = req.id;
+  console.log('id', id);
 
   await pool.query(
     // "select * from per_all_peoples p INNER JOIN fnd_user f on p.person_id = f.employee_id where  f.user_name = $1",
@@ -13,8 +14,10 @@ router.get("/", async (req, res, next) => {
     (error, result) => {
       try {
         if (error) throw error;
+        console.log(result.rows);
         res.status(200).send(result.rows[0]);
       } catch (err) {
+        console.log(err.message);
         next(err);
       }
     }
