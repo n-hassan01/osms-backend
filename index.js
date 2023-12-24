@@ -124,11 +124,11 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
-app.use("/login", LoginToken, LoginService);
-app.use("/logout", LoginToken, LogoutService);
+app.use("/login", LoginService);
+app.use("/logout", LogoutService);
 app.use("/get-menus", GetUserMenusService);
-app.use("/loggedin-user", LoginToken, AuthGuard, GetLoggedInUserDetailsService);
-app.use("/profile", LoginToken, AuthGuard, GetUserProfileDetailsService);
+app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
+app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AddSalesOrderService);
@@ -184,6 +184,7 @@ app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
+app.use("/add-user-assign",AddUserAssignService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
