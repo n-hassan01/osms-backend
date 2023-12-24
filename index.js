@@ -111,6 +111,7 @@ const GetAllWfNotifications = require("./Controllers/AdminPanel/getAllWfNotifica
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
+const loginTokenMiddleware = require("./middlewares/getLoginTokenMiddleware");
 
 //app using middlewares
 app.use(express.json());
@@ -124,7 +125,7 @@ app.use("/compare-otp", CompareOtpService);
 app.use("/store-otp", StoreOtpService);
 app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
-app.use("/login", LoginService);
+app.use("/login", loginTokenMiddleware, LoginService);
 app.use("/logout", LogoutService);
 app.use("/get-menus", GetUserMenusService);
 app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
