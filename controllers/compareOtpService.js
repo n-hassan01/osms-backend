@@ -70,7 +70,7 @@ router.post("/", async (req, res, next) => {
         const subCatagory = person_id ? "Employee" : "Business partner";
 
         const insertedUser = await pool.query(
-          'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4) RETURNING *',
+          'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *',
           [
             userName,
             hashedPassword,
