@@ -39,18 +39,6 @@ router.post("/", async (req, res, next) => {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
       if (userType === "Private") {
-        // const currentDate = new Date().toJSON();
-
-        // const insertQuery =
-        //   'INSERT INTO "fnd_user" (user_name, user_password, start_date, status) VALUES ($1, $2, $3, $4) RETURNING *';
-
-        // const insertedUser = await pool.query(insertQuery, [
-        //   id,
-        //   password,
-        //   currentDate,
-        //   "approved",
-        // ]);
-        // Check if the employee exists in the database
         const employeeResult = await pool.query(
           "SELECT * FROM per_all_peoples WHERE employee_number=$1",
           [userName]
@@ -63,9 +51,6 @@ router.post("/", async (req, res, next) => {
         );
 
         if (employeeResult.rowCount === 0 && customerResult.rowCount === 0) {
-          // if (customerResult.rowCount === 0) {
-          //   return res.status(401).send({ message: "Unauthorized!" });
-          // }
           return res.status(401).send({ message: "Unauthorized!" });
         }
 
@@ -85,7 +70,7 @@ router.post("/", async (req, res, next) => {
         const subCatagory = person_id ? "Employee" : "Business partner";
 
         const insertedUser = await pool.query(
-          'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_catagory, user_sub_catagory) VALUES($1, $2, $3, $4) RETURNING *',
+          'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4) RETURNING *',
           [
             userName,
             hashedPassword,
@@ -102,7 +87,7 @@ router.post("/", async (req, res, next) => {
           .json({ message: "OTP matched!", user: insertedUser.rows[0] });
       } else {
         const insertedUser = await pool.query(
-          'INSERT INTO "hz_cust_accounts"(account_number, user_catagory, account_name, nid, user_age, user_gender, user_profession, user_org, user_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
+          'INSERT INTO "hz_cust_accounts"(account_number, user_category, account_name, nid, user_age, user_gender, user_profession, user_org, user_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
           [
             userName,
             userType,
