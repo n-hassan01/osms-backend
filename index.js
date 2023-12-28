@@ -9,7 +9,7 @@ app.use(cors());
 
 //routing api for users
 const SignupService = require("../osms-backend/Controllers/signupService");
-const SendOtpService = require("./controllers/sendOtpService");
+const SendOtpService = require("./Controllers/sendOtpService.js");
 const CompareOtpService = require("./Controllers/compareOtpService");
 const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
