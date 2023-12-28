@@ -6,12 +6,12 @@ const pool = require("../dbConnection");
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
+
 router.post("/", async (req, res, next) => {
   const { email, userId } = req.body;
   const otp = generateOTP();
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
     host: "smtp.gmail.com",
     port: 587,
     secure: false,
@@ -19,6 +19,11 @@ router.post("/", async (req, res, next) => {
       user: "ahmedraihanalif@gmail.com",
       pass: "xrkv mokm rbrz zqpb",
     },
+    pool: true,
+    maxConnections: 5,
+    maxConnections: 5,
+    socketTimeout: 90000, // 30 seconds
+    connectionTimeout: 90000, // 30 seconds
   });
 
   const mailOptions = {
@@ -29,49 +34,28 @@ router.post("/", async (req, res, next) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions, (error, info) => {
-      if (error) throw error;
+    // Send mail
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: ", info.response);
 
-      console.log("Email sent: ", info.response);
-    });
+    // Database queries
+    const result = await pool.query("SELECT COUNT(*) FROM otp WHERE id = $1", [
+      userId,
+    ]);
+    const countExistUserId = result.rows[0].count;
 
-    pool.query(
-      "SELECT COUNT(*) FROM otp WHERE id = $1",
-      [userId],
-      (error, result) => {
-        if (error) throw error;
+    if (countExistUserId === "0") {
+      await pool.query("INSERT INTO otp(id, otp) VALUES ($1, $2)", [
+        userId,
+        otp,
+      ]);
+    } else {
+      await pool.query("UPDATE otp SET otp = $1 WHERE id = $2", [otp, userId]);
+    }
 
-        const countExistUserId = result.rows[0].count;
-        if (countExistUserId === "0") {
-          pool.query(
-            "INSERT INTO otp(id, otp) VALUES ($1, $2)",
-            [userId, otp],
-            (error, result) => {
-              try {
-                if (error) throw error;
-              } catch (err) {
-                next(err);
-              }
-            }
-          );
-        } else {
-          pool.query(
-            "UPDATE otp SET otp = $1 WHERE id = $2",
-            [otp, userId],
-            (error, result) => {
-              try {
-                if (error) throw error;
-              } catch (err) {
-                next(err);
-              }
-            }
-          );
-        }
-        res.status(200).json({ message: "OTP sent successfully" });
-      }
-    );
+    res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
-    console.log('abc');
+    console.error("Error sending email or updating database:", error);
     next(error);
   }
 });
