@@ -108,6 +108,7 @@ const DeleteHzCustAccounts = require("./Controllers/AdminPanel/deleteHzCustAccou
 const GetHzCustAccounts = require("./Controllers/AdminPanel/getHzCustAccounts.js");
 const GetPerHzCustAccounts = require("./Controllers/AdminPanel/getPerHzCustAccounts.js");
 const GetAllWfNotifications = require("./Controllers/AdminPanel/getAllWfNotifications.js");
+const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceService.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -187,7 +188,7 @@ app.use("/get-per-fnd-user", GetPerFndUserService);
 app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
-app.use("/add-user-assign",AddUserAssignService);
+app.use("/add-user-assign", AddUserAssignService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
@@ -206,6 +207,7 @@ app.use("/delete-hz-cust-accounts", DeleteHzCustAccounts);
 app.use("/get-hz-cust-accounts", GetHzCustAccounts);
 app.use("/get-all-wf-notifications", GetAllWfNotifications);
 app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
+app.use("/get-item-price", GetItemPriceService);
 
 // error handling middlewares
 app.use((req, res, next) => {
