@@ -23,6 +23,7 @@ router.post("/", async (req, res, next) => {
     specialDiscount: Joi.number().allow(null),
     specialAdjustment: Joi.number().allow(null),
     totalPrice: Joi.number().allow(null),
+    distributor: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -50,12 +51,13 @@ router.post("/", async (req, res, next) => {
     specialDiscount,
     specialAdjustment,
     totalPrice,
+    distributor,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description,ship_to,special_discount,special_adjustment,total_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17, $18, $19, $20, $21) RETURNING order_number, header_id;",
+    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description,ship_to,special_discount,special_adjustment,total_price, distributor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17, $18, $19, $20, $21, $22) RETURNING order_number, header_id;",
     [
       orderNumber,
       date,
@@ -78,6 +80,7 @@ router.post("/", async (req, res, next) => {
       specialDiscount,
       specialAdjustment,
       totalPrice,
+      distributor,
     ],
     (error, result) => {
       try {

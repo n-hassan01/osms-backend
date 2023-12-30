@@ -87,7 +87,7 @@ router.post("/", async (req, res, next) => {
           .json({ message: "OTP matched!", user: insertedUser.rows[0] });
       } else {
         const insertedUser = await pool.query(
-          'INSERT INTO "hz_cust_accounts"(account_number, user_category, account_name, nid, user_age, user_gender, user_profession, user_org, user_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
+          'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, nid, user_age, user_gender, user_profession, user_org, user_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
           [
             userName,
             userType,
