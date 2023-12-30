@@ -155,7 +155,7 @@ router.post("/", async (req, res, next) => {
       }
 
       await pool.query(
-        'INSERT INTO "fnd_user"(user_name, user_password, start_date, status, user_catagory, user_sub_catagory) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
+        'INSERT INTO "fnd_user"(user_name, user_password, start_date, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
         [userName, hashedPassword, currentDate, "pending", "Public", "Public"]
       );
 
