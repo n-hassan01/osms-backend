@@ -19,6 +19,7 @@ router.put("/:header_id", async (req, res, next) => {
     specialDiscount: Joi.number().allow(null),
     specialAdjustment: Joi.number().allow(null),
     totalPrice: Joi.number().allow(null),
+    distributor: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -37,12 +38,13 @@ router.put("/:header_id", async (req, res, next) => {
     specialDiscount,
     specialAdjustment,
     totalPrice,
+    distributor,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE oe_order_headers_all SET shipping_method_code=$1, description=$2, last_updated_by=$3, ship_to=$4, special_discount=$5, special_adjustment=$6, total_price=%7 WHERE header_id=$8;",
+    "UPDATE oe_order_headers_all SET shipping_method_code=$1, description=$2, last_updated_by=$3, ship_to=$4, special_discount=$5, special_adjustment=$6, total_price=%7 distributor=$8 WHERE header_id=$9;",
     [
       shippingMethodCode,
       description,
@@ -51,6 +53,7 @@ router.put("/:header_id", async (req, res, next) => {
       specialDiscount,
       specialAdjustment,
       totalPrice,
+      distributor,
       headerId,
     ],
     (error, result) => {
