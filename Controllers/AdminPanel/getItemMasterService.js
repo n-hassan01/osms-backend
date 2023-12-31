@@ -23,7 +23,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/inventory_item_id", async (req, res, next) => {
   await pool.query(
-    "SELECT inventory_item_id, inventory_item_code, description, primary_uom_code FROM public.mtl_system_items;",
+    "SELECT inventory_item_id, inventory_item_code, description, primary_uom_code, unit_price FROM public.mtl_system_items_V;",
     (error, result) => {
       try {
         if (error) throw error;
