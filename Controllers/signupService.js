@@ -109,7 +109,7 @@ router.post("/", async (req, res, next) => {
         };
 
         const userId = person_id ? person_id : cust_account_id;
-        const subCatagory = person_id ? "Employee" : "Business partner";
+        const subCatagory = person_id ? "Employee" : "Business Partner";
 
         const fndId = await pool.query(
           'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING user_id',
@@ -189,7 +189,7 @@ router.post("/", async (req, res, next) => {
 
       const fndId = await pool.query(
         'INSERT INTO "fnd_user"(user_name, user_password, start_date, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
-        [userName, hashedPassword, currentDate, "pending", "Public", "Public"]
+        [userName, hashedPassword, currentDate, "pending", "Public", "Business Partner"]
       );
 
       await pool.query(
