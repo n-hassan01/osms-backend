@@ -127,6 +127,17 @@ router.post("/", async (req, res, next) => {
           ["approved", insertedUser.cust_account_id, userName]
         );
 
+        const fndResult = await pool.query(
+          "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
+          [userName]
+        );
+        console.log("fnd", fndResult);
+
+        await pool.query(
+          "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
+          [fndResult.rows[0].user_id, 5]
+        );
+
         res.status(200).json({ message: "OTP matched!" });
       }
     } else {
