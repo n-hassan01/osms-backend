@@ -60,7 +60,7 @@ router.put("/:header_id", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "UPDATE oe_order_headers_all SET shipping_method_code=$1, description=$2, last_updated_by=$3, ship_to=$4, special_discount=$5, special_adjustment=$6, total_price=$7 distributor=$8, sold_to_org_id=$9, ship_to_org_id=$10, invoice_to_org_id=$11, deliver_to_org_id=$12, sold_to_contact_id=$13, ship_to_contact_id=$14, invoice_to_contact_id=$15, deliver_to_contact_id=$16 WHERE header_id=$17;",
+    "UPDATE oe_order_headers_all SET shipping_method_code=$1, description=$2, last_updated_by=$3, ship_to=$4, special_discount=$5, special_adjustment=$6, total_price=$7, distributor=$8, sold_to_org_id=$9, ship_to_org_id=$10, invoice_to_org_id=$11, deliver_to_org_id=$12, sold_to_contact_id=$13, ship_to_contact_id=$14, invoice_to_contact_id=$15, deliver_to_contact_id=$16 WHERE header_id=$17;",
     [
       shippingMethodCode,
       description,
