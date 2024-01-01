@@ -63,6 +63,8 @@ router.post("/", async (req, res, next) => {
         return res.status(401).send({ message: "Unauthorized!" });
       }
 
+      const type = employeeResult.rowCount > 0 ? "E" : "C";
+
       const result = employeeResult.rows[0]
         ? employeeResult.rows[0]
         : customerResult.rows[0];
@@ -103,60 +105,60 @@ router.post("/", async (req, res, next) => {
         };
       } else {
         // Insert a new user into the "fnd_user" table
-        const newUser = {
-          id: userName,
-          password: hashedPassword,
-        };
+        // const newUser = {
+        //   id: userName,
+        //   password: hashedPassword,
+        // };
 
-        const userId = person_id ? person_id : cust_account_id;
-        const subCatagory = person_id ? "Employee" : "Business Partner";
+        // const userId = person_id ? person_id : cust_account_id;
+        // const subCatagory = person_id ? "Employee" : "Business Partner";
 
-        const fndId = await pool.query(
-          'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING user_id',
-          [
-            newUser.id,
-            newUser.password,
-            currentDate,
-            userId,
-            "pending",
-            "Private",
-            subCatagory,
-          ]
-        );
+        // const fndId = await pool.query(
+        //   'INSERT INTO "fnd_user"(user_name, user_password, start_date, employee_id, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING user_id',
+        //   [
+        //     newUser.id,
+        //     newUser.password,
+        //     currentDate,
+        //     userId,
+        //     "pending",
+        //     "Private",
+        //     subCatagory,
+        //   ]
+        // );
 
-        console.log('id', fndId);
-        await pool.query(
-          "INSERT INTO co_seller_users (user_id,hierarchy_id,hierarchy_line_id,hierarchy_line_num) VALUES ($1,$2,$3,$4)",
-          [fndId, 1, 0, 0]
-        );
+        // console.log('id', fndId);
+        // await pool.query(
+        //   "INSERT INTO co_seller_users (user_id,hierarchy_id,hierarchy_line_id,hierarchy_line_num) VALUES ($1,$2,$3,$4)",
+        //   [fndId, 1, 0, 0]
+        // );
 
-        if (customerResult.rowCount === 0) {
-          await pool.query(
-            'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, ship_to_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-            [
-              employeeResult.rows[0].employee_number,
-              "Private",
-              employeeResult.rows[0].full_name,
+        // if (customerResult.rowCount === 0) {
+        //   await pool.query(
+        //     'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, ship_to_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+        //     [
+        //       employeeResult.rows[0].employee_number,
+        //       "Private",
+        //       employeeResult.rows[0].full_name,
 
-              employeeResult.rows[0].ship_to_address,
-              currentDate,
-              1,
-              currentDate,
-              1,
-            ]
-          );
-        }
+        //       employeeResult.rows[0].ship_to_address,
+        //       currentDate,
+        //       1,
+        //       currentDate,
+        //       1,
+        //     ]
+        //   );
+        // }
 
-        const fndResult = await pool.query(
-          "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
-          [userName]
-        );
-        console.log('fnd', fndResult);
+        // const fndResult = await pool.query(
+        //   "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
+        //   [userName]
+        // );
+        // console.log('fnd', fndResult);
 
-        await pool.query(
-          "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
-          [fndResult.rows[0].user_id, 5]
-        );
+        // await pool.query(
+        //   "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
+        //   [fndResult.rows[0].user_id, 5]
+        // );
 
         authenticationMethod = {
           flag: "phone",
@@ -167,7 +169,7 @@ router.post("/", async (req, res, next) => {
       return res.status(200).send({
         message: "Sign up complete!",
         authenticationMethod,
-        user: userName,
+        user: type,
       });
     } else {
       // Check if the user already exists in the "fnd_user" table
@@ -187,41 +189,41 @@ router.post("/", async (req, res, next) => {
         });
       }
 
-      const fndId = await pool.query(
-        'INSERT INTO "fnd_user"(user_name, user_password, start_date, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
-        [userName, hashedPassword, currentDate, "pending", "Public", "Business Partner"]
-      );
+      // const fndId = await pool.query(
+      //   'INSERT INTO "fnd_user"(user_name, user_password, start_date, status, user_category, user_sub_category) VALUES($1, $2, $3, $4, $5, $6) RETURNING *',
+      //   [userName, hashedPassword, currentDate, "pending", "Public", "Business Partner"]
+      // );
 
-      await pool.query(
-        "INSERT INTO co_seller_users (user_id,hierarchy_id,hierarchy_line_id,hierarchy_line_num) VALUES ($1,$2,$3,$4)",
-        [fndId.rows[0].user_id, 1, 0, 0]
-      );
+      // await pool.query(
+      //   "INSERT INTO co_seller_users (user_id,hierarchy_id,hierarchy_line_id,hierarchy_line_num) VALUES ($1,$2,$3,$4)",
+      //   [fndId.rows[0].user_id, 1, 0, 0]
+      // );
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isEmail = emailRegex.test(userName);
 
       const authenticationMethod = isEmail
         ? {
-          flag: "email",
-          value: userName,
-        }
+            flag: "email",
+            value: userName,
+          }
         : {
-          flag: "phone",
-          value: userName,
-        };
+            flag: "phone",
+            value: userName,
+          };
 
-      const fndResult = await pool.query(
-        "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
-        [userName]
-      );
-      await pool.query(
-        "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
-        [fndResult.rows[0].user_id, 5]
-      );
+      // const fndResult = await pool.query(
+      //   "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
+      //   [userName]
+      // );
+      // await pool.query(
+      //   "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
+      //   [fndResult.rows[0].user_id, 5]
+      // );
       return res.status(200).json({
         message: "Sign up complete!",
         authenticationMethod,
-        user: userName,
+        user: "P",
       });
     }
   } catch (error) {
