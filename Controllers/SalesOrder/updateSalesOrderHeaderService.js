@@ -19,7 +19,7 @@ router.put("/:header_id", async (req, res, next) => {
     specialDiscount: Joi.number().allow(null),
     specialAdjustment: Joi.number().allow(null),
     totalPrice: Joi.number().allow(null),
-    distributor: Joi.number().allow(null),
+    distributor: Joi.string().min(0),
     soldToOrgId: Joi.number().allow(null),
     shipToOrgId: Joi.number().allow(null),
     invoiceToOrgId: Joi.number().allow(null),
