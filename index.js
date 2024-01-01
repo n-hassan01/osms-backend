@@ -110,6 +110,7 @@ const GetPerHzCustAccounts = require("./Controllers/AdminPanel/getPerHzCustAccou
 const GetAllWfNotifications = require("./Controllers/AdminPanel/getAllWfNotifications.js");
 const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceService.js");
 const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersService.js");
+const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -210,6 +211,7 @@ app.use("/get-all-wf-notifications", GetAllWfNotifications);
 app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
 app.use("/get-item-price", GetItemPriceService);
 app.use("/add-co-seller-users", AddCoSellerUsers);
+app.use("/user-signup-process",UserSignupProcess);
 
 // error handling middlewares
 app.use((req, res, next) => {
