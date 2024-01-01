@@ -85,9 +85,26 @@ router.post("/", async (req, res, next) => {
         res
           .status(200)
           .json({ message: "OTP matched!", user: insertedUser.rows[0] });
+
+        if (customerResult.rowCount === 0) {
+          await pool.query(
+            'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, ship_to_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [
+              employeeResult.rows[0].employee_number,
+              "Private",
+              employeeResult.rows[0].full_name,
+
+              employeeResult.rows[0].ship_to_address,
+              currentDate,
+              1,
+              currentDate,
+              1,
+            ]
+          );
+        }
       } else {
         const insertedUser = await pool.query(
-          'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, nid, user_age, user_gender, user_profession, user_org, user_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
+          'INSERT INTO "hz_cust_accounts"(account_number, user_category, full_name, nid, user_age, user_gender, user_profession, user_org, ship_to_address, last_update_date, last_updated_by, creation_date, created_by) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
           [
             userName,
             userType,
@@ -108,6 +125,17 @@ router.post("/", async (req, res, next) => {
         await pool.query(
           "UPDATE fnd_user SET status=$1, employee_id=$2 WHERE user_name=$3",
           ["approved", insertedUser.cust_account_id, userName]
+        );
+
+        const fndResult = await pool.query(
+          "SELECT user_id, user_name FROM fnd_user WHERE user_name=$1",
+          [userName]
+        );
+        console.log("fnd", fndResult);
+
+        await pool.query(
+          "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
+          [fndResult.rows[0].user_id, 5]
         );
 
         res.status(200).json({ message: "OTP matched!" });
