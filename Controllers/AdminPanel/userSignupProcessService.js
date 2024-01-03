@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
       ]
     );
 
-    res.json(result.rows[0]);
+    res.json({ message: 'Signup Completed!' });
   } catch (error) {
     console.error(error);
     next(error);
