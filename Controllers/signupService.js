@@ -63,7 +63,7 @@ router.post("/", async (req, res, next) => {
         return res.status(401).send({ message: "Unauthorized!" });
       }
 
-      const type = employeeResult.rowCount > 0 ? "E" : "C";
+      const type = employeeResult.rowCount > 0 ? "EMPLOYEE" : "CUSTOMER";
 
       const result = employeeResult.rows[0]
         ? employeeResult.rows[0]
@@ -223,7 +223,7 @@ router.post("/", async (req, res, next) => {
       return res.status(200).json({
         message: "Sign up complete!",
         authenticationMethod,
-        user: "P",
+        user: "PUBLIC",
       });
     }
   } catch (error) {
