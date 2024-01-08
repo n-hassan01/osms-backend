@@ -131,7 +131,7 @@ app.use("/get-otp", GetOtpService);
 app.use("/delete-otp", DeleteOtpService);
 app.use("/login", LoginService);
 app.use("/logout", loginTokenMiddleware, LogoutService);
-app.use("/get-menus", GetUserMenusService);
+app.use("/get-menus", AuthGuard, GetUserMenusService);
 app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 
@@ -211,7 +211,7 @@ app.use("/get-all-wf-notifications", GetAllWfNotifications);
 app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
 app.use("/get-item-price", GetItemPriceService);
 app.use("/add-co-seller-users", AddCoSellerUsers);
-app.use("/user-signup-process",UserSignupProcess);
+app.use("/user-signup-process", UserSignupProcess);
 
 // error handling middlewares
 app.use((req, res, next) => {
