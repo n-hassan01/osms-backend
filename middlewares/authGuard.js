@@ -9,7 +9,7 @@ const authGuard = (req, res, next) => {
     const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
 
     if (!decodedToken) {
-      res.status(403).send("Forbidden!");
+      return res.status(403).send("Forbidden!");
     }
 
     const { id, role } = decodedToken;

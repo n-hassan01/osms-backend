@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get("/:user_name", async (req, res, next) => {
   try {
-    const userName = req.params.user_name;
+    // const userName = req.params.user_name;
+    const userName = req.id;
 
     const result1 = await pool.query(
       "SELECT user_id FROM fnd_user WHERE user_name = $1",
