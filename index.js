@@ -136,7 +136,7 @@ app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 
 // routing middleware for sales order module
-app.use("/add-sales-order-header", AddSalesOrderService);
+app.use("/add-sales-order-header", AuthGuard, AddSalesOrderService);
 app.use("/get-sales-order-header", GetSalesOrderService);
 app.use("/delete-sales-order-header", DeleteSalesOrderService);
 app.use("/update-sales-order-header", UpdateSalesOrderHeaderService);
