@@ -9,6 +9,11 @@ router.post("/call", async (req, res, next) => {
     pTransactionId: Joi.number().required(),
     pTransactionNum: Joi.string().required(),
     pAppsUsername: Joi.string().required(),
+    pNotificationId: Joi.number().required(),
+    pApprovalType: Joi.string().required(),
+    pEmpid: Joi.number().required(),
+    pNote: Joi.string().required(),
+    pAuthorizationStatus: Joi.string().required(),
   });
 
   const validation = schema.validate(req.body);
@@ -19,14 +24,33 @@ router.post("/call", async (req, res, next) => {
     return res.status(400).send("Invalid inputs");
   }
 
-  const { pHierarchyId, pTransactionId, pTransactionNum, pAppsUsername } =
-    req.body;
+  const {
+    pHierarchyId,
+    pTransactionID,
+    pTransactionNum,
+    pAppsUsername,
+    pNotificationID,
+    pApprovalType,
+    pEmpid,
+    pNote,
+    pAuthorizationStatus,
+  } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "CALL proc_so_approval($1,$2,$3,$4);",
-    [pHierarchyId, pTransactionId, pTransactionNum, pAppsUsername],
+    "CALL proc_so_approval_all($1,$2,$3,$4,$5,$6,$7,$8,$9);",
+    [
+      pHierarchyId,
+      pTransactionID,
+      pTransactionNum,
+      pAppsUsername,
+      pNotificationID,
+      pApprovalType,
+      pEmpid,
+      pNote,
+      pAuthorizationStatus,
+    ],
     (error, result) => {
       try {
         if (error) throw error;
@@ -114,3 +138,5 @@ router.post("/submit-approval", async (req, res, next) => {
 });
 
 module.exports = router;
+
+
