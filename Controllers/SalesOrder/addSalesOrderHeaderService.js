@@ -73,7 +73,7 @@ router.post("/", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description,ship_to,special_discount,special_adjustment,total_price, distributor, sold_to_org_id, ship_to_org_id, invoice_to_org_id, deliver_to_org_id, sold_to_contact_id, ship_to_contact_id, invoice_to_contact_id, deliver_to_contact_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30) RETURNING order_number, header_id;",
+    "INSERT INTO oe_order_headers_all(order_number, last_update_date, last_updated_by, created_by, creation_date, order_type_id, ordered_date, request_date, payment_term_id, shipping_method_code, cancelled_flag, open_flag, booked_flag, salesrep_id, sales_channel_code, booked_date, description,ship_to,special_discount,special_adjustment,total_price, distributor, sold_to_org_id, ship_to_org_id, invoice_to_org_id, deliver_to_org_id, sold_to_contact_id, ship_to_contact_id, invoice_to_contact_id, deliver_to_contact_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,$13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30) RETURNING order_number, header_id, authorization_status;",
     [
       orderNumber,
       date,

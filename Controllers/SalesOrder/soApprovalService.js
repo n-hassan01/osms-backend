@@ -26,10 +26,10 @@ router.post("/call", async (req, res, next) => {
 
   const {
     pHierarchyId,
-    pTransactionID,
+    pTransactionId,
     pTransactionNum,
     pAppsUsername,
-    pNotificationID,
+    pNotificationId,
     pApprovalType,
     pEmpid,
     pNote,
@@ -42,10 +42,10 @@ router.post("/call", async (req, res, next) => {
     "CALL proc_so_approval_all($1,$2,$3,$4,$5,$6,$7,$8,$9);",
     [
       pHierarchyId,
-      pTransactionID,
+      pTransactionId,
       pTransactionNum,
       pAppsUsername,
-      pNotificationID,
+      pNotificationId,
       pApprovalType,
       pEmpid,
       pNote,
