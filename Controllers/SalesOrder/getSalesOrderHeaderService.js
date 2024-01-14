@@ -38,7 +38,7 @@ router.get("/by-user/:user_id", async (req, res, next) => {
   const userId = req.params.user_id;
   
   await pool.query(
-    "SELECT * FROM public.oe_order_headers_all WHERE created_by=$1 ORDER BY header_id ASC;",
+    "SELECT * FROM public.oe_order_headers_all WHERE created_by=$1 ORDER BY order_number DESC;",
     [userId],
     (error, result) => {
       try {

@@ -199,7 +199,8 @@ router.post("/", async (req, res, next) => {
       //   [fndId.rows[0].user_id, 1, 0, 0]
       // );
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const isEmail = emailRegex.test(userName);
 
       const authenticationMethod = isEmail
@@ -220,6 +221,7 @@ router.post("/", async (req, res, next) => {
       //   "INSERT INTO user_menu_assignment (user_id,menu_Id ) VALUES ($1, $2 ) RETURNING *",
       //   [fndResult.rows[0].user_id, 5]
       // );
+      
       return res.status(200).json({
         message: "Sign up complete!",
         authenticationMethod,
