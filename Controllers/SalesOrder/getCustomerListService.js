@@ -2,8 +2,8 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 
-router.get("/:primary_salesrep_code", async (req, res, next) => {
-  const primarySalesrepCode = req.params.primary_salesrep_code;
+router.get("/", async (req, res, next) => {
+  const primarySalesrepCode = req.id;
 
   await pool.query(
     "SELECT cust_account_id, account_number, full_name, ship_to_address FROM hz_cust_accounts where primary_salesrep_code=$1;",
