@@ -144,7 +144,7 @@ app.use("/sales-order-line", SalesOrderLineService);
 app.use("/so-approval", SoApprovalService);
 app.use("/wf-notification-view", WfNotificationView);
 app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
-app.use("/customer-list", GetCustomerListService);
+app.use("/customer-list", AuthGuard, GetCustomerListService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
