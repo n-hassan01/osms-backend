@@ -19,6 +19,8 @@ const GetLoggedInUserDetailsService = require("./Controllers/getLoggedInUserDeta
 const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsService");
 const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
+const ComparePasswordService = require("./Controllers/comparePasswordService");
+const ChangePasswordService = require("./Controllers/changePasswordService");
 
 //routing api for sales order module
 const AddSalesOrderService = require("./Controllers/SalesOrder/addSalesOrderHeaderService");
@@ -134,6 +136,8 @@ app.use("/logout", loginTokenMiddleware, LogoutService);
 app.use("/get-menus", AuthGuard, GetUserMenusService);
 app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
+app.use("/compare-password", AuthGuard, ComparePasswordService);
+app.use("/change-password", AuthGuard, ChangePasswordService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AuthGuard, AddSalesOrderService);
