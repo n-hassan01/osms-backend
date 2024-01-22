@@ -8,10 +8,10 @@ app.use(express.json());
 app.use(cors());
 
 //routing api for users
-const SignupService = require("../osms-backend/Controllers/signupService");
+const SignupService = require("./Controllers/signupService");
 const SendOtpService = require("./Controllers/sendOtpService.js");
 const CompareOtpService = require("./Controllers/compareOtpService");
-const StoreOtpService = require("../osms-backend/Controllers/storeOtpService");
+const StoreOtpService = require("./Controllers/storeOtpService");
 const GetOtpService = require("./Controllers/getOtpService");
 const DeleteOtpService = require("./Controllers/deleteOtpService");
 const LoginService = require("./Controllers/loginService");
@@ -19,6 +19,8 @@ const GetLoggedInUserDetailsService = require("./Controllers/getLoggedInUserDeta
 const GetUserProfileDetailsService = require("./Controllers/getProfileDetailsService");
 const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
+const ComparePasswordService = require("./Controllers/comparePasswordService");
+const ChangePasswordService = require("./Controllers/changePasswordService");
 
 //routing api for sales order module
 const AddSalesOrderService = require("./Controllers/SalesOrder/addSalesOrderHeaderService");
@@ -134,6 +136,8 @@ app.use("/logout", loginTokenMiddleware, LogoutService);
 app.use("/get-menus", AuthGuard, GetUserMenusService);
 app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
+app.use("/compare-password", AuthGuard, ComparePasswordService);
+app.use("/change-password", AuthGuard, ChangePasswordService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AuthGuard, AddSalesOrderService);
@@ -144,7 +148,7 @@ app.use("/sales-order-line", SalesOrderLineService);
 app.use("/so-approval", SoApprovalService);
 app.use("/wf-notification-view", WfNotificationView);
 app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
-app.use("/customer-list", GetCustomerListService);
+app.use("/customer-list", AuthGuard, GetCustomerListService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
