@@ -3,8 +3,8 @@ const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
-  const userId = req.body.body;
-  console.log("req", userId);
+  const { userId } = req.body;
+
   await pool.query(
     "SELECT * FROM wf_notifications_v where recipient_role=$1 and status='OPEN' ORDER BY sent_date DESC ",
     [userId],
