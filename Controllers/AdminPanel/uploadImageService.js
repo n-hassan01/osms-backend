@@ -42,7 +42,7 @@ router.post("/", coverUpload.single("file"), async (req, res, next) => {
 
     try {
       const result = await pool.query(
-        "INSERT INTO public.promotion(original_name, size, type, file_name, path, upload_date) VALUES ($1, $2, $3, $4, $5) RETURNING *;",
+        "INSERT INTO public.promotion(original_name, size, type, file_name, path, upload_date) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;",
         [originalname, size, mimetype, filename, destination, today]
       );
 
