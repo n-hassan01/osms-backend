@@ -64,6 +64,7 @@ const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/delet
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
+const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
 
 // middlewares api
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -199,6 +200,7 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
+app.use("/upload-image", AuthGuard, UploadImageService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
