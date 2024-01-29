@@ -21,6 +21,8 @@ const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
 const ComparePasswordService = require("./Controllers/comparePasswordService");
 const ChangePasswordService = require("./Controllers/changePasswordService");
+const ForgetPasswordService = require("./Controllers/forgetPasswordService");
+const GetEmailAddressService = require("./Controllers/getUserEmailAddressService");
 
 //routing api for sales order module
 const AddSalesOrderService = require("./Controllers/SalesOrder/addSalesOrderHeaderService");
@@ -62,6 +64,7 @@ const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/delet
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
+const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
 
 // middlewares api
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -138,6 +141,8 @@ app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 app.use("/compare-password", AuthGuard, ComparePasswordService);
 app.use("/change-password", AuthGuard, ChangePasswordService);
+app.use("/forget-password", ForgetPasswordService);
+app.use("/get-email-address", GetEmailAddressService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AuthGuard, AddSalesOrderService);
@@ -195,6 +200,7 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
+app.use("/upload-image", AuthGuard, UploadImageService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
