@@ -200,7 +200,7 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
-app.use("/upload-image", UploadImageService);
+app.use("/upload-image", AuthGuard, UploadImageService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
