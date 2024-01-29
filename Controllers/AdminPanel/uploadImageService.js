@@ -38,10 +38,12 @@ router.post("/", coverUpload.single("file"), async (req, res, next) => {
       path: destination,
     } = fileInfo;
 
+    const today = new Date();
+
     try {
       const result = await pool.query(
-        "INSERT INTO public.promotion(original_name, size, type, file_name, path) VALUES ($1, $2, $3, $4, $5) RETURNING *;",
-        [originalname, size, mimetype, filename, destination]
+        "INSERT INTO public.promotion(original_name, size, type, file_name, path, upload_date) VALUES ($1, $2, $3, $4, $5) RETURNING *;",
+        [originalname, size, mimetype, filename, destination, today]
       );
 
       console.log(result.rows);
