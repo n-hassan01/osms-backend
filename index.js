@@ -66,7 +66,8 @@ const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updat
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
 const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
-
+const MrlprodBanks = require("./Controllers/AdminPanel/addMrlprodBanksService.js");
+const MrlprodBankBranches = require("./Controllers/AdminPanel/addMrlprodBankBranchesService.js");
 // middlewares api
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
@@ -224,6 +225,8 @@ app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
 app.use("/get-item-price", GetItemPriceService);
 app.use("/add-co-seller-users", AddCoSellerUsers);
 app.use("/user-signup-process", UserSignupProcess);
+app.use("/mrlprodbanks", MrlprodBanks);
+app.use("/mrlprodbankbranches", MrlprodBankBranches);
 
 // error handling middlewares
 app.use((req, res, next) => {
