@@ -94,15 +94,15 @@ router.get("/get", async (req, res, next) => {
   );
 });
 
-router.get("/get/:bank_branch_id", async (req, res, next) => {
-  const bankBranchId = req.params.bank_branch_id;
+router.get("/get/:bank_id", async (req, res, next) => {
+  const bankId = req.params.bank_id;
   await pool.query(
-    "SELECT * FROM public.mrlprod_bank_branches WHERE bank_branch_id=$1;",
-    [bankBranchId],
+    "SELECT * FROM public.mrlprod_bank_branches WHERE bank_id=$1;",
+    [bankId],
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows[0]);
+        res.status(200).send(result.rows);
       } catch (err) {
         next(err);
       }
