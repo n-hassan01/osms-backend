@@ -35,6 +35,7 @@ const WfNotificationView = require("./Controllers/SalesOrder/wfNotificationViewS
 const CreateSalesOrderNumberSevice = require("./Controllers/SalesOrder/getSalesOrderNumberService");
 const GetCustomerListService = require("./Controllers/SalesOrder/getCustomerListService");
 const GetPromotionListService = require("./Controllers/SalesOrder/getPromotionService");
+const BankDepositService = require("./Controllers/SalesOrder/bankDepositService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -68,6 +69,7 @@ const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteM
 const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
 const MrlprodBanks = require("./Controllers/AdminPanel/addMrlprodBanksService.js");
 const MrlprodBankBranches = require("./Controllers/AdminPanel/addMrlprodBankBranchesService.js");
+
 const MrlprodBankAccounts = require("./Controllers/AdminPanel/addMrlprodBankAccountsService.js");
 
 // middlewares api
@@ -159,6 +161,7 @@ app.use("/wf-notification-view", WfNotificationView);
 app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
 app.use("/customer-list", AuthGuard, GetCustomerListService);
 app.use("/promotion-list", AuthGuard, GetPromotionListService);
+app.use("/bank-deposit", AuthGuard, BankDepositService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
