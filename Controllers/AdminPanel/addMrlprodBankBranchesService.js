@@ -49,7 +49,7 @@ router.post("/add", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO mrlprod_bank_branches (bank_id,bank_code, bank_branch_name, bank_branch_name_alt, description, address_line1, city, last_update_date, last_updated_by,  last_update_login, creation_date, created_by,active_date,bank_admin_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;",
+    "INSERT INTO bank_branches (bank_id,bank_code, bank_branch_name, bank_branch_name_alt, description, address_line1, city, last_update_date, last_updated_by,  last_update_login, creation_date, created_by,active_date,bank_admin_email) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;",
     [
       bankId,
       bankCode,
@@ -81,23 +81,20 @@ router.post("/add", async (req, res, next) => {
 });
 
 router.get("/get", async (req, res, next) => {
-  await pool.query(
-    "SELECT * FROM public.mrlprod_bank_branches;",
-    (error, result) => {
-      try {
-        if (error) throw error;
-        res.status(200).send(result.rows);
-      } catch (err) {
-        next(err);
-      }
+  await pool.query("SELECT * FROM bank_branches;", (error, result) => {
+    try {
+      if (error) throw error;
+      res.status(200).send(result.rows);
+    } catch (err) {
+      next(err);
     }
-  );
+  });
 });
 
 router.get("/get/:bank_id", async (req, res, next) => {
   const bankId = req.params.bank_id;
   await pool.query(
-    "SELECT * FROM public.mrlprod_bank_branches WHERE bank_id=$1;",
+    "SELECT * FROM bank_branches WHERE bank_id=$1;",
     [bankId],
     (error, result) => {
       try {
@@ -156,7 +153,7 @@ router.put("/update/:bank_branch_id", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "UPDATE mrlprod_bank_branches SET bank_id=$1, bank_code=$2, bank_branch_name=$3, bank_branch_name_alt=$4, description=$5, address_line1=$6, city=$7, last_update_date=$8, last_updated_by=$9,  last_update_login=$10, creation_date=$11, created_by=$12, active_date=$13,bank_admin_email=$14 WHERE bank_branch_id=$15;",
+    "UPDATE bank_branches SET bank_id=$1, bank_code=$2, bank_branch_name=$3, bank_branch_name_alt=$4, description=$5, address_line1=$6, city=$7, last_update_date=$8, last_updated_by=$9,  last_update_login=$10, creation_date=$11, created_by=$12, active_date=$13,bank_admin_email=$14 WHERE bank_branch_id=$15;",
     [
       bankId,
       bankCode,
@@ -194,7 +191,7 @@ router.delete("/delete/:bank_branch_id", async (req, res, next) => {
   //const now = new Date();
 
   await pool.query(
-    "DELETE FROM mrlprod_bank_branches WHERE bank_branch_id = $1",
+    "DELETE FROM bank_branches WHERE bank_branch_id = $1",
     [bankBranchId],
     (error, result) => {
       try {
