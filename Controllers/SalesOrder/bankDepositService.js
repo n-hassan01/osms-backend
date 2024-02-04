@@ -1,6 +1,9 @@
 const express = require("express");
 const Joi = require("joi");
 const pool = require("../../dbConnection");
+const multer = require("multer");
+const path = require("path");
+
 const router = express.Router();
 
 router.post("/add", async (req, res, next) => {
@@ -218,6 +221,36 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
       }
     }
   );
+});
+
+const coverStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, path.join(__dirname, process.env.DEPOSIT_PATH));
+  },
+  filename(req, file, cb) {
+    console.log(file);
+
+    cb(null, `deposit_${file.originalname}`);
+  },
+});
+
+const coverUpload = multer({ storage: coverStorage });
+
+router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
+  const fileInfo = req.file;
+
+  if (fileInfo) {
+    try {
+      res
+        .status(200)
+        .send({ message: "Uploaded successfully!", value: fileInfo.filename });
+    } catch (error) {
+      console.error(error.message);
+      next(error);
+    }
+  } else {
+    res.status(400).send({ message: "File not provided or upload failed!" });
+  }
 });
 
 module.exports = router;
