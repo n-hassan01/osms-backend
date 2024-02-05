@@ -256,4 +256,26 @@ router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
   }
 });
 
+router.get("/type-list", async (req, res, next) => {
+  await pool.query("SELECT * FROM public.deposit_type;", (error, result) => {
+    try {
+      if (error) throw error;
+      res.status(200).send(result.rows);
+    } catch (err) {
+      next(err);
+    }
+  });
+});
+
+router.get("/company-bank-account/view", async (req, res, next) => {
+  await pool.query("SELECT * FROM public.bank_accounts_v;", (error, result) => {
+    try {
+      if (error) throw error;
+      res.status(200).send(result.rows);
+    } catch (err) {
+      next(err);
+    }
+  });
+});
+
 module.exports = router;
