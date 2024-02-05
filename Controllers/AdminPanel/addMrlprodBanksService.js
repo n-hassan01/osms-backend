@@ -82,6 +82,20 @@ router.get("/get", async (req, res, next) => {
   });
 });
 
+router.get("/get/list", async (req, res, next) => {
+  await pool.query(
+    "SELECT bank_id, bank_code, bank_name FROM banks;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/get/:bank_id", async (req, res, next) => {
   const bankId = req.params.bank_id;
   await pool.query(
