@@ -66,7 +66,7 @@ router.post("/add", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, remittance_bank_account_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21);",
+    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21);",
     [
       customerBankAccountId,
       customerBankBranchId,
