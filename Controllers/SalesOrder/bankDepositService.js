@@ -28,6 +28,7 @@ router.post("/add", async (req, res, next) => {
     // lastUpdateDate: Joi.string().min(0),
     createdBy: Joi.number().allow(null),
     // creationDate: Joi.string().min(0),
+    uploadedFilename: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -59,12 +60,13 @@ router.post("/add", async (req, res, next) => {
     // lastUpdateDate,
     createdBy,
     // creationDate,
+    uploadedFilename,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20);",
+    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21);",
     [
       customerBankAccountId,
       customerBankBranchId,
@@ -86,6 +88,7 @@ router.post("/add", async (req, res, next) => {
       date,
       createdBy,
       date,
+      uploadedFilename,
     ],
     (error, result) => {
       try {
@@ -251,6 +254,28 @@ router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
   } else {
     res.status(400).send({ message: "File not provided or upload failed!" });
   }
+});
+
+router.get("/type-list", async (req, res, next) => {
+  await pool.query("SELECT * FROM public.deposit_type;", (error, result) => {
+    try {
+      if (error) throw error;
+      res.status(200).send(result.rows);
+    } catch (err) {
+      next(err);
+    }
+  });
+});
+
+router.get("/company-bank-account/view", async (req, res, next) => {
+  await pool.query("SELECT * FROM public.bank_accounts_v;", (error, result) => {
+    try {
+      if (error) throw error;
+      res.status(200).send(result.rows);
+    } catch (err) {
+      next(err);
+    }
+  });
 });
 
 module.exports = router;
