@@ -137,7 +137,7 @@ router.get("/get/user/:user_id", async (req, res, next) => {
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows[0]);
+        res.status(200).send(result.rows);
       } catch (err) {
         next(err);
       }
