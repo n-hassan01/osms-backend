@@ -126,6 +126,7 @@ router.put("/update/:bank_branch_id", async (req, res, next) => {
 
   const schema = Joi.object({
     bankId: Joi.number().required(),
+    bankBranchId: Joi.number().required(),
     bankCode: Joi.string().max(30),
     bankBranchName: Joi.string().max(60).required(),
     bankBranchNameAlt: Joi.string().max(320).allow(null),
