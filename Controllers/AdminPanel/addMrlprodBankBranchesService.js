@@ -105,6 +105,23 @@ router.get("/get/list", async (req, res, next) => {
   );
 });
 
+router.get("/get/list/:bank_id", async (req, res, next) => {
+  const bankId = req.params.bank_id;
+
+  await pool.query(
+    "SELECT bank_branch_id, bank_branch_name FROM bank_branches WHERE bank_id=$1;",
+    [bankId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/get/:bank_id", async (req, res, next) => {
   const bankId = req.params.bank_id;
   await pool.query(
@@ -126,6 +143,7 @@ router.put("/update/:bank_branch_id", async (req, res, next) => {
 
   const schema = Joi.object({
     bankId: Joi.number().required(),
+    bankBranchId: Joi.number().required(),
     bankCode: Joi.string().max(30),
     bankBranchName: Joi.string().max(60).required(),
     bankBranchNameAlt: Joi.string().max(320).allow(null),
