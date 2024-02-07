@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
-    bankAccountNum: Joi.string().max(30),
+    bankAccountNum: Joi.string().max(30).required(),
     bankAccountName: Joi.string().max(100).required(),
     bankAccountNameAlt: Joi.string().max(320).allow(null),
     bankBranchId: Joi.number().required(),
@@ -108,7 +108,7 @@ router.put("/update/:bank_account_id", async (req, res, next) => {
   const bankAccountId = req.params.bank_account_id;
 
   const schema = Joi.object({
-    bankAccountNum: Joi.string().max(30),
+    bankAccountNum: Joi.string().max(30).required(),
     bankAccountName: Joi.string().max(100).required(),
     bankAccountNameAlt: Joi.string().max(320).allow(null),
     bankBranchId: Joi.number().required(),
