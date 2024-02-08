@@ -128,6 +128,23 @@ router.get("/get/:cash_receipt_id", async (req, res, next) => {
   );
 });
 
+router.get("/get/user/:user_id", async (req, res, next) => {
+  const userId = req.params.user_id;
+
+  await pool.query(
+    "SELECT * FROM public.ar_cash_receipts_all WHERE created_by=$1;",
+    [userId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.delete("/delete/:cash_receipt_id", async (req, res, next) => {
   const cashReceiptId = req.params.cash_receipt_id;
   await pool.query(
