@@ -149,7 +149,8 @@ router.get("/get/view/:user_id", async (req, res, next) => {
   const userId = req.params.user_id;
 
   await pool.query(
-    "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
+    // "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
+    "SELECT * FROM ar_cash_receipts_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1;",
     [userId],
     (error, result) => {
       try {
