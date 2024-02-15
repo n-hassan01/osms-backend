@@ -3,6 +3,7 @@ const Joi = require("joi");
 const pool = require("../../dbConnection");
 const multer = require("multer");
 const path = require("path");
+const { env } = require("process");
 
 const router = express.Router();
 
@@ -315,6 +316,15 @@ router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
   } else {
     res.status(400).send({ message: "File not provided or upload failed!" });
   }
+});
+
+router.post("/download", (req, res) => {
+  const location = process.env.DEPOSIT_PATH;
+  const filename = req.body.fileName;
+  console.log(location);
+  console.log(filename);
+
+  res.download(`${location}${filename}`, filename);
 });
 
 router.get("/type-list", async (req, res, next) => {
