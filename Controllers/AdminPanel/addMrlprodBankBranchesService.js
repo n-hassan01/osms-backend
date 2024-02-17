@@ -109,7 +109,7 @@ router.get("/get/list/:bank_id", async (req, res, next) => {
   const bankId = req.params.bank_id;
 
   await pool.query(
-    "SELECT bank_branch_id, bank_branch_name FROM bank_branches WHERE bank_id=$1;",
+    "SELECT * FROM bank_branches WHERE bank_id=$1;",
     [bankId],
     (error, result) => {
       try {
@@ -130,7 +130,7 @@ router.get("/get/:bank_branch_id", async (req, res, next) => {
     (error, result) => {
       try {
         if (error) throw error;
-        res.status(200).send(result.rows);
+        res.status(200).send(result.rows[0]);
       } catch (err) {
         next(err);
       }
@@ -209,7 +209,7 @@ router.put("/update/:bank_branch_id", async (req, res, next) => {
 
         return res.status(200).json({
           message: "Successfully updated!",
-          headerInfo: result.rows[0],
+          headerInfo: result.rows,
         });
       } catch (err) {
         next(err);

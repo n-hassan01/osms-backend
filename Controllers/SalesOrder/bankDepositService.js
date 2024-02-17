@@ -3,6 +3,7 @@ const Joi = require("joi");
 const pool = require("../../dbConnection");
 const multer = require("multer");
 const path = require("path");
+const { env } = require("process");
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.post("/add", async (req, res, next) => {
     legalEntityId: Joi.number().allow(null),
     ledgerId: Joi.number().allow(null),
     currencyCode: Joi.string().min(0).max(15),
-    payFromCustomer: Joi.string().min(0),
+    payFromCustomer: Joi.number().required(),
     receiptMethodId: Joi.string().min(0),
     docSequenceValue: Joi.string().min(0),
     docSequenceId: Joi.number().allow(null),
@@ -32,6 +33,7 @@ router.post("/add", async (req, res, next) => {
     // creationDate: Joi.string().min(0),
     uploadedFilename: Joi.string().min(0),
     remarks: Joi.string().min(0),
+    depositor: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -67,12 +69,13 @@ router.post("/add", async (req, res, next) => {
     depositorBank,
     depositType,
     remarks,
+    depositor,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, depositor_bank, deposit_type, remarks) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24);",
+    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, depositor_bank, deposit_type, remarks, depositor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25);",
     [
       customerBankAccountId,
       customerBankBranchId,
@@ -98,6 +101,7 @@ router.post("/add", async (req, res, next) => {
       depositorBank,
       depositType,
       remarks,
+      depositor,
     ],
     (error, result) => {
       try {
@@ -128,11 +132,29 @@ router.get("/get/:cash_receipt_id", async (req, res, next) => {
   );
 });
 
+router.get("/view/:cash_receipt_id", async (req, res, next) => {
+  const cashReceiptId = req.params.cash_receipt_id;
+
+  await pool.query(
+    "SELECT * FROM public.ar_cash_receipts_all_v WHERE cash_receipt_id=$1;",
+    [cashReceiptId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows[0]);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/get/view/:user_id", async (req, res, next) => {
   const userId = req.params.user_id;
 
   await pool.query(
-    "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
+    // "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
+    "SELECT * FROM ar_cash_receipts_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1;",
     [userId],
     (error, result) => {
       try {
@@ -297,6 +319,15 @@ router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
   } else {
     res.status(400).send({ message: "File not provided or upload failed!" });
   }
+});
+
+router.post("/download", (req, res) => {
+  const location = process.env.DEPOSIT_PATH;
+  const filename = req.body.fileName;
+  console.log(location);
+  console.log(filename);
+
+  res.download(`${location}${filename}`, filename);
 });
 
 router.get("/type-list", async (req, res, next) => {
