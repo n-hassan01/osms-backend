@@ -21,6 +21,8 @@ const GetUserMenusService = require("./Controllers/getUserMenusService");
 const LogoutService = require("./Controllers/logoutService");
 const ComparePasswordService = require("./Controllers/comparePasswordService");
 const ChangePasswordService = require("./Controllers/changePasswordService");
+const ForgetPasswordService = require("./Controllers/forgetPasswordService");
+const GetEmailAddressService = require("./Controllers/getUserEmailAddressService");
 
 //routing api for sales order module
 const AddSalesOrderService = require("./Controllers/SalesOrder/addSalesOrderHeaderService");
@@ -32,6 +34,8 @@ const SoApprovalService = require("./Controllers/SalesOrder/soApprovalService");
 const WfNotificationView = require("./Controllers/SalesOrder/wfNotificationViewService");
 const CreateSalesOrderNumberSevice = require("./Controllers/SalesOrder/getSalesOrderNumberService");
 const GetCustomerListService = require("./Controllers/SalesOrder/getCustomerListService");
+const GetPromotionListService = require("./Controllers/SalesOrder/getPromotionService");
+const BankDepositService = require("./Controllers/SalesOrder/bankDepositService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -62,6 +66,11 @@ const DeleteMtlTransactionTypesService = require("./Controllers/AdminPanel/delet
 const UpdateMtlTransactionTypesService = require("./Controllers/AdminPanel/updateMtlTransactionTypesService");
 const AddMtlTxnRequestLineService = require("./Controllers/AdminPanel/addTxnRequestLineService");
 const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteMtlTxnRequestLineService");
+const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
+const MrlprodBanks = require("./Controllers/AdminPanel/addMrlprodBanksService.js");
+const MrlprodBankBranches = require("./Controllers/AdminPanel/addMrlprodBankBranchesService.js");
+
+const MrlprodBankAccounts = require("./Controllers/AdminPanel/addMrlprodBankAccountsService.js");
 
 // middlewares api
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
@@ -138,6 +147,8 @@ app.use("/loggedin-user", AuthGuard, GetLoggedInUserDetailsService);
 app.use("/profile", AuthGuard, GetUserProfileDetailsService);
 app.use("/compare-password", AuthGuard, ComparePasswordService);
 app.use("/change-password", AuthGuard, ChangePasswordService);
+app.use("/forget-password", ForgetPasswordService);
+app.use("/get-email-address", GetEmailAddressService);
 
 // routing middleware for sales order module
 app.use("/add-sales-order-header", AuthGuard, AddSalesOrderService);
@@ -149,6 +160,8 @@ app.use("/so-approval", SoApprovalService);
 app.use("/wf-notification-view", WfNotificationView);
 app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
 app.use("/customer-list", AuthGuard, GetCustomerListService);
+app.use("/promotion-list", AuthGuard, GetPromotionListService);
+app.use("/bank-deposit", AuthGuard, BankDepositService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
@@ -195,6 +208,7 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
+app.use("/upload-image", AuthGuard, UploadImageService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
@@ -216,7 +230,9 @@ app.use("/get-per-hz-cust-accounts", GetPerHzCustAccounts);
 app.use("/get-item-price", GetItemPriceService);
 app.use("/add-co-seller-users", AddCoSellerUsers);
 app.use("/user-signup-process", UserSignupProcess);
-
+app.use("/mrlprodbanks", MrlprodBanks);
+app.use("/mrlprodbankbranches", MrlprodBankBranches);
+app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);

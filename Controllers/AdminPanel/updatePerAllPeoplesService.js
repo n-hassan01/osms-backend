@@ -116,8 +116,10 @@ router.put("/:person_id", async (req, res, next) => {
 
           res
             .status(200)
-            .json(
-              ` modified with personId: ${personId}`
+            .json({
+              message: `Successfully updated! ${personId}`, 
+              headerInfo: result.rows,
+            }
             );
         } catch (err) {
           next(err);
