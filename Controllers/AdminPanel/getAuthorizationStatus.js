@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   await pool.query(
-    " SELECT header_id,order_number, description ,ordered_date,authorization_status FROM oe_order_headers_all where authorization_status='APPROVED'",
+    " SELECT header_id,order_number, description ,ordered_date,authorization_status FROM oe_order_headers_all where authorization_status='APPROVED' ORDER BY order_number DESC",
 
     (error, result) => {
       try {
