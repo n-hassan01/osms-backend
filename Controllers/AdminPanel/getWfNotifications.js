@@ -6,7 +6,7 @@ router.post("/", async (req, res, next) => {
   const { userId } = req.body;
 
   await pool.query(
-    "SELECT * FROM wf_notifications_v where recipient_role=$1 and status='OPEN' ORDER BY sent_date DESC ",
+    "SELECT * FROM wf_notifications_v where recipient_role=$1 and status='OPEN' ORDER BY user_key DESC ",
     [userId],
 
     (error, result) => {
