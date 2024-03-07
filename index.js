@@ -69,7 +69,6 @@ const DeleteMtlTxnRequestLineService = require("./Controllers/AdminPanel/deleteM
 const UploadImageService = require("./Controllers/AdminPanel/uploadImageService");
 const MrlprodBanks = require("./Controllers/AdminPanel/addMrlprodBanksService.js");
 const MrlprodBankBranches = require("./Controllers/AdminPanel/addMrlprodBankBranchesService.js");
-
 const MrlprodBankAccounts = require("./Controllers/AdminPanel/addMrlprodBankAccountsService.js");
 
 // middlewares api
@@ -122,7 +121,7 @@ const GetAllWfNotifications = require("./Controllers/AdminPanel/getAllWfNotifica
 const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceService.js");
 const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersService.js");
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
-const MtlCategories = require ("./Controllers/AdminPanel/addMtlCategoriesService.js");
+const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
@@ -231,7 +230,7 @@ app.use("/get-item-price", GetItemPriceService);
 app.use("/add-co-seller-users", AddCoSellerUsers);
 app.use("/user-signup-process", UserSignupProcess);
 app.use("/mrlprodbanks", MrlprodBanks);
-app.use("/addmtlcategories",MtlCategories);
+app.use("/addmtlcategories", MtlCategories);
 app.use("/mrlprodbankbranches", MrlprodBankBranches);
 app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
 // error handling middlewares
