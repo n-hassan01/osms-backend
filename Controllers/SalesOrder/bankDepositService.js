@@ -34,6 +34,7 @@ router.post("/add", async (req, res, next) => {
     uploadedFilename: Joi.string().min(0),
     remarks: Joi.string().min(0),
     depositor: Joi.string().min(0),
+    invoiceNumbe: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -70,12 +71,13 @@ router.post("/add", async (req, res, next) => {
     depositType,
     remarks,
     depositor,
+    invoiceNumbe,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(customer_bank_account_id, customer_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, remittance_bank_account_id, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, depositor_bank, deposit_type, remarks, depositor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25);",
+    "INSERT INTO public.ar_cash_receipts_all(remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25);",
     [
       customerBankAccountId,
       customerBankBranchId,
@@ -83,7 +85,7 @@ router.post("/add", async (req, res, next) => {
       receiptDate,
       depositDate,
       amount,
-      remittanceBankAccountId,
+      // remittanceBankAccountId,
       legalEntityId,
       ledgerId,
       currencyCode,
@@ -91,7 +93,8 @@ router.post("/add", async (req, res, next) => {
       receiptMethodId,
       docSequenceValue,
       docSequenceId,
-      status,
+      // status,
+      "NEW",
       anticipatedClearingDate,
       lastUpdatedBy,
       date,
@@ -102,6 +105,7 @@ router.post("/add", async (req, res, next) => {
       depositType,
       remarks,
       depositor,
+      invoiceNumbe,
     ],
     (error, result) => {
       try {
@@ -160,6 +164,38 @@ router.get("/get/view/:user_id", async (req, res, next) => {
       try {
         if (error) throw error;
         res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/customer/view", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_all_v;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.put("/approve/", async (req, res, next) => {
+  const { action, cashReceiptId } = req.body;
+
+  await pool.query(
+    "UPDATE public.ar_cash_receipts_all SET status=$1 WHERE cash_receipt_id=$2;",
+    [action, cashReceiptId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json({ message: "Successfully updated!" });
       } catch (err) {
         next(err);
       }
@@ -257,7 +293,7 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "UPDATE public.ar_cash_receipts_all SET customer_bank_account_id=$1, customer_bank_branch_id=$2, receipt_number=$3, receipt_date=$4, deposit_date=$5, amount=$6, remittance_bank_account_id=$7, legal_entity_id=$8, ledger_id=$9, currency_code=$10, pay_from_customer=$11, receipt_method_id=$12, doc_sequence_value=$13, doc_sequence_id=$14, status=$15, anticipated_clearing_date=$16, last_updated_by=$17, last_update_date=$18 WHERE cash_receipt_id=$19;",
+    "UPDATE public.ar_cash_receipts_all SET company_cust_bank_id=$1, company_cust_bank_branch_id=$2, receipt_number=$3, receipt_date=$4, deposit_date=$5, amount=$6, remittance_bank_account_id=$7, legal_entity_id=$8, ledger_id=$9, currency_code=$10, pay_from_customer=$11, receipt_method_id=$12, doc_sequence_value=$13, doc_sequence_id=$14, status=$15, anticipated_clearing_date=$16, last_updated_by=$17, last_update_date=$18 WHERE cash_receipt_id=$19;",
     [
       customerBankAccountId,
       customerBankBranchId,
@@ -327,7 +363,9 @@ router.post("/download", (req, res) => {
   console.log(location);
   console.log(filename);
 
-  res.download(`${location}${filename}`, filename);
+  const filePath = path.join(__dirname, location, filename);
+  // res.download(`${location}${filename}`, filename);
+  res.download(filePath, filename);
 });
 
 router.get("/type-list", async (req, res, next) => {
