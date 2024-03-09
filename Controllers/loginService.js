@@ -27,7 +27,7 @@ router.post("/", (req, res, next) => {
               },
               process.env.SECRET_KEY,
               {
-                expiresIn: "1d",
+                expiresIn: "30d",
               }
             );
 
