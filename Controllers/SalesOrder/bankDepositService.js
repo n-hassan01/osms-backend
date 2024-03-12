@@ -237,6 +237,22 @@ router.delete("/delete/:cash_receipt_id", async (req, res, next) => {
   );
 });
 
+router.put("/reject", async (req, res, next) => {
+  await pool.query(
+    "UPDATE public.ar_cash_receipts_all SET reject_reason=$1 WHERE cash_receipt_id=$2;",
+    [req.body.rejectReason, req.body.cashReceiptId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json({ message: "Successfully rejected!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.put("/update/:cash_receipt_id", async (req, res, next) => {
   const cashReceiptId = req.params.cash_receipt_id;
 
