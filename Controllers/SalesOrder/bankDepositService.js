@@ -201,6 +201,23 @@ router.get("/customer/view", async (req, res, next) => {
   );
 });
 
+router.post("/customer/view/filterByDate", async (req, res, next) => {
+  const { toDepositDate, fromDepositDate } = req.body;
+
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date BETWEEN $1 AND $2",
+    [fromDepositDate, toDepositDate],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.put("/approve/", async (req, res, next) => {
   const { action, cashReceiptId } = req.body;
 
