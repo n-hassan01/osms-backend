@@ -34,7 +34,7 @@ router.post("/add", async (req, res, next) => {
     uploadedFilename: Joi.string().min(0),
     remarks: Joi.string().min(0),
     depositor: Joi.string().min(0),
-    invoiceNumbe: Joi.string().min(0),
+    invoiceNumber: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -71,7 +71,7 @@ router.post("/add", async (req, res, next) => {
     depositType,
     remarks,
     depositor,
-    invoiceNumbe,
+    invoiceNumber,
   } = req.body;
 
   const date = new Date();
@@ -105,7 +105,7 @@ router.post("/add", async (req, res, next) => {
       depositType,
       remarks,
       depositor,
-      invoiceNumbe,
+      invoiceNumber,
     ],
     (error, result) => {
       try {
@@ -158,7 +158,7 @@ router.get("/get/view/:user_id", async (req, res, next) => {
 
   await pool.query(
     // "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
-    "SELECT * FROM ar_cash_receipts_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1;",
+    "SELECT * FROM ar_cash_receipts_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1 ORDER BY deposit_date DESC;",
     [userId],
     (error, result) => {
       try {
@@ -171,9 +171,42 @@ router.get("/get/view/:user_id", async (req, res, next) => {
   );
 });
 
+router.put("/reject", async (req, res, next) => {
+  await pool.query(
+    "UPDATE public.ar_cash_receipts_all SET reject_reason=$1 WHERE cash_receipt_id=$2;",
+    [req.body.rejectReason, req.body.cashReceiptId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json({ message: "Successfully rejected!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/customer/view", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM public.customer_deposit_all_v;",
+    "SELECT * FROM public.customer_deposit_all_v ORDER BY deposit_date DESC;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.post("/customer/view/filterByDate", async (req, res, next) => {
+  const { toDepositDate, fromDepositDate } = req.body;
+
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date BETWEEN $1 AND $2",
+    [fromDepositDate, toDepositDate],
     (error, result) => {
       try {
         if (error) throw error;
