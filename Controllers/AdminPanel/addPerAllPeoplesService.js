@@ -4,11 +4,10 @@ const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
-  console.log(req.body);
   const schema = Joi.object({
-    effectiveStartDate: Joi.string().required(),
-    effectiveEndDate: Joi.string().required(),
-    businessGroupId: Joi.number().required(),
+    effectiveStartDate: Joi.string(),
+    effectiveEndDate: Joi.string(),
+    businessGroupId: Joi.number(),
     personTypeId: Joi.number(),
     employeeNumber: Joi.string().max(30).required(),
     title: Joi.string().max(30),
@@ -18,25 +17,25 @@ router.post("/", async (req, res, next) => {
     lastName: Joi.string().max(150),
     bloodType: Joi.string().max(30),
     dateOfBirth: Joi.string().min(0),
-    emailAddress: Joi.string().max(240).required(),
+    emailAddress: Joi.string().max(240),
     maritalStatus: Joi.string().max(30),
     nationality: Joi.string().max(30),
     sex: Joi.string().max(30),
-    workTelephone: Joi.string().max(60).required(),
+    workTelephone: Joi.string().max(60),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().min(0),
     lastUpdateLogin: Joi.number().min(0),
     createdBy: Joi.number().min(0),
     creationDate: Joi.string().min(0),
     dateOfDeath: Joi.string().min(0),
-    originalDateOfHire: Joi.string().min(0).required(),
+    originalDateOfHire: Joi.string().min(0),
     townOfBirth: Joi.string().max(90),
     regionOfBirth: Joi.string().max(90),
     countryOfBirth: Joi.string().max(90),
     globalPersonId: Joi.string().max(30),
     partyId: Joi.number().min(0),
+    shipToAddress: Joi.string().min(0),
   });
-
   const validation = schema.validate(req.body);
 
   if (validation.error) {
@@ -73,14 +72,18 @@ router.post("/", async (req, res, next) => {
       countryOfBirth,
       globalPersonId,
       partyId,
+      shipToAddress,
     } = req.body;
 
+    const currentDate = new Date();
+
     await pool.query(
-      "INSERT INTO per_all_peoples ( effective_start_date ,effective_end_date,business_group_id,person_type_id,employee_number,title,full_name,first_name,middle_names,last_name,blood_type,date_of_birth,email_address,marital_status,nationality,sex,work_telephone,last_update_date,last_updated_by,last_update_login,created_by,creation_date,date_of_death  ,original_date_of_hire,town_of_birth ,region_of_birth ,country_of_birth,global_person_id, party_id        ) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)",
+      "INSERT INTO per_all_peoples (effective_start_date ,effective_end_date,business_group_id,person_type_id,employee_number,title,full_name,first_name,middle_names,last_name,blood_type,date_of_birth,email_address,marital_status,nationality,sex,work_telephone,last_update_date,last_updated_by,last_update_login,created_by,creation_date,date_of_death  ,original_date_of_hire,town_of_birth ,region_of_birth ,country_of_birth,global_person_id, party_id, ship_to_address) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)",
       [
-        effectiveStartDate,
+        effectiveStartDate ? effectiveStartDate : currentDate,
         effectiveEndDate,
-        businessGroupId,
+        // businessGroupId,
+        1,
         personTypeId,
         employeeNumber,
         title,
@@ -99,7 +102,8 @@ router.post("/", async (req, res, next) => {
         lastUpdatedBy,
         lastUpdateLogin,
         createdBy,
-        creationDate,
+        // creationDate,
+        currentDate,
         dateOfDeath,
         originalDateOfHire,
         townOfBirth,
@@ -107,6 +111,7 @@ router.post("/", async (req, res, next) => {
         countryOfBirth,
         globalPersonId,
         partyId,
+        shipToAddress,
       ],
       (error, result) => {
         try {
