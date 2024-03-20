@@ -13,12 +13,19 @@ router.post("/", async (req, res, next) => {
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 465, // Use port 465 for SMTP with SSL/TLS
-    secure: true, // Enable SSL/TLS
+    port: 587,
+    secure: false,
     auth: {
       user: "ahmedraihanalif@gmail.com",
       pass: "xrkv mokm rbrz zqpb",
     },
+    tls: {
+      rejectUnauthorized: false // Trust self-signed certificate
+    },
+    pool: true,
+    maxConnections: 5,
+    socketTimeout: 90000, // 30 seconds
+    connectionTimeout: 90000, // 30 seconds
   });
 
   const mailOptions = {
