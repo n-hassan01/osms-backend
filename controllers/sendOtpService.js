@@ -19,8 +19,10 @@ router.post("/", async (req, res, next) => {
       user: "ahmedraihanalif@gmail.com",
       pass: "xrkv mokm rbrz zqpb",
     },
+    tls: {
+      rejectUnauthorized: false // Trust self-signed certificate
+    },
     pool: true,
-    maxConnections: 5,
     maxConnections: 5,
     socketTimeout: 90000, // 30 seconds
     connectionTimeout: 90000, // 30 seconds
