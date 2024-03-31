@@ -20,6 +20,24 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/view", async (req, res, next) => {
+  const primarySalesrepCode = req.id;
+
+  await pool.query(
+    "SELECT cust_account_id, account_number, full_name, ship_to_address FROM customer_territory_v where employee_number=$1;",
+    [primarySalesrepCode],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/:cust_group_id", async (req, res, next) => {
   const customerGroupId = req.params.cust_group_id;
 
