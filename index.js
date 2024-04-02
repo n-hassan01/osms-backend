@@ -122,6 +122,8 @@ const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceServic
 const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersService.js");
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
+const GetDrillDown = require("./Controllers/AdminPanel/getDrillDown.js");
+
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
@@ -233,6 +235,8 @@ app.use("/mrlprodbanks", MrlprodBanks);
 app.use("/addmtlcategories", MtlCategories);
 app.use("/mrlprodbankbranches", MrlprodBankBranches);
 app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
+app.use("/drill-down", GetDrillDown);
+
 // error handling middlewares
 app.use((req, res, next) => {
   console.log(req.originalUrl);
