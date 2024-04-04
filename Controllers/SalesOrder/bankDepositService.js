@@ -140,7 +140,7 @@ router.get("/view/:cash_receipt_id", async (req, res, next) => {
   const cashReceiptId = req.params.cash_receipt_id;
 
   await pool.query(
-    "SELECT * FROM public.ar_cash_receipts_all_v WHERE cash_receipt_id=$1;",
+    "SELECT * FROM public.customer_deposit_all_v WHERE cash_receipt_id=$1;",
     [cashReceiptId],
     (error, result) => {
       try {
@@ -157,8 +157,8 @@ router.get("/get/view/:user_id", async (req, res, next) => {
   const userId = req.params.user_id;
 
   await pool.query(
-    // "SELECT * FROM public.ar_cash_receipts_all_v WHERE created_by=$1;",
-    "SELECT * FROM ar_cash_receipts_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1 ORDER BY deposit_date DESC;",
+    // "SELECT * FROM public.customer_deposit_all_v WHERE created_by=$1;",
+    "SELECT * FROM customer_deposit_all_v WHERE creation_date >= CURRENT_DATE - INTERVAL '30 days' AND created_by=$1 ORDER BY deposit_date DESC;",
     [userId],
     (error, result) => {
       try {
