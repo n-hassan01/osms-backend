@@ -129,6 +129,9 @@ const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 const loginTokenMiddleware = require("./middlewares/getLoginTokenMiddleware");
 
+//routing api for integrate vatpos software
+const VatposIntegrationService = require("./Controllers/VatposIntegration/vatposIntegrationService");
+
 //app using middlewares
 app.use(express.json());
 app.use(cors());
@@ -236,6 +239,9 @@ app.use("/addmtlcategories", MtlCategories);
 app.use("/mrlprodbankbranches", MrlprodBankBranches);
 app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
 app.use("/drill-down", GetDrillDown);
+
+// routing middleware for integrate vatpos software
+app.use("/vatpos-integration", VatposIntegrationService);
 
 // error handling middlewares
 app.use((req, res, next) => {
