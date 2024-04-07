@@ -203,6 +203,7 @@ app.use("/get-per-all-peoples", GetPerAllPeoplesService);
 app.use("/add-per-all-peoples", AddPerAllPeoplesService);
 app.use("/update-per-all-peoples", UpdatePerAllPeoplesService);
 app.use("/getper-per-all-peoples", GetperPerAllPeoplesService);
+app.use("/delete-per-all-peoples", DeletePerAllPeoplesService);
 app.use("/getdata-for-fnd-user", GetDataForFndUserService);
 app.use("/add-fnd-user", AddFndUserService);
 app.use("/get-fnd-user", GetFndUserService);
