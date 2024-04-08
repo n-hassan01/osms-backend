@@ -122,7 +122,8 @@ const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceServic
 const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersService.js");
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
-const GetDrillDown = require("./Controllers/AdminPanel/getDrillDown.js");
+const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
+const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -240,6 +241,7 @@ app.use("/addmtlcategories", MtlCategories);
 app.use("/mrlprodbankbranches", MrlprodBankBranches);
 app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
 app.use("/drill-down", GetDrillDown);
+app.use("/standard-bar-data", GetStandardBarDataView);
 
 // routing middleware for integrate vatpos software
 app.use("/vatpos-integration", VatposIntegrationService);
