@@ -77,9 +77,18 @@ router.post("/", async (req, res, next) => {
 
     const currentDate = new Date();
 
+    const generatedId = await pool.query(
+      "SELECT FN_NEW_SEQ_NUMBER($1,$2) FROM DUAL;",
+      [1, "PER_ALL_PEOPLES"]
+    );
+
+    const fnNewSeqNumber = generatedId.rows[0].fn_new_seq_number;
+    console.log(fnNewSeqNumber);
+
     await pool.query(
-      "INSERT INTO per_all_peoples (effective_start_date ,effective_end_date,business_group_id,person_type_id,employee_number,title,full_name,first_name,middle_names,last_name,blood_type,date_of_birth,email_address,marital_status,nationality,sex,work_telephone,last_update_date,last_updated_by,last_update_login,created_by,creation_date,date_of_death  ,original_date_of_hire,town_of_birth ,region_of_birth ,country_of_birth,global_person_id, party_id, ship_to_address) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)",
+      "INSERT INTO per_all_peoples(person_id, effective_start_date ,effective_end_date,business_group_id,person_type_id,employee_number,title,full_name,first_name,middle_names,last_name,blood_type,date_of_birth,email_address,marital_status,nationality,sex,work_telephone,last_update_date,last_updated_by,last_update_login,created_by,creation_date,date_of_death  ,original_date_of_hire,town_of_birth ,region_of_birth ,country_of_birth,global_person_id, party_id, ship_to_address) VALUES ($1, $2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)",
       [
+        fnNewSeqNumber,
         effectiveStartDate ? effectiveStartDate : currentDate,
         effectiveEndDate,
         // businessGroupId,
