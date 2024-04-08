@@ -123,12 +123,15 @@ const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersServi
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
-const GetStandardBarDataView=require("./Controllers/DashBoard/getStandardBarData.js");
+const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 const loginTokenMiddleware = require("./middlewares/getLoginTokenMiddleware");
+
+//routing api for integrate vatpos software
+const VatposIntegrationService = require("./Controllers/VatposIntegration/vatposIntegrationService");
 
 //app using middlewares
 app.use(express.json());
@@ -201,6 +204,7 @@ app.use("/get-per-all-peoples", GetPerAllPeoplesService);
 app.use("/add-per-all-peoples", AddPerAllPeoplesService);
 app.use("/update-per-all-peoples", UpdatePerAllPeoplesService);
 app.use("/getper-per-all-peoples", GetperPerAllPeoplesService);
+app.use("/delete-per-all-peoples", DeletePerAllPeoplesService);
 app.use("/getdata-for-fnd-user", GetDataForFndUserService);
 app.use("/add-fnd-user", AddFndUserService);
 app.use("/get-fnd-user", GetFndUserService);
@@ -237,7 +241,10 @@ app.use("/addmtlcategories", MtlCategories);
 app.use("/mrlprodbankbranches", MrlprodBankBranches);
 app.use("/mrlprodbankaccounts", MrlprodBankAccounts);
 app.use("/drill-down", GetDrillDown);
-app.use("/standard-bar-data",GetStandardBarDataView);
+app.use("/standard-bar-data", GetStandardBarDataView);
+
+// routing middleware for integrate vatpos software
+app.use("/vatpos-integration", VatposIntegrationService);
 
 // error handling middlewares
 app.use((req, res, next) => {
