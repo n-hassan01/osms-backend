@@ -22,7 +22,7 @@ router.get("/peruser/:user_id", async (req, res, next) => {
   const userId = req.params.user_id;
   console.log(userId);
   await pool.query(
-    "Select menus.menu_description From user_menu_assignment join menus ON user_menu_assignment.menu_id = menus.menu_id where user_id = $1 ",
+    "Select menus.menu_description, user_menu_assignment.from_date, user_menu_assignment.to_date, user_menu_assignment.user_id, user_menu_assignment.menu_id From user_menu_assignment join menus ON user_menu_assignment.menu_id = menus.menu_id where user_id = $1 ",
     [userId],
     (error, result) => {
       try {
