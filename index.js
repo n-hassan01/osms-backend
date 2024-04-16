@@ -101,6 +101,7 @@ const UpdateSubMenuService = require("./Controllers/AdminPanel/updateSubMenuServ
 const DeleteSubMenuService = require("./Controllers/AdminPanel/deleteSubMenuService");
 const GetMenuIdService = require("./Controllers/AdminPanel/getMenuIdService");
 const AddUserAssignService = require("./Controllers/AdminPanel/addUserAssignService");
+const UpdateUserMenuAssign = require("./Controllers/AdminPanel/UpdateUserMenuAssignService");
 const GetHrLocationsIdService = require("./Controllers/AdminPanel/getHrLocationsIdService");
 const AddPoActionHistory = require("./Controllers/AdminPanel/addPoActionHistory");
 const UpdatePoActionHistory = require("./Controllers/AdminPanel/updatePoActionHistory.js");
@@ -214,6 +215,7 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
+app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
 
 ///////////////////////// sap
