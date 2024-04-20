@@ -70,8 +70,6 @@ const UploadImageService = require("./Controllers/AdminPanel/uploadImageService"
 const MrlprodBanks = require("./Controllers/AdminPanel/addMrlprodBanksService.js");
 const MrlprodBankBranches = require("./Controllers/AdminPanel/addMrlprodBankBranchesService.js");
 const MrlprodBankAccounts = require("./Controllers/AdminPanel/addMrlprodBankAccountsService.js");
-
-// middlewares api
 const GetPerMtlTransactionTypesService = require("./Controllers/AdminPanel/getPerMtlTransactionTypesService");
 const GetMtlMaterialTransactionsService = require("./Controllers/AdminPanel/getMtlMaterialTransactionsService");
 const GetPerAllPeoplesService = require("./Controllers/AdminPanel/getPerAllPeoplesService");
@@ -101,6 +99,7 @@ const UpdateSubMenuService = require("./Controllers/AdminPanel/updateSubMenuServ
 const DeleteSubMenuService = require("./Controllers/AdminPanel/deleteSubMenuService");
 const GetMenuIdService = require("./Controllers/AdminPanel/getMenuIdService");
 const AddUserAssignService = require("./Controllers/AdminPanel/addUserAssignService");
+const UpdateUserMenuAssign = require("./Controllers/AdminPanel/UpdateUserMenuAssignService");
 const GetHrLocationsIdService = require("./Controllers/AdminPanel/getHrLocationsIdService");
 const AddPoActionHistory = require("./Controllers/AdminPanel/addPoActionHistory");
 const UpdatePoActionHistory = require("./Controllers/AdminPanel/updatePoActionHistory.js");
@@ -122,6 +121,8 @@ const GetItemPriceService = require("./Controllers/SalesOrder/getItemPriceServic
 const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersService.js");
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
+const UserActionAssignmentService = require("./Controllers/AdminPanel/UserActionAssignmentService");
+
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 
@@ -214,7 +215,9 @@ app.use("/delete-fnd-user", DeleteFndUserService);
 app.use("/get-menu-ids", GetMenuIdService);
 app.use("/get-menus", GetMenusService);
 app.use("/add-user-assign", AddUserAssignService);
+app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
+app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
