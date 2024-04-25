@@ -125,6 +125,8 @@ const UserActionAssignmentService = require("./Controllers/AdminPanel/UserAction
 
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
+const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
+const GetBrandingAssetsDetailsService = require("./Controllers/AdminPanel/getBrandingAssetsDetailsService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -218,6 +220,8 @@ app.use("/add-user-assign", AddUserAssignService);
 app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
+app.use("/get-bd-area-lists", GetDivisionDistrictThana);
+app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
