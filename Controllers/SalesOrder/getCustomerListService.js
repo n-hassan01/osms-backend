@@ -24,7 +24,7 @@ router.get("/view", async (req, res, next) => {
   const primarySalesrepCode = req.id;
 
   await pool.query(
-    "SELECT clsv.cust_account_id, clsv.account_number, clsv.full_name, clsv.ship_to_address FROM customer_list_security_v clsv WHERE CASE fn_get_cust_security_mapping($1) WHEN 'L1' THEN account_number WHEN 'L2' THEN emp_number_l2 END IN($2,'9999')",
+    "SELECT clsv.cust_account_id, clsv.account_number, clsv.full_name, clsv.ship_to_address FROM customer_list_security_v clsv WHERE CASE fn_get_cust_security_mapping($1) WHEN 'L1' THEN emp_number_l1 WHEN 'L2' THEN emp_number_l2 END IN($2,'9999')",
     [primarySalesrepCode, primarySalesrepCode],
     (error, result) => {
       try {
