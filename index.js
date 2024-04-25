@@ -223,7 +223,7 @@ app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
 app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
-app.use("/get-mtl-categories-b",GetMtlCategoriesBService);
+app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
