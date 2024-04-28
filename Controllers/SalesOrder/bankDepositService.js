@@ -446,6 +446,23 @@ router.get("/type-list", async (req, res, next) => {
   });
 });
 
+router.get("/type/:deposit_type_id", async (req, res, next) => {
+  const depositTypeId = req.params.deposit_type_id;
+
+  await pool.query(
+    "SELECT * FROM public.deposit_type WHERE deposit_type_id=$1;",
+    [depositTypeId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/company-bank-account/view", async (req, res, next) => {
   await pool.query("SELECT * FROM public.bank_accounts_v;", (error, result) => {
     try {
