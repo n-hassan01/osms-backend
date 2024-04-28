@@ -20,6 +20,21 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/all", async (req, res, next) => {
+  await pool.query(
+    "SELECT clsv.cust_account_id, clsv.account_number, clsv.full_name, clsv.ship_to_address FROM customer_list_security_v clsv;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/view", async (req, res, next) => {
   const primarySalesrepCode = req.id;
 
