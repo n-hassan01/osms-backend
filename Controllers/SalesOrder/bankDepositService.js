@@ -322,6 +322,7 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
     uploadedFilename: Joi.string().min(0),
     remarks: Joi.string().min(0),
     lastUpdatedBy: Joi.number().allow(null),
+    cashReceiptId: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
