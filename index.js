@@ -125,9 +125,12 @@ const UserActionAssignmentService = require("./Controllers/AdminPanel/UserAction
 
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
+const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
+
+//routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
 const GetBrandingAssetsDetailsService = require("./Controllers/AdminPanel/getBrandingAssetsDetailsService");
-const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
+const BrandingAssetsService = require("./Controllers/BandingAssetsManagement/brandingAssetsService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -221,9 +224,12 @@ app.use("/add-user-assign", AddUserAssignService);
 app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
+app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
+
+// routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
 app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
-app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
+app.use("/branding-assets", BrandingAssetsService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
