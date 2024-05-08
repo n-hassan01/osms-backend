@@ -346,6 +346,7 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
     invoiceNumber,
     uploadedFilename,
     remarks,
+    lastUpdatedBy
   } = req.body;
 
   const date = new Date();
