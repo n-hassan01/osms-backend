@@ -3,6 +3,7 @@ const Joi = require("joi");
 const pool = require("../../dbConnection");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const { env } = require("process");
 
 const router = express.Router();
@@ -308,25 +309,20 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
   const cashReceiptId = req.params.cash_receipt_id;
 
   const schema = Joi.object({
-    customerBankAccountId: Joi.number().allow(null),
-    customerBankBranchId: Joi.number().allow(null),
-    receiptNumber: Joi.string().min(0),
-    receiptDate: Joi.string().min(0),
     depositDate: Joi.string().min(0),
-    amount: Joi.string().min(0),
-    remittanceBankAccountId: Joi.number().allow(null),
-    legalEntityId: Joi.number().allow(null),
-    ledgerId: Joi.number().allow(null),
-    currencyCode: Joi.string().min(0).max(15),
+    amount: Joi.number().allow(null),
     payFromCustomer: Joi.string().min(0),
-    receiptMethodId: Joi.string().min(0),
-    docSequenceValue: Joi.string().min(0),
-    docSequenceId: Joi.number().allow(null),
-    status: Joi.string().min(0).max(30),
-    anticipatedClearingDate: Joi.string().min(0),
+    depositTypeId: Joi.number().allow(null),
+    depositorName: Joi.string().min(0),
+    companyCustBankId: Joi.number().allow(null),
+    companyCustBankBranchId: Joi.number().allow(null),
+    remittanceBankAccountId: Joi.number().allow(null),
+    receiptNumber: Joi.string().min(0),
+    invoiceNumber: Joi.string().min(0),
+    uploadedFilename: Joi.string().min(0),
+    remarks: Joi.string().min(0),
     lastUpdatedBy: Joi.number().allow(null),
-    // lastUpdateDate: Joi.string().min(0),
-    createdBy: Joi.number().allow(null),
+    cashReceiptId: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -338,46 +334,37 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
   }
 
   const {
-    customerBankAccountId,
-    customerBankBranchId,
-    receiptNumber,
-    receiptDate,
     depositDate,
     amount,
-    remittanceBankAccountId,
-    legalEntityId,
-    ledgerId,
-    currencyCode,
     payFromCustomer,
-    receiptMethodId,
-    docSequenceValue,
-    docSequenceId,
-    status,
-    anticipatedClearingDate,
-    lastUpdatedBy,
+    depositTypeId,
+    depositorName,
+    companyCustBankId,
+    companyCustBankBranchId,
+    remittanceBankAccountId,
+    receiptNumber,
+    invoiceNumber,
+    uploadedFilename,
+    remarks,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE public.ar_cash_receipts_all SET company_cust_bank_id=$1, company_cust_bank_branch_id=$2, receipt_number=$3, receipt_date=$4, deposit_date=$5, amount=$6, remittance_bank_account_id=$7, legal_entity_id=$8, ledger_id=$9, currency_code=$10, pay_from_customer=$11, receipt_method_id=$12, doc_sequence_value=$13, doc_sequence_id=$14, status=$15, anticipated_clearing_date=$16, last_updated_by=$17, last_update_date=$18 WHERE cash_receipt_id=$19;",
+    "UPDATE public.ar_cash_receipts_all SET deposit_date=$1, amount=$2, pay_from_customer=$3, deposit_type_id=$4, depositor_name=$5, company_cust_bank_id=$6, company_cust_bank_branch_id=$7, remittance_bank_account_id=$8, receipt_number=$9, invoice_number=$10, uploaded_filename=$11, remarks=$12, last_updated_by=$13, last_update_date=$14 WHERE cash_receipt_id=$15;",
     [
-      customerBankAccountId,
-      customerBankBranchId,
-      receiptNumber,
-      receiptDate,
       depositDate,
       amount,
-      remittanceBankAccountId,
-      legalEntityId,
-      ledgerId,
-      currencyCode,
       payFromCustomer,
-      receiptMethodId,
-      docSequenceValue,
-      docSequenceId,
-      status,
-      anticipatedClearingDate,
+      depositTypeId,
+      depositorName,
+      companyCustBankId,
+      companyCustBankBranchId,
+      remittanceBankAccountId,
+      receiptNumber,
+      invoiceNumber,
+      uploadedFilename,
+      remarks,
       lastUpdatedBy,
       date,
       cashReceiptId,
@@ -386,7 +373,7 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
       try {
         if (error) throw error;
 
-        return res.status(200).json({ message: "Successfully added!" });
+        return res.status(200).json({ message: "Successfully updated!" });
       } catch (err) {
         next(err);
       }
@@ -427,12 +414,32 @@ router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
 router.post("/download", (req, res) => {
   const location = process.env.DEPOSIT_PATH;
   const filename = req.body.fileName;
-  console.log(location);
-  console.log(filename);
 
   const filePath = path.join(__dirname, location, filename);
   // res.download(`${location}${filename}`, filename);
   res.download(filePath, filename);
+});
+
+router.delete("/delete", (req, res) => {
+  const location = process.env.DEPOSIT_PATH;
+  const filename = req.body.fileName;
+
+  const filePath = path.join(__dirname, location, filename);
+
+  if (!filePath) {
+    return res.status(400).json({ error: "File path is required" });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to delete file" });
+    }
+    res.status(200).json({ message: "File deleted successfully" });
+  });
 });
 
 router.get("/type-list", async (req, res, next) => {
