@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
+const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
