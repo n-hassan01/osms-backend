@@ -131,6 +131,8 @@ const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategor
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
 const GetBrandingAssetsDetailsService = require("./Controllers/AdminPanel/getBrandingAssetsDetailsService");
 const BrandingAssetsService = require("./Controllers/BandingAssetsManagement/brandingAssetsService");
+const ShopMasterService = require("./Controllers/BandingAssetsManagement/ShopMasterService");
+const RouteMasterService = require("./Controllers/BandingAssetsManagement/routeMasterService.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -230,6 +232,8 @@ app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
 app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
 app.use("/branding-assets", BrandingAssetsService);
+app.use("/shop-master", ShopMasterService);
+app.use("/route-master", RouteMasterService);
 
 ///////////////////////// sap
 app.use("/add-po-action-history", AddPoActionHistory);
