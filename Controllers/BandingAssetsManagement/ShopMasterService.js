@@ -2,6 +2,10 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 const Joi = require("joi");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const { env } = require("process");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -164,6 +168,72 @@ router.delete("/delete/:shop_id", async (req, res, next) => {
       }
     }
   );
+});
+
+const imageStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, path.join(__dirname, process.env.SHOP_MASTER_PATH));
+  },
+  filename(req, file, cb) {
+    console.log(file);
+
+    cb(null, `shop_master_${file.originalname}`);
+  },
+});
+
+const imageUpload = multer({ storage: imageStorage });
+
+router.post(
+  "/image/upload",
+  imageUpload.single("file"),
+  async (req, res, next) => {
+    const fileInfo = req.file;
+
+    if (fileInfo) {
+      try {
+        res.status(200).send({
+          message: "Uploaded successfully!",
+          value: fileInfo.filename,
+        });
+      } catch (error) {
+        console.error(error.message);
+        next(error);
+      }
+    } else {
+      res.status(400).send({ message: "File not provided or upload failed!" });
+    }
+  }
+);
+
+router.post("/image/download", (req, res) => {
+  const location = process.env.SHOP_MASTER_PATH;
+  const filename = req.body.fileName;
+
+  const filePath = path.join(__dirname, location, filename);
+  // res.download(`${location}${filename}`, filename);
+  res.download(filePath, filename);
+});
+
+router.delete("/image/delete", (req, res) => {
+  const location = process.env.SHOP_MASTER_PATH;
+  const filename = req.body.fileName;
+
+  const filePath = path.join(__dirname, location, filename);
+
+  if (!filePath) {
+    return res.status(400).json({ error: "File path is required" });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to delete file" });
+    }
+    res.status(200).json({ message: "File deleted successfully" });
+  });
 });
 
 module.exports = router;
