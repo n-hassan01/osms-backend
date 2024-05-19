@@ -118,7 +118,7 @@ router.get("/customerGroup/list", async (req, res, next) => {
 //   );
 // });
 
-router.get("/mapping", async (req, res, next) => {
+router.get("/profile/mapping", async (req, res, next) => {
   const employeeNumber = req.id;
 
   await pool.query(
@@ -136,7 +136,7 @@ router.get("/mapping", async (req, res, next) => {
   );
 });
 
-router.get("/mapping/cust_group_id", async (req, res, next) => {
+router.get("/mapping/group/:cust_group_id", async (req, res, next) => {
   const customerGroupId = req.params.cust_group_id;
 
   await pool.query(
