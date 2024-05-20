@@ -60,21 +60,24 @@ router.post("/add", async (req, res, next) => {
   const { assetId, dateEffective, shopName, remarks, dateIneffective, shopId } =
     req.body;
 
-  const date = new Date();
+  try {
+    const result = await pool.query(
+      "SELECT public.fn_new_seq_id('distribution_id', 'fa_distribution_history')"
+    );
+    const distributionId = result.rows[0].fn_new_seq_id;
 
-  await pool.query(
-    "INSERT INTO public.fa_distribution_history(asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id) VALUES ($1, $2, $3, $4, $5, $6);",
-    [assetId, dateEffective, shopName, remarks, dateIneffective, shopId],
-    (error, result) => {
-      try {
-        if (error) throw error;
+    await pool.query(
+      `INSERT INTO public.fa_distribution_history(
+          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+      [distributionId, assetId, dateEffective, shopName, remarks, dateIneffective, shopId]
+    );
 
-        return res.status(200).json({ message: "Successfully assigned!" });
-      } catch (err) {
-        next(err);
-      }
-    }
-  );
+    return res.status(200).json({ message: "Successfully assigned!" });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
 });
 
 module.exports = router;
