@@ -19,6 +19,24 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/byShop/:shop_name", async (req, res, next) => {
+  const shopName = req.params.shop_name;
+  
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE shop_name=$1",
+    [shopName],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
@@ -59,8 +77,16 @@ router.post("/add", async (req, res, next) => {
     return res.status(400).send("Invalid inputs");
   }
 
-  const { assetId, dateEffective, shopName, remarks, dateIneffective, shopId, recordType, uploadedFileName } =
-    req.body;
+  const {
+    assetId,
+    dateEffective,
+    shopName,
+    remarks,
+    dateIneffective,
+    shopId,
+    recordType,
+    uploadedFileName,
+  } = req.body;
 
   try {
     const result = await pool.query(
@@ -72,7 +98,17 @@ router.post("/add", async (req, res, next) => {
       `INSERT INTO public.fa_distribution_history(
           distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
-      [distributionId, assetId, dateEffective, shopName, remarks, dateIneffective, shopId, recordType, uploadedFileName]
+      [
+        distributionId,
+        assetId,
+        dateEffective,
+        shopName,
+        remarks,
+        dateIneffective,
+        shopId,
+        recordType,
+        uploadedFileName,
+      ]
     );
 
     return res.status(200).json({ message: "Successfully assigned!" });
