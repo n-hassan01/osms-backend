@@ -39,6 +39,8 @@ router.post("/add", async (req, res, next) => {
     // lastUpdateDate: Joi.string().min(0),
     // lastUpdatedBy: Joi.number().allow(null),
     dateIneffective: Joi.string().min(0),
+    recordType: Joi.string().min(0),
+    uploadedFileName: Joi.string().min(0),
     // assignedTo: Joi.number().allow(null),
     // transactionHeaderIdOut: Joi.number().allow(null),
     // transactionUnits: Joi.number().allow(null),
@@ -57,7 +59,7 @@ router.post("/add", async (req, res, next) => {
     return res.status(400).send("Invalid inputs");
   }
 
-  const { assetId, dateEffective, shopName, remarks, dateIneffective, shopId } =
+  const { assetId, dateEffective, shopName, remarks, dateIneffective, shopId, recordType, uploadedFileName } =
     req.body;
 
   try {
@@ -68,9 +70,9 @@ router.post("/add", async (req, res, next) => {
 
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
-          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7);`,
-      [distributionId, assetId, dateEffective, shopName, remarks, dateIneffective, shopId]
+          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+      [distributionId, assetId, dateEffective, shopName, remarks, dateIneffective, shopId, recordType, uploadedFileName]
     );
 
     return res.status(200).json({ message: "Successfully assigned!" });
