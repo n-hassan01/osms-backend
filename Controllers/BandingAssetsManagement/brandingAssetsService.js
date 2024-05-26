@@ -2,6 +2,9 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 const Joi = require("joi");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -21,7 +24,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/byShop/:shop_name", async (req, res, next) => {
   const shopName = req.params.shop_name;
-  
+
   await pool.query(
     "SELECT * FROM branding_assets_details_v WHERE shop_name=$1",
     [shopName],
@@ -59,6 +62,7 @@ router.post("/add", async (req, res, next) => {
     dateIneffective: Joi.string().min(0),
     recordType: Joi.string().min(0),
     uploadedFileName: Joi.string().min(0),
+    reviewStatus: Joi.string().min(0),
     // assignedTo: Joi.number().allow(null),
     // transactionHeaderIdOut: Joi.number().allow(null),
     // transactionUnits: Joi.number().allow(null),
@@ -86,6 +90,7 @@ router.post("/add", async (req, res, next) => {
     shopId,
     recordType,
     uploadedFileName,
+    reviewStatus
   } = req.body;
 
   try {
@@ -96,8 +101,8 @@ router.post("/add", async (req, res, next) => {
 
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
-          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`,
+          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename, review_status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
       [
         distributionId,
         assetId,
@@ -108,6 +113,7 @@ router.post("/add", async (req, res, next) => {
         shopId,
         recordType,
         uploadedFileName,
+        reviewStatus
       ]
     );
 
@@ -116,6 +122,72 @@ router.post("/add", async (req, res, next) => {
     console.error(error);
     return next(error);
   }
+});
+
+const imageStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, path.join(__dirname, process.env.BRANDING_ASSET_PATH));
+  },
+  filename(req, file, cb) {
+    console.log(file);
+
+    cb(null, `branding_asset_${file.originalname}`);
+  },
+});
+
+const imageUpload = multer({ storage: imageStorage });
+
+router.post(
+  "/image/upload",
+  imageUpload.single("file"),
+  async (req, res, next) => {
+    const fileInfo = req.file;
+
+    if (fileInfo) {
+      try {
+        res.status(200).send({
+          message: "Uploaded successfully!",
+          value: fileInfo.filename,
+        });
+      } catch (error) {
+        console.error(error.message);
+        next(error);
+      }
+    } else {
+      res.status(400).send({ message: "File not provided or upload failed!" });
+    }
+  }
+);
+
+router.post("/image/download", (req, res) => {
+  const location = process.env.BRANDING_ASSET_PATH;
+  const filename = req.body.fileName;
+
+  const filePath = path.join(__dirname, location, filename);
+  // res.download(`${location}${filename}`, filename);
+  res.download(filePath, filename);
+});
+
+router.delete("/image/delete/:file_name", (req, res) => {
+  const location = process.env.BRANDING_ASSET_PATH;
+  const filename = req.params.file_name;
+
+  const filePath = path.join(__dirname, location, filename);
+
+  if (!filePath) {
+    return res.status(400).json({ error: "File path is required" });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to delete file" });
+    }
+    res.status(200).json({ message: "File deleted successfully" });
+  });
 });
 
 module.exports = router;
