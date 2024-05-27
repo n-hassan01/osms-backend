@@ -206,7 +206,7 @@ router.post("/customer/view/filterByDate", async (req, res, next) => {
   const { toDepositDate, fromDepositDate } = req.body;
 
   await pool.query(
-    "SELECT * FROM public.customer_deposit_all_v WHERE creation_date BETWEEN $1 AND $2",
+    "SELECT * FROM public.customer_deposit_all_v WHERE creation_date BETWEEN $1 AND $2 ORDER BY creation_date ASC",
     [fromDepositDate, toDepositDate],
     (error, result) => {
       try {
@@ -346,7 +346,7 @@ router.put("/update/:cash_receipt_id", async (req, res, next) => {
     invoiceNumber,
     uploadedFilename,
     remarks,
-    lastUpdatedBy
+    lastUpdatedBy,
   } = req.body;
 
   const date = new Date();

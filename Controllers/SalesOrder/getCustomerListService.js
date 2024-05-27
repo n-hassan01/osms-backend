@@ -118,4 +118,40 @@ router.get("/customerGroup/list", async (req, res, next) => {
 //   );
 // });
 
+router.get("/profile/mapping", async (req, res, next) => {
+  const employeeNumber = req.id;
+
+  await pool.query(
+    "SELECT * FROM public.data_security_profile_mapping where employee_number=$1;",
+    [employeeNumber],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/mapping/group/:cust_group_id", async (req, res, next) => {
+  const customerGroupId = req.params.cust_group_id;
+
+  await pool.query(
+    "SELECT * FROM public.data_security_profile_mapping where cust_group_id=$1;",
+    [customerGroupId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;
