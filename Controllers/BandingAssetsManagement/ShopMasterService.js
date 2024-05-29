@@ -39,24 +39,6 @@ router.get("/view", async (req, res, next) => {
   );
 });
 
-router.get("/getChildItem/:item_id", async (req, res, next) => {
-  const itemId = req.params.item_id;
-
-  await pool.query(
-    "SELECT * FROM mtl_system_items_child_v WHERE parent_inventory_item_id=$1;",
-    [itemId],
-    (error, result) => {
-      try {
-        if (error) throw error;
-
-        res.status(200).json(result.rows);
-      } catch (err) {
-        next(err);
-      }
-    }
-  );
-});
-
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     shopName: Joi.string().min(0),
