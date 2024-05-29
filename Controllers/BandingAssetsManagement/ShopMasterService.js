@@ -23,6 +23,22 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/view", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM shop_master_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     shopName: Joi.string().min(0),
