@@ -40,6 +40,24 @@ router.get("/byShop/:shop_name", async (req, res, next) => {
   );
 });
 
+router.get("/itemsByShop/:shop_id", async (req, res, next) => {
+  const shopId = req.params.shop_id;
+
+  await pool.query(
+    "SELECT inventory_item_id, item_name, item_category FROM branding_assets_details_v WHERE shop_id=$1",
+    [shopId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
@@ -90,7 +108,7 @@ router.post("/add", async (req, res, next) => {
     shopId,
     recordType,
     uploadedFileName,
-    reviewStatus
+    reviewStatus,
   } = req.body;
 
   try {
@@ -113,7 +131,7 @@ router.post("/add", async (req, res, next) => {
         shopId,
         recordType,
         uploadedFileName,
-        reviewStatus
+        reviewStatus,
       ]
     );
 
