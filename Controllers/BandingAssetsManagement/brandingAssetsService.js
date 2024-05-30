@@ -76,6 +76,24 @@ router.get("/getChildItem/:item_id", async (req, res, next) => {
   );
 });
 
+router.get("/viewReviewStatus/:asset_id", async (req, res, next) => {
+  const assetId = req.params.asset_id;
+
+  await pool.query(
+    "SELECT * FROM fa_distribution_history WHERE asset_id=$1;",
+    [assetId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
