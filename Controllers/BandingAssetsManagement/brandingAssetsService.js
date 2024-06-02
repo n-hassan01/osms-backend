@@ -44,7 +44,7 @@ router.get("/itemsByShop/:shop_id", async (req, res, next) => {
   const shopId = req.params.shop_id;
 
   await pool.query(
-    "SELECT inventory_item_id, item_name, item_category FROM branding_assets_details_v WHERE shop_id=$1",
+    "SELECT DISTINCT inventory_item_id, item_name, item_category FROM branding_assets_details_v WHERE shop_id=$1",
     [shopId],
     (error, result) => {
       try {
