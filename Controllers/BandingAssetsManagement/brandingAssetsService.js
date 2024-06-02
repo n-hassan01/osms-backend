@@ -156,7 +156,7 @@ router.post("/add", async (req, res, next) => {
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
           distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename, review_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -171,7 +171,71 @@ router.post("/add", async (req, res, next) => {
       ]
     );
 
-    return res.status(200).json({ message: "Successfully assigned!" });
+    return res
+      .status(200)
+      .json({ message: "Successfully assigned!", value: distributionId });
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+});
+
+router.post("/update", async (req, res, next) => {
+  const schema = Joi.object({
+    distributionId: Joi.number().required(0),
+    assetId: Joi.number().allow(null),
+    dateEffective: Joi.string().min(0),
+    shopName: Joi.string().min(0),
+    remarks: Joi.string().min(0),
+    dateIneffective: Joi.string().min(0),
+    recordType: Joi.string().min(0),
+    uploadedFileName: Joi.string().min(0),
+    reviewStatus: Joi.string().min(0),
+    shopId: Joi.number().allow(null),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const {
+    distributionId,
+    assetId,
+    dateEffective,
+    shopName,
+    remarks,
+    dateIneffective,
+    shopId,
+    recordType,
+    uploadedFileName,
+    reviewStatus,
+  } = req.body;
+
+  try {
+    await pool.query(
+      `UPDATE public.fa_distribution_history
+	      SET asset_id=$1, date_effective=$2, shop_name=$3, remarks=$4, date_ineffective=$5, shop_id=$6, "RECORD_TYPE"=$7, 
+        uploaded_filename=$8, review_status=$9
+	    WHERE distribution_id=$10;`,
+      [
+        assetId,
+        dateEffective,
+        shopName,
+        remarks,
+        dateIneffective,
+        shopId,
+        recordType,
+        uploadedFileName,
+        reviewStatus,
+        distributionId,
+      ]
+    );
+
+    return res.status(200).json({ message: "Successfully updated!" });
   } catch (error) {
     console.error(error);
     return next(error);
