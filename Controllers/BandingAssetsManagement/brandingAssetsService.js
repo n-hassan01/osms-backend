@@ -125,6 +125,7 @@ router.post("/add", async (req, res, next) => {
     // capitalAdjAccountCcid: Joi.number().allow(null),
     // generalFundAccountCcid: Joi.number().allow(null),
     shopId: Joi.number().allow(null),
+    createdBy: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -145,6 +146,7 @@ router.post("/add", async (req, res, next) => {
     recordType,
     uploadedFileName,
     reviewStatus,
+    createdBy,
   } = req.body;
 
   try {
@@ -152,11 +154,13 @@ router.post("/add", async (req, res, next) => {
       "SELECT public.fn_new_seq_id('distribution_id', 'fa_distribution_history')"
     );
     const distributionId = result.rows[0].fn_new_seq_id;
+    const today = new Date();
 
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
-          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", uploaded_filename, review_status
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING distribution_id;`,
+          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", 
+          uploaded_filename, review_status, created_by, creation_date
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -168,6 +172,8 @@ router.post("/add", async (req, res, next) => {
         recordType,
         uploadedFileName,
         reviewStatus,
+        createdBy,
+        today
       ]
     );
 
