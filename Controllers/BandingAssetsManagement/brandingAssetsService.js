@@ -80,7 +80,7 @@ router.get("/viewReviewStatus/:asset_id", async (req, res, next) => {
   const assetId = req.params.asset_id;
 
   await pool.query(
-    "SELECT * FROM fa_distribution_history WHERE asset_id=$1;",
+    "SELECT * FROM fa_distribution_history WHERE asset_id=$1 ORDER BY creation_date DESC;",
     [assetId],
     (error, result) => {
       try {
