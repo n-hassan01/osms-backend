@@ -103,7 +103,7 @@ router.post("/", async (req, res, next) => {
     minimumOrderQuantity,
     maximumOrderQuantity,
     paymentTermsId,
-    categoryId
+    categoryId,
   } = req.body;
 
   try {
@@ -163,7 +163,9 @@ router.post("/", async (req, res, next) => {
       ]
     );
 
-    return res.status(200).json({ message: "Successfully added!", headerInfo: result.rows });
+    return res
+      .status(200)
+      .json({ message: "Successfully added!", headerInfo: result.rows });
   } catch (error) {
     console.error(error);
     return next(error);
@@ -338,7 +340,7 @@ router.post("/child", async (req, res, next) => {
     minimumOrderQuantity,
     maximumOrderQuantity,
     paymentTermsId,
-    categoryId
+    categoryId,
   } = req.body;
 
   try {
@@ -404,6 +406,60 @@ router.post("/child", async (req, res, next) => {
     console.error(error);
     return next(error);
   }
+});
+
+router.post("/call/procedure", async (req, res, next) => {
+  const schema = Joi.object({
+    inventoryItemCode: Joi.string().max(40).required(),
+    description: Joi.string().max(240).min(0),
+    primaryUomCode: Joi.string().max(3).min(0),
+    startDateActive: Joi.date().allow(null, ""),
+    // endDateActive: Joi.date().allow(null, ""),
+    categoryId: Joi.number().allow(null),
+  });
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const {
+    inventoryItemCode,
+    description,
+    primaryUomCode,
+    startDateActive,
+    categoryId,
+  } = req.body;
+
+  const userName = req.id;
+
+  await pool.query(
+    "CALL public.proc_manage_mtl_system_items($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
+    [
+      2,
+      inventoryItemCode,
+      description,
+      primaryUomCode,
+      "Y",
+      startDateActive,
+      "Y",
+      "Y",
+      "Y",
+      categoryId,
+      userName,
+    ],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).send("Successfully added!");
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 });
 
 module.exports = router;
