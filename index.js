@@ -188,7 +188,7 @@ app.use("/add-unit-measure", AddUnitMeasureService);
 app.use("/get-unit-measure", GetUnitMeasureService);
 app.use("/disable-unit-measure", DisableUnitMeasureService);
 app.use("/update-unit-measure", UpdateUnitMeasureService);
-app.use("/add-item-master", AddItemMasterService);
+app.use("/add-item-master", AuthGuard, AddItemMasterService);
 app.use("/get-item-master", GetItemMasterService);
 app.use("/update-item-master", UpdateItemMasterService);
 app.use("/delete-item-master", DeleteItemMasterService);
