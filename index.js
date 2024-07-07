@@ -122,7 +122,7 @@ const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersServi
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
 const UserActionAssignmentService = require("./Controllers/AdminPanel/UserActionAssignmentService");
-
+const AddExcelDataService = require("./Controllers/AdminPanel/addExcelDataService.js");
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
@@ -227,6 +227,7 @@ app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
+app.use("/add-excel-data", AddExcelDataService);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
