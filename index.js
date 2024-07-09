@@ -126,6 +126,7 @@ const AddExcelDataService = require("./Controllers/AdminPanel/addExcelDataServic
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
+const AddReconsiledDataService = require("./Controllers/AdminPanel/addReconciledDataService.js");
 
 //routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
@@ -228,6 +229,7 @@ app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
 app.use("/add-excel-data", AddExcelDataService);
+app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
