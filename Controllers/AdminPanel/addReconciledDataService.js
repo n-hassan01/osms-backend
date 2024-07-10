@@ -8,27 +8,27 @@ router.post("/", async (req, res, next) => {
   const schema = Joi.array().items(
     Joi.object({
       cashReceiptId: Joi.number(),
-      //   status: Joi.string(),
-      depositDate: Joi.string(),
+      bankReconId: Joi.number(),
+      //   depositDate: Joi.number(),
       //   entryDate: Joi.string(),
       //   companyBank: Joi.string(),
       //   companyAccount: Joi.string(),
       //   companyName: Joi.string(),
-      payFromCustomer: Joi.number(),
+      // payFromCustomer: Joi.number(),
       //   customerName: Joi.string(),
       //   customerGroup: Joi.string(),
-      amount: Joi.number(),
+      // amount: Joi.number(),
       //   invoiceNumber: Joi.string(),
       //   depositType: Joi.string(),
       //   depositFromBank: Joi.string(),
       //   depositFromBranch: Joi.string(),
       //   receiptNumber: Joi.string(),
-      glDate: Joi.string(),
-      glAmount: Joi.number(),
+      // glDate: Joi.number(),
+      // glAmount: Joi.number(),
       //   depositor: Joi.string().max(200),
       //   employee: Joi.string().max(200),
       //   userName: Joi.string().max(200),
-      //   remarks: Joi.string().max(200),
+      remarks: Joi.string(),
     })
   );
   console.log("schema", schema);
@@ -44,11 +44,12 @@ router.post("/", async (req, res, next) => {
     const data = req.body;
     let result;
     for (const item of data) {
-      const { cashReceiptId, amount, glDate } = item;
+      const { cashReceiptId, bankReconId, remarks } = item;
       result = await pool.query(
         "CALL public.proc_bank_recon_process($1,$2, $3)",
-        [cashReceiptId, glDate, amount]
+        [cashReceiptId, bankReconId, remarks]
       );
+
       console.log("hool", result.rows);
     }
     res.json(result.rows);
