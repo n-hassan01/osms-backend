@@ -128,6 +128,7 @@ const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
 const AddReconsiledDataService = require("./Controllers/AdminPanel/addReconciledDataService.js");
+const GetBankReconDetailsService = require("./Controllers/AdminPanel/getBankReconIdService.js");
 
 //routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
@@ -231,6 +232,8 @@ app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
 app.use("/add-excel-data", AddExcelDataService);
 app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
+app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
+app.use("/get-bank_recon_details", GetBankReconDetailsService);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
