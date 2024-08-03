@@ -4,8 +4,9 @@ const cors = require("cors");
 const app = express();
 
 //app using middlewares
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cors());
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 //routing api for users
 const SignupService = require("./Controllers/signupService");
@@ -122,10 +123,12 @@ const AddCoSellerUsers = require("./Controllers/AdminPanel/addCoSellerUsersServi
 const UserSignupProcess = require("./Controllers/AdminPanel/userSignupProcessService");
 const MtlCategories = require("./Controllers/AdminPanel/addMtlCategoriesService.js");
 const UserActionAssignmentService = require("./Controllers/AdminPanel/UserActionAssignmentService");
-
+const AddExcelDataService = require("./Controllers/AdminPanel/addExcelDataService.js");
 const GetDrillDown = require("./Controllers/DashBoard/getDrillDown.js");
 const GetStandardBarDataView = require("./Controllers/DashBoard/getStandardBarData.js");
 const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategoriesBService");
+const AddReconsiledDataService = require("./Controllers/AdminPanel/addReconciledDataService.js");
+const GetBankReconDetailsService = require("./Controllers/AdminPanel/getBankReconIdService.js");
 
 //routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
@@ -227,6 +230,10 @@ app.use("/updateUserMenuAssign", AuthGuard, UpdateUserMenuAssign);
 app.use("/upload-image", AuthGuard, UploadImageService);
 app.use("/user-actions", AuthGuard, UserActionAssignmentService);
 app.use("/get-mtl-categories-b", GetMtlCategoriesBService);
+app.use("/add-excel-data", AddExcelDataService);
+app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
+app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
+app.use("/get-bank_recon_details", GetBankReconDetailsService);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);

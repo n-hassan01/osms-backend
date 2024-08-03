@@ -203,20 +203,35 @@ router.get("/customer/view", async (req, res, next) => {
 });
 
 router.post("/customer/view/filterByDate", async (req, res, next) => {
-  const { toDepositDate, fromDepositDate } = req.body;
+  const { toDepositDate, fromDepositDate, userName } = req.body;
 
-  await pool.query(
-    "SELECT * FROM public.customer_deposit_all_v WHERE creation_date BETWEEN $1 AND $2 ORDER BY creation_date ASC",
-    [fromDepositDate, toDepositDate],
-    (error, result) => {
-      try {
-        if (error) throw error;
-        res.status(200).send(result.rows);
-      } catch (err) {
-        next(err);
+  if (userName) {
+    await pool.query(
+      "SELECT * FROM public.customer_deposit_all_v WHERE creation_date BETWEEN $1 AND $2 AND user_name=$3 ORDER BY creation_date ASC",
+      [fromDepositDate, toDepositDate, userName],
+      (error, result) => {
+        try {
+          if (error) throw error;
+          res.status(200).send(result.rows);
+        } catch (err) {
+          next(err);
+        }
       }
-    }
-  );
+    );
+  } else {
+    await pool.query(
+      "SELECT * FROM public.customer_deposit_all_v WHERE creation_date BETWEEN $1 AND $2 ORDER BY creation_date ASC",
+      [fromDepositDate, toDepositDate],
+      (error, result) => {
+        try {
+          if (error) throw error;
+          res.status(200).send(result.rows);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+  }
 });
 
 router.post("/customer/view/filterByFromDate", async (req, res, next) => {

@@ -22,6 +22,22 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/brandList", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM fnd_lookup_brands_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/byShop/:shop_name", async (req, res, next) => {
   const shopName = req.params.shop_name;
 
@@ -126,6 +142,7 @@ router.post("/add", async (req, res, next) => {
     // generalFundAccountCcid: Joi.number().allow(null),
     shopId: Joi.number().allow(null),
     createdBy: Joi.number().allow(null),
+    brandCode: Joi.string().max(30).min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -147,6 +164,7 @@ router.post("/add", async (req, res, next) => {
     uploadedFileName,
     reviewStatus,
     createdBy,
+    brandCode,
   } = req.body;
 
   try {
@@ -159,8 +177,8 @@ router.post("/add", async (req, res, next) => {
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
           distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", 
-          uploaded_filename, review_status, created_by, creation_date
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING distribution_id;`,
+          uploaded_filename, review_status, created_by, creation_date, brand_code
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -173,7 +191,8 @@ router.post("/add", async (req, res, next) => {
         uploadedFileName,
         reviewStatus,
         createdBy,
-        today
+        today,
+        brandCode,
       ]
     );
 
@@ -198,6 +217,7 @@ router.post("/update", async (req, res, next) => {
     uploadedFileName: Joi.string().min(0),
     reviewStatus: Joi.string().min(0),
     shopId: Joi.number().allow(null),
+    brandCode: Joi.string().max(30).min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -219,13 +239,14 @@ router.post("/update", async (req, res, next) => {
     recordType,
     uploadedFileName,
     reviewStatus,
+    brandCode,
   } = req.body;
 
   try {
     await pool.query(
       `UPDATE public.fa_distribution_history
 	      SET asset_id=$1, date_effective=$2, shop_name=$3, remarks=$4, date_ineffective=$5, shop_id=$6, "RECORD_TYPE"=$7, 
-        uploaded_filename=$8, review_status=$9
+        uploaded_filename=$8, review_status=$9, brand_code=$10
 	    WHERE distribution_id=$10;`,
       [
         assetId,
@@ -238,6 +259,7 @@ router.post("/update", async (req, res, next) => {
         uploadedFileName,
         reviewStatus,
         distributionId,
+        brandCode,
       ]
     );
 
