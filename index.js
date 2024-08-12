@@ -240,7 +240,7 @@ app.use("/get-bank_recon_details", GetBankReconDetailsService);
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
 app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
 app.use("/branding-assets", BrandingAssetsService);
-app.use("/shop-master", ShopMasterService);
+app.use("/shop-master", AuthGuard, ShopMasterService);
 app.use("/route-master", RouteMasterService);
 
 ///////////////////////// sap
