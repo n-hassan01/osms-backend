@@ -24,19 +24,35 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/view", async (req, res, next) => {
-  await pool.query(
-    "SELECT * FROM shop_master_v;",
+  try {
+    const userName = req.id;
 
-    (error, result) => {
-      try {
-        if (error) throw error;
+    // First query to get the group ID
+    const groupResult = await pool.query(
+      "SELECT cust_group_id FROM public.fnd_user WHERE user_name=$1;",
+      [userName]
+    );
 
-        res.status(200).json(result.rows);
-      } catch (err) {
-        next(err);
-      }
+    // Check if a group ID was found
+    if (groupResult.rows.length === 0) {
+      return res.status(404).json({ error: "Group ID not found for user." });
     }
-  );
+
+    const groupId = groupResult.rows[0].cust_group_id;
+
+    // Second query to get data from shop_master_v using the group ID
+    const shopResult = await pool.query(
+      "SELECT * FROM shop_master_v WHERE cust_group_id=$1;",
+      [groupId]
+    );
+
+    // Send the result back as JSON
+    res.status(200).json(shopResult.rows);
+  } catch (err) {
+    // Handle errors
+    console.error("Error executing queries:", err.message);
+    next(err);
+  }
 });
 
 router.post("/add", async (req, res, next) => {
