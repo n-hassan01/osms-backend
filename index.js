@@ -137,6 +137,8 @@ const GetBrandingAssetsDetailsService = require("./Controllers/AdminPanel/getBra
 const BrandingAssetsService = require("./Controllers/BandingAssetsManagement/brandingAssetsService");
 const ShopMasterService = require("./Controllers/BandingAssetsManagement/ShopMasterService");
 const RouteMasterService = require("./Controllers/BandingAssetsManagement/routeMasterService.js");
+const BeatService = require("./Controllers/BandingAssetsManagement/BeatService");
+const TownService = require("./Controllers/BandingAssetsManagement/TownService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -242,6 +244,8 @@ app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
 app.use("/branding-assets", BrandingAssetsService);
 app.use("/shop-master", AuthGuard, ShopMasterService);
 app.use("/route-master", RouteMasterService);
+app.use("/beat", BeatService);
+app.use("/beat", TownService);
 
 ///////////////////////// sap
 app.use("/add-customer-from-sap", AddCustomerFromSap);
