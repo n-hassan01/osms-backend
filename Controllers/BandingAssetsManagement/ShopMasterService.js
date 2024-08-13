@@ -26,7 +26,6 @@ router.get("/", async (req, res, next) => {
 router.get("/view", async (req, res, next) => {
   try {
     const userName = req.id;
-    console.log("User Name:", userName);
 
     // First query to get the group ID
     const groupResult = await pool.query(
@@ -40,7 +39,6 @@ router.get("/view", async (req, res, next) => {
     }
 
     const groupId = groupResult.rows[0].cust_group_id;
-    console.log("Group ID:", groupId);
 
     // Second query to get data from shop_master_v using the group ID
     const shopResult = await pool.query(
