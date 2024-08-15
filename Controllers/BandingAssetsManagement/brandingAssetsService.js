@@ -22,6 +22,22 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/layouts", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM brand_store_layouts;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/brandList", async (req, res, next) => {
   await pool.query(
     "SELECT * FROM fnd_lookup_brands_v;",

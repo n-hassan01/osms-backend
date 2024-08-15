@@ -137,6 +137,9 @@ const GetBrandingAssetsDetailsService = require("./Controllers/AdminPanel/getBra
 const BrandingAssetsService = require("./Controllers/BandingAssetsManagement/brandingAssetsService");
 const ShopMasterService = require("./Controllers/BandingAssetsManagement/ShopMasterService");
 const RouteMasterService = require("./Controllers/BandingAssetsManagement/routeMasterService.js");
+const RegionService = require("./Controllers/BandingAssetsManagement/regionService.js");
+const AreaService = require("./Controllers/BandingAssetsManagement/areaService.js");
+const TerritoryService = require("./Controllers/BandingAssetsManagement/territoryService.js");
 const BeatService = require("./Controllers/BandingAssetsManagement/BeatService");
 const TownService = require("./Controllers/BandingAssetsManagement/TownService");
 
@@ -244,8 +247,11 @@ app.use("/get-branding-assets-detail", GetBrandingAssetsDetailsService);
 app.use("/branding-assets", BrandingAssetsService);
 app.use("/shop-master", AuthGuard, ShopMasterService);
 app.use("/route-master", RouteMasterService);
+app.use("/region", AuthGuard, RegionService);
+app.use("/area", AreaService);
+app.use("/territory", TerritoryService);
+app.use("/town", TownService);
 app.use("/beat", BeatService);
-app.use("/beat", TownService);
 
 ///////////////////////// sap
 app.use("/add-customer-from-sap", AddCustomerFromSap);
