@@ -68,4 +68,20 @@ router.get("/get/list", async (req, res, next) => {
   );
 });
 
+router.get("/mtl-system-items-ba-v", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM mtl_system_items_ba_v ",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;

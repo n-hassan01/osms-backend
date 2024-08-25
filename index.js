@@ -142,7 +142,6 @@ const AreaService = require("./Controllers/BandingAssetsManagement/areaService.j
 const TerritoryService = require("./Controllers/BandingAssetsManagement/territoryService.js");
 const BeatService = require("./Controllers/BandingAssetsManagement/BeatService");
 const TownService = require("./Controllers/BandingAssetsManagement/TownService");
-const GetMtlSystemBaViewService = require("./Controllers/AdminPanel/getMtlSystemBaViewService.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -253,7 +252,6 @@ app.use("/area", AreaService);
 app.use("/territory", TerritoryService);
 app.use("/town", TownService);
 app.use("/beat", BeatService);
-app.use("/get-mtlSystemItemsBaView", GetMtlSystemBaViewService);
 
 ///////////////////////// sap
 app.use("/add-customer-from-sap", AddCustomerFromSap);
