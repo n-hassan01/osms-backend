@@ -54,6 +54,22 @@ router.get("/brandList", async (req, res, next) => {
   );
 });
 
+router.get("/brandingAssetSumReport", async (req, res, next) => {
+  await pool.query(
+    "select * from branding_asset_sum_report_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/byShop/:shop_name", async (req, res, next) => {
   const shopName = req.params.shop_name;
 
