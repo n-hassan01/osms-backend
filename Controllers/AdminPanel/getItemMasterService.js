@@ -68,7 +68,7 @@ router.get("/get/list", async (req, res, next) => {
   );
 });
 
-router.get("/mtl-system-items-ba-v", async (req, res, next) => {
+router.get("/view/ba", async (req, res, next) => {
   await pool.query(
     "SELECT * FROM mtl_system_items_ba_v ",
 
