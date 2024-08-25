@@ -56,7 +56,7 @@ router.get("/brandList", async (req, res, next) => {
 
 router.get("/brandingAssetSumReport", async (req, res, next) => {
   await pool.query(
-    "select * from branding_asset_sum_report;",
+    "select * from branding_asset_sum_report_v;",
 
     (error, result) => {
       try {
