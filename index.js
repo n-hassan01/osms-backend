@@ -37,6 +37,7 @@ const CreateSalesOrderNumberSevice = require("./Controllers/SalesOrder/getSalesO
 const GetCustomerListService = require("./Controllers/SalesOrder/getCustomerListService");
 const GetPromotionListService = require("./Controllers/SalesOrder/getPromotionService");
 const BankDepositService = require("./Controllers/SalesOrder/bankDepositService");
+const UndefinedBankDepositService = require("./Controllers/SalesOrder/undefinedBankDepositService");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -185,6 +186,7 @@ app.use("/create-salesorder-number", CreateSalesOrderNumberSevice);
 app.use("/customer-list", AuthGuard, GetCustomerListService);
 app.use("/promotion-list", AuthGuard, GetPromotionListService);
 app.use("/bank-deposit", AuthGuard, BankDepositService);
+app.use("/undefined-bank-deposit", UndefinedBankDepositService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
