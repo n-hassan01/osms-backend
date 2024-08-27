@@ -36,6 +36,8 @@ router.post("/add", async (req, res, next) => {
     remarks: Joi.string().min(0),
     depositor: Joi.string().min(0),
     invoiceNumber: Joi.string().min(0),
+    unidentifiedRefDocNum: Joi.number().allow(null),
+    statusDate: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -73,12 +75,14 @@ router.post("/add", async (req, res, next) => {
     remarks,
     depositor,
     invoiceNumber,
+    unidentifiedRefDocNum,
+    statusDate,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25);",
+    "INSERT INTO public.ar_cash_receipts_all(remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number, unidentified_ref_doc_num, status_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27);",
     [
       customerBankAccountId,
       customerBankBranchId,
@@ -107,6 +111,8 @@ router.post("/add", async (req, res, next) => {
       remarks,
       depositor,
       invoiceNumber,
+      unidentifiedRefDocNum,
+      statusDate,
     ],
     (error, result) => {
       try {
