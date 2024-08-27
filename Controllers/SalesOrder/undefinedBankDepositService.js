@@ -17,6 +17,21 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/view", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_claimed_identified_v;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     documentNumber: Joi.number().allow(null),
