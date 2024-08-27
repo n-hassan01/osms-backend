@@ -154,4 +154,65 @@ router.put("/update", async (req, res, next) => {
   );
 });
 
+router.post("/uploadExcel", async (req, res, next) => {
+  //   const schema = Joi.array().items(
+  //     Joi.object({
+  //       document_number: Joi.number().allow(null),
+  //       bank_stm_date: Joi.string().min(0),
+  //       company_code: Joi.string().min(0).max(10),
+  //       bank_name: Joi.string().min(0).max(100),
+  //       bank_account_num: Joi.string().min(0).max(100),
+  //       description: Joi.string().min(0).max(200),
+  //       amount: Joi.string().min(0),
+  //       remarks: Joi.string().min(0).max(250),
+  //       status: Joi.string().min(0).max(20),
+  //     })
+  //   );
+  //   console.log("schema", schema);
+
+  //   const validation = schema.validate(req.body);
+
+  //   if (validation.error) {
+  //     console.log(validation.error.message);
+  //     return res.status(400).send("Bad Request");
+  //   }
+
+  try {
+    const data = req.body;
+    let result;
+    for (const item of data) {
+      const {
+        document_number,
+        bank_stm_date,
+        company_code,
+        bank_name,
+        bank_account_num,
+        description,
+        amount,
+        remarks,
+      } = item;
+
+      result = await pool.query(
+        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8)",
+        [
+          document_number,
+          bank_stm_date,
+          company_code,
+          bank_name,
+          bank_account_num,
+          description,
+          amount,
+          remarks,
+        ]
+      );
+
+      console.log("hool", result.rows);
+    }
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
