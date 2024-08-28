@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
+const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -233,7 +234,7 @@ router.post("/uploadExcel", async (req, res, next) => {
 router.post("/confirm", async (req, res, next) => {
   const schema = Joi.object({
     cashReceiptId: Joi.number().required(),
-    remarks: Joi.string().required(),
+    remarks: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
