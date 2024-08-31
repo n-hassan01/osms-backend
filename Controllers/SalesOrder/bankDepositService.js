@@ -37,7 +37,7 @@ router.post("/add", async (req, res, next) => {
     depositor: Joi.string().min(0),
     invoiceNumber: Joi.string().min(0),
     unidentifiedRefDocNum: Joi.number().allow(null),
-    statusDate: Joi.string().min(0),
+    statusDate: Joi.date().allow(null, ""),
   });
 
   const validation = schema.validate(req.body);
@@ -98,8 +98,8 @@ router.post("/add", async (req, res, next) => {
       receiptMethodId,
       docSequenceValue,
       docSequenceId,
-      // status,
-      "NEW",
+      status,
+      // "NEW",
       anticipatedClearingDate,
       lastUpdatedBy,
       date,

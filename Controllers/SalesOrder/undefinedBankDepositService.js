@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
+const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -228,6 +229,37 @@ router.post("/uploadExcel", async (req, res, next) => {
     console.error(error);
     next(error);
   }
+});
+
+router.post("/confirm", async (req, res, next) => {
+  const schema = Joi.object({
+    cashReceiptId: Joi.number().required(),
+    remarks: Joi.string().min(0),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const { cashReceiptId, remarks } = req.body;
+
+  await pool.query(
+    "CALL proc_unidentified_claimed_confirm_process($1, $2);",
+    [cashReceiptId, remarks],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        return res.status(200).json({ message: "Successfully executed!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 });
 
 module.exports = router;
