@@ -79,51 +79,63 @@ router.post("/add", async (req, res, next) => {
     statusDate,
   } = req.body;
 
-  const date = new Date();
+  try {
+    const primaryKey = await getPrimaryKey(
+      "cash_receipt_id",
+      "ar_cash_receipts_all"
+    );
+    console.log("Generated Primary Key:", primaryKey);
 
-  await pool.query(
-    "INSERT INTO public.ar_cash_receipts_all(remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number, unidentified_ref_doc_num, status_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27);",
-    [
-      customerBankAccountId,
-      customerBankBranchId,
-      receiptNumber,
-      receiptDate,
-      depositDate,
-      amount,
-      // remittanceBankAccountId,
-      legalEntityId,
-      ledgerId,
-      currencyCode,
-      payFromCustomer,
-      receiptMethodId,
-      docSequenceValue,
-      docSequenceId,
-      status,
-      // "NEW",
-      anticipatedClearingDate,
-      lastUpdatedBy,
-      date,
-      createdBy,
-      date,
-      uploadedFilename,
-      depositorBank,
-      depositType,
-      remarks,
-      depositor,
-      invoiceNumber,
-      unidentifiedRefDocNum,
-      statusDate,
-    ],
-    (error, result) => {
-      try {
-        if (error) throw error;
+    const date = new Date();
 
-        return res.status(200).json({ message: "Successfully added!" });
-      } catch (err) {
-        next(err);
+    await pool.query(
+      "INSERT INTO public.ar_cash_receipts_all(cash_receipt_id, remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number, unidentified_ref_doc_num, status_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28);",
+      [
+        primaryKey,
+        customerBankAccountId,
+        customerBankBranchId,
+        receiptNumber,
+        receiptDate,
+        depositDate,
+        amount,
+        // remittanceBankAccountId,
+        legalEntityId,
+        ledgerId,
+        currencyCode,
+        payFromCustomer,
+        receiptMethodId,
+        docSequenceValue,
+        docSequenceId,
+        status,
+        // "NEW",
+        anticipatedClearingDate,
+        lastUpdatedBy,
+        date,
+        createdBy,
+        date,
+        uploadedFilename,
+        depositorBank,
+        depositType,
+        remarks,
+        depositor,
+        invoiceNumber,
+        unidentifiedRefDocNum,
+        statusDate,
+      ],
+      (error, result) => {
+        try {
+          if (error) throw error;
+
+          return res.status(200).json({ message: "Successfully added!" });
+        } catch (err) {
+          next(err);
+        }
       }
-    }
-  );
+    );
+    // You can proceed with other operations using the primary key.
+  } catch (err) {
+    console.error("Error fetching primary key:", err.message);
+  }
 });
 
 router.get("/get/:cash_receipt_id", async (req, res, next) => {
