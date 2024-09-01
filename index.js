@@ -148,6 +148,7 @@ const TownService = require("./Controllers/BandingAssetsManagement/TownService")
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
 const loginTokenMiddleware = require("./middlewares/getLoginTokenMiddleware");
+const getPrimaryKeyMiddleware = require("./middlewares/getPrimaryKey");
 
 //routing api for integrate vatpos software
 const VatposIntegrationService = require("./Controllers/VatposIntegration/vatposIntegrationService");
