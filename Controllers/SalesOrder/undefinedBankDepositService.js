@@ -38,12 +38,13 @@ router.post("/add", async (req, res, next) => {
     documentNumber: Joi.number().allow(null),
     bankStmDate: Joi.string().min(0),
     companyCode: Joi.string().min(0).max(10),
-    bankName: Joi.string().min(0).max(100),
     bankAccountNum: Joi.string().min(0).max(100),
     description: Joi.string().min(0).max(200),
     amount: Joi.string().min(0),
     remarks: Joi.string().min(0).max(250),
     status: Joi.string().min(0).max(20),
+    depositTypeId: Joi.number().allow(null),
+    bankAccountId: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -58,28 +59,30 @@ router.post("/add", async (req, res, next) => {
     documentNumber,
     bankStmDate,
     companyCode,
-    bankName,
     bankAccountNum,
     description,
     amount,
     remarks,
     status,
+    depositTypeId,
+    bankAccountId,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.unidentified_bank_deposits(document_number, bank_stm_date, company_code, bank_name, bank_account_num, description, amount, remarks, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);",
+    "INSERT INTO public.unidentified_bank_deposits(document_number, bank_stm_date, company_code, bank_account_num, description, amount, remarks, status, deposit_type_id, bank_account_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $10);",
     [
       documentNumber,
       bankStmDate,
       companyCode,
-      bankName,
       bankAccountNum,
       description,
       amount,
       remarks,
       status,
+      depositTypeId,
+      bankAccountId,
     ],
     (error, result) => {
       try {
@@ -200,24 +203,26 @@ router.post("/uploadExcel", async (req, res, next) => {
       const {
         document_number,
         bank_stm_date,
-        company_code,
-        bank_name,
+        deposit_type_id,
+        bank_account_id,
         bank_account_num,
-        description,
         amount,
+        company_code,
+        description,
         remarks,
       } = item;
 
       result = await pool.query(
-        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8)",
+        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8, $9)",
         [
           document_number,
           bank_stm_date,
-          company_code,
-          bank_name,
+          deposit_type_id,
+          bank_account_id,
           bank_account_num,
-          description,
           amount,
+          company_code,
+          description,
           remarks,
         ]
       );

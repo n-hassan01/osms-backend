@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 //routing api for users
+const AddUserService = require("./Controllers/AdminPanel/addUserService.js");
 const SignupService = require("./Controllers/signupService");
 const SendOtpService = require("./Controllers/sendOtpService.js");
 const CompareOtpService = require("./Controllers/compareOtpService");
@@ -160,6 +161,7 @@ app.use(cors());
 
 // routing middleware for user
 // authentication and authorization
+app.use("/add-user", AddUserService);
 app.use("/signup", SignupService);
 app.use("/send-otp", SendOtpService);
 app.use("/compare-otp", CompareOtpService);
