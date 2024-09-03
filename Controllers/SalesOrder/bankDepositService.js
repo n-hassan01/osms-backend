@@ -90,7 +90,7 @@ router.post("/add", async (req, res, next) => {
     const date = new Date();
 
     await pool.query(
-      "INSERT INTO public.ar_cash_receipts_all(cash_receipt_id, remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number, unidentified_ref_doc_num, status_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28);",
+      "INSERT INTO public.ar_cash_receipts_all(cash_receipt_id, remittance_bank_account_id, company_cust_bank_branch_id, receipt_number, receipt_date, deposit_date, amount, legal_entity_id, ledger_id, currency_code, pay_from_customer, receipt_method_id, doc_sequence_value, doc_sequence_id, status, anticipated_clearing_date, last_updated_by, last_update_date, created_by, creation_date, uploaded_filename, company_cust_bank_id, deposit_type_id, remarks, depositor_name, invoice_number, unidentified_ref_doc_num, status_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28) returning cash_receipt_id;",
       [
         primaryKey,
         customerBankAccountId,
@@ -127,7 +127,12 @@ router.post("/add", async (req, res, next) => {
         try {
           if (error) throw error;
 
-          return res.status(200).json({ message: "Successfully added!" });
+          return res
+            .status(200)
+            .json({
+              message: "Successfully added!",
+              cashReceiptId: primaryKey,
+            });
         } catch (err) {
           next(err);
         }

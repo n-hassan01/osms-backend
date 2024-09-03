@@ -19,9 +19,10 @@ router.get("/", async (req, res, next) => {
 
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
-    payFromCustomer: Joi.number().require(),
-    amount: Joi.number().require(),
-    invoiceNumber: Joi.string().max(40).require(),
+    cashReceiptId: Joi.number().required(),
+    payFromCustomer: Joi.number().required(),
+    amount: Joi.number().allow(null),
+    invoiceNumber: Joi.string().max(40).required(),
     remarks: Joi.string().max(100).min(0),
     lastUpdatedBy: Joi.number().allow(null),
     lastUpdateDate: Joi.date().allow("", null),
@@ -39,6 +40,7 @@ router.post("/add", async (req, res, next) => {
   }
 
   const {
+    cashReceiptId,
     payFromCustomer,
     amount,
     invoiceNumber,
@@ -51,12 +53,6 @@ router.post("/add", async (req, res, next) => {
   } = req.body;
 
   try {
-    const result = await pool.query(
-      "SELECT public.fn_new_seq_id('cash_receipt_id', 'ar_cash_rec_customer_all')"
-    );
-    const cashReceiptId = result.rows[0].fn_new_seq_id;
-    const today = new Date();
-
     await pool.query(
       `INSERT INTO public.ar_cash_rec_customer_all(
         cash_receipt_id, pay_from_customer, amount, invoice_number, remarks, last_updated_by, last_update_date, 
