@@ -9,6 +9,7 @@ app.use(cors());
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 //routing api for users
+const AddUserService = require("./Controllers/AdminPanel/addUserService.js");
 const SignupService = require("./Controllers/signupService");
 const SendOtpService = require("./Controllers/sendOtpService.js");
 const CompareOtpService = require("./Controllers/compareOtpService");
@@ -39,6 +40,7 @@ const GetPromotionListService = require("./Controllers/SalesOrder/getPromotionSe
 const BankDepositService = require("./Controllers/SalesOrder/bankDepositService");
 const UndefinedBankDepositService = require("./Controllers/SalesOrder/undefinedBankDepositService");
 const ApInvoiceAllService = require("./Controllers/SalesOrder/apInvoiceAllService");
+const ArCashRecCustomerAllervice = require("./Controllers/SalesOrder/arCashRecCustomerAllService.js");
 
 //routing api for admin
 const AddHrLocationsAll = require("./Controllers/AdminPanel/addHrLocationsService");
@@ -160,6 +162,7 @@ app.use(cors());
 
 // routing middleware for user
 // authentication and authorization
+app.use("/add-user", AddUserService);
 app.use("/signup", SignupService);
 app.use("/send-otp", SendOtpService);
 app.use("/compare-otp", CompareOtpService);
@@ -190,6 +193,7 @@ app.use("/promotion-list", AuthGuard, GetPromotionListService);
 app.use("/bank-deposit", AuthGuard, BankDepositService);
 app.use("/undefined-bank-deposit", UndefinedBankDepositService);
 app.use("/ap-invoice-all", ApInvoiceAllService);
+app.use("/arCashRecCustomerAll", ArCashRecCustomerAllervice);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
