@@ -40,6 +40,7 @@ const GetPromotionListService = require("./Controllers/SalesOrder/getPromotionSe
 const BankDepositService = require("./Controllers/SalesOrder/bankDepositService");
 const UndefinedBankDepositService = require("./Controllers/SalesOrder/undefinedBankDepositService");
 const ApInvoiceAllService = require("./Controllers/SalesOrder/apInvoiceAllService");
+const ApInvoiceLinesAllService = require("./Controllers/SalesOrder/apInvoiceLinesAllService.js");
 const ArCashRecCustomerAllervice = require("./Controllers/SalesOrder/arCashRecCustomerAllService.js");
 
 //routing api for admin
@@ -193,6 +194,7 @@ app.use("/promotion-list", AuthGuard, GetPromotionListService);
 app.use("/bank-deposit", AuthGuard, BankDepositService);
 app.use("/undefined-bank-deposit", UndefinedBankDepositService);
 app.use("/ap-invoice-all", ApInvoiceAllService);
+app.use("/apInvoiceLinesAll", ApInvoiceLinesAllService);
 app.use("/arCashRecCustomerAll", ArCashRecCustomerAllervice);
 
 // routing middleware for admin
