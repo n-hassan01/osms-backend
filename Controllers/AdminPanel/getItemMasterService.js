@@ -84,4 +84,20 @@ router.get("/view/ba", async (req, res, next) => {
   );
 });
 
+router.get("/view/fg", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM mtl_system_items_fg_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 module.exports = router;
