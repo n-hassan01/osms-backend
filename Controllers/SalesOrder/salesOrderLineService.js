@@ -19,6 +19,7 @@ router.post("/add", async (req, res, next) => {
     offerQuantity: Joi.number().allow(null),
     totalQuantity: Joi.number().allow(null),
     unitOfferPrice: Joi.number().allow(null),
+    inventoryItemCode: Joi.string().min(0).max(40),
   });
 
   const validation = schema.validate(req.body);
@@ -44,12 +45,13 @@ router.post("/add", async (req, res, next) => {
     offerQuantity,
     totalQuantity,
     unitOfferPrice,
+    inventoryItemCode,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO oe_order_lines_all(total_price, open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price, offer_quantity, total_quantity, unit_offer_price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING line_number, line_id;",
+    "INSERT INTO oe_order_lines_all(total_price, open_flag, booked_flag, header_id, line_number, inventory_item_id, creation_date, created_by, ordered_item, order_quantity_uom, ordered_quantity, sold_from_org_id, unit_selling_price, offer_quantity, total_quantity, unit_offer_price, inventory_item_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING line_number, line_id;",
     [
       totalPrice,
       "Y",
@@ -67,6 +69,7 @@ router.post("/add", async (req, res, next) => {
       offerQuantity,
       totalQuantity,
       unitOfferPrice,
+      inventoryItemCode,
     ],
     (error, result) => {
       try {
@@ -123,8 +126,9 @@ router.put("/update/:line_id", async (req, res, next) => {
     inventoryItemId: Joi.number().required(),
     orderedItem: Joi.string().min(0).max(2000),
     orderQuantityUom: Joi.string().min(0).max(3),
-    orderedQuantity: Joi.number().allow(null),
+    inventoryItemCode: Joi.string().min(0).max(40),
     // soldFromOrgId: Joi.number().allow(null),
+    orderedQuantity: Joi.number().allow(null),
     unitSellingPrice: Joi.number().allow(null),
     totalPrice: Joi.number().allow(null),
     offerQuantity: Joi.number().allow(null),
@@ -151,12 +155,13 @@ router.put("/update/:line_id", async (req, res, next) => {
     offerQuantity,
     totalQuantity,
     unitOfferPrice,
+    inventoryItemCode,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE oe_order_lines_all SET inventory_item_id=$1, ordered_item=$2, order_quantity_uom=$3, ordered_quantity=$4, unit_selling_price=$5, total_price=$6, offer_quantity=$7, total_quantity=$8, unit_offer_price=$9 WHERE line_id=$10;",
+    "UPDATE oe_order_lines_all SET inventory_item_id=$1, ordered_item=$2, order_quantity_uom=$3, ordered_quantity=$4, unit_selling_price=$5, total_price=$6, offer_quantity=$7, total_quantity=$8, unit_offer_price=$9, inventory_item_code=$10 WHERE line_id=$11;",
     [
       inventoryItemId,
       orderedItem,
@@ -168,6 +173,7 @@ router.put("/update/:line_id", async (req, res, next) => {
       offerQuantity,
       totalQuantity,
       unitOfferPrice,
+      inventoryItemCode,
       lineId,
     ],
     (error, result) => {

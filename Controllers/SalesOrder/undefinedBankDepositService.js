@@ -5,7 +5,7 @@ const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM public.unidentified_bank_deposits;",
+    "SELECT * FROM public.unidentified_bank_deposits_v;",
     (error, result) => {
       try {
         if (error) throw error;
