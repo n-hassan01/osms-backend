@@ -135,6 +135,7 @@ const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategor
 const AddReconsiledDataService = require("./Controllers/AdminPanel/addReconciledDataService.js");
 const GetBankReconDetailsService = require("./Controllers/AdminPanel/getBankReconIdService.js");
 const AddCustomerFromSap = require("./Controllers/SapIntegration/AddCustomerFromSap.js");
+const CustomerSummaryList = require("./Controllers/AdminPanel/getSummaryCustomerListService.js");
 
 //routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
@@ -251,6 +252,7 @@ app.use("/add-excel-data", AddExcelDataService);
 app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
 app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
 app.use("/get-bank_recon_details", GetBankReconDetailsService);
+app.use("/customer-summary", CustomerSummaryList);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
