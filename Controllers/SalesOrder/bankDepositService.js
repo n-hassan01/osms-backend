@@ -127,12 +127,10 @@ router.post("/add", async (req, res, next) => {
         try {
           if (error) throw error;
 
-          return res
-            .status(200)
-            .json({
-              message: "Successfully added!",
-              cashReceiptId: primaryKey,
-            });
+          return res.status(200).json({
+            message: "Successfully added!",
+            cashReceiptId: primaryKey,
+          });
         } catch (err) {
           next(err);
         }
@@ -519,6 +517,22 @@ router.get("/company-bank-account/view", async (req, res, next) => {
       next(err);
     }
   });
+});
+
+router.get("/get-doc-number", async (req, res, next) => {
+  await pool.query(
+    "select fn_create_deposit_number() from dual;",
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        const value = result.rows[0].fn_create_deposit_number;
+        res.status(200).send({ value });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 });
 
 module.exports = router;
