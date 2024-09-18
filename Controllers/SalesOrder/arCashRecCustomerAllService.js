@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
+const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -25,10 +26,10 @@ router.post("/add", async (req, res, next) => {
     invoiceNumber: Joi.string().max(40).required(),
     remarks: Joi.string().max(100).min(0),
     lastUpdatedBy: Joi.number().allow(null),
-    lastUpdateDate: Joi.date().allow("", null),
+    lastUpdateDate: Joi.date().allow(null, ''),
     lastUpdateLogin: Joi.number().allow(null),
     createdBy: Joi.number().allow(null),
-    creationDate: Joi.date().allow("", null),
+    creationDate: Joi.date().allow(null, ''),
   });
 
   const validation = schema.validate(req.body);
@@ -57,7 +58,7 @@ router.post("/add", async (req, res, next) => {
       `INSERT INTO public.ar_cash_rec_customer_all(
         cash_receipt_id, pay_from_customer, amount, invoice_number, remarks, last_updated_by, last_update_date, 
         last_update_login, created_by, creation_date)
-        VALUES ($1, $2, $3, $4, $5, $,6 $7, $8, $9, $10);`,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
       [
         cashReceiptId,
         payFromCustomer,

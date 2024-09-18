@@ -40,7 +40,7 @@ router.post("/add", async (req, res, next) => {
     companyCode: Joi.string().min(0).max(10),
     bankAccountNum: Joi.string().min(0).max(100),
     description: Joi.string().min(0).max(200),
-    amount: Joi.string().min(0),
+    amount: Joi.number().min(0),
     remarks: Joi.string().min(0).max(250),
     status: Joi.string().min(0).max(20),
     depositTypeId: Joi.number().allow(null),
