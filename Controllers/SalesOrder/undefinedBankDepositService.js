@@ -210,10 +210,11 @@ router.post("/uploadExcel", async (req, res, next) => {
         company_code,
         description,
         remarks,
+        userId,
       } = item;
 
       result = await pool.query(
-        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
         [
           document_number,
           bank_stm_date,
@@ -224,6 +225,7 @@ router.post("/uploadExcel", async (req, res, next) => {
           company_code,
           description,
           remarks,
+          userId,
         ]
       );
 
