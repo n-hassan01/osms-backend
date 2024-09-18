@@ -21,7 +21,7 @@ router.post("/add", async (req, res, next) => {
     legalEntityId: Joi.number().allow(null),
     ledgerId: Joi.number().allow(null),
     currencyCode: Joi.string().min(0).max(15),
-    payFromCustomer: Joi.number().required(),
+    payFromCustomer: Joi.number().allow(null),
     receiptMethodId: Joi.string().min(0),
     docSequenceValue: Joi.string().min(0),
     docSequenceId: Joi.number().allow(null),
