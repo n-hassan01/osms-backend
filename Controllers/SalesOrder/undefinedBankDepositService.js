@@ -40,7 +40,7 @@ router.post("/add", async (req, res, next) => {
     companyCode: Joi.string().min(0).max(10),
     bankAccountNum: Joi.string().min(0).max(100),
     description: Joi.string().min(0).max(200),
-    amount: Joi.string().min(0),
+    amount: Joi.number().min(0),
     remarks: Joi.string().min(0).max(250),
     status: Joi.string().min(0).max(20),
     depositTypeId: Joi.number().allow(null),
@@ -210,10 +210,11 @@ router.post("/uploadExcel", async (req, res, next) => {
         company_code,
         description,
         remarks,
+        userId,
       } = item;
 
       result = await pool.query(
-        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8, $9)",
+        "CALL public.proc_unidentified_deposits_upload_process($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
         [
           document_number,
           bank_stm_date,
@@ -224,6 +225,7 @@ router.post("/uploadExcel", async (req, res, next) => {
           company_code,
           description,
           remarks,
+          userId,
         ]
       );
 
