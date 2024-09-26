@@ -30,12 +30,11 @@ router.get("/", async (req, res, next) => {
 
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
-    businessPartner: Joi.string().min(0),
-    businessPartnerFullname: Joi.string().min(0),
-    businessPartnerCategory: Joi.number().allow(null),
-    businessPartnerGrouping: Joi.string().min(0),
-    businessPartnerIdByExtSystem: Joi.string().min(0),
-    businessPartnerType: Joi.string().min(0),
+    product: Joi.string().min(0),
+    productType: Joi.string().min(0),
+    creationDateTime: Joi.string().min(0),
+    createdByUser: Joi.string().min(0),
+    baseUnit: Joi.string().min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -46,27 +45,14 @@ router.post("/add", async (req, res, next) => {
     return res.status(400).send("Invalid inputs");
   }
 
-  const {
-    businessPartner,
-    businessPartnerFullname,
-    businessPartnerCategory,
-    businessPartnerGrouping,
-    businessPartnerIdByExtSystem,
-    businessPartnerType,
-  } = req.body;
+  const { product, productType, creationDateTime, createdByUser, baseUnit } =
+    req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.customer_from_sap(business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type) VALUES ($1, $2, $3, $4, $5, $6);",
-    [
-      businessPartner,
-      businessPartnerCategory,
-      businessPartnerFullname,
-      businessPartnerGrouping,
-      businessPartnerIdByExtSystem,
-      businessPartnerType,
-    ],
+    "INSERT INTO public.product_from_sap(product, product_type, creation_date_time, created_by_user, base_unit) VALUES ($1, $2, $3, $4, $5);",
+    [product, productType, creationDateTime, createdByUser, baseUnit],
     (error, result) => {
       try {
         if (error) throw error;
