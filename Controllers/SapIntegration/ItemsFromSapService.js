@@ -12,7 +12,7 @@ router.get("/", async (req, res, next) => {
 
   try {
     const response = await axios.get(
-      "https://my411141-api.s4hana.cloud.sap/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/Product",
+      "https://my411141-api.s4hana.cloud.sap/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/Product?$top=10000",
       {
         headers: {
           Authorization: `Basic ${auth}`,
