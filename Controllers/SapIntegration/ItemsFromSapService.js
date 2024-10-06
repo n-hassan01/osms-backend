@@ -9,19 +9,36 @@ const password = process.env.PASSWORD_TO_GET_CUSTOMER_FROM_SAP;
 
 router.get("/", async (req, res, next) => {
   const auth = Buffer.from(`${username}:${password}`).toString("base64");
+  const chunkSize = 500; // Define a reasonable chunk size
+  let allItems = [];
+  let skip = 0;
+  let hasMoreData = true;
 
   try {
-    const response = await axios.get(
-      "https://my411141-api.s4hana.cloud.sap/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/Product?$top=10000",
-      {
-        headers: {
-          Authorization: `Basic ${auth}`,
-        },
-      }
-    );
+    while (hasMoreData) {
+      const response = await axios.get(
+        `https://my411141-api.s4hana.cloud.sap/sap/opu/odata4/sap/api_product/srvd_a2x/sap/product/0002/Product?$top=${chunkSize}&$skip=${skip}`,
+        {
+          headers: {
+            Authorization: `Basic ${auth}`,
+          },
+        }
+      );
 
-    const items = response.data.value;
-    res.json({ items });
+      const items = response.data.value;
+      allItems = allItems.concat(items); // Append the chunk of data to the full result
+
+      // If the returned items are less than the chunk size, it means we've retrieved all the data
+      if (items.length < chunkSize) {
+        hasMoreData = false;
+      }
+
+      // Update skip value for the next request
+      skip += chunkSize;
+    }
+
+    // Respond with the aggregated items
+    res.json({ items: allItems });
   } catch (error) {
     console.error(error);
     next(error);
@@ -97,6 +114,78 @@ router.post("/add/error", async (req, res, next) => {
       }
     }
   );
+});
+
+// Helper function to chunk the array
+function chunkArray(array, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+router.post("/add/all", async (req, res, next) => {
+  const { content } = req.body;
+  const errors = [];
+  const BATCH_SIZE = 500;
+
+  // Split content into smaller chunks
+  const batches = chunkArray(content, BATCH_SIZE);
+
+  try {
+    // Process each batch sequentially
+    for (const batch of batches) {
+      const values = [];
+      const params = [];
+
+      // Prepare the values and params for each batch insert
+      batch.forEach((element, index) => {
+        const {
+          product,
+          productType,
+          creationDateTime,
+          createdByUser,
+          baseUnit,
+        } = element;
+        values.push(
+          `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${
+            index * 5 + 4
+          }, $${index * 5 + 5})`
+        );
+        params.push(
+          product,
+          productType,
+          creationDateTime,
+          createdByUser,
+          baseUnit
+        );
+      });
+
+      // Generate the query for the batch insert
+      const query = `
+        INSERT INTO public.product_from_sap(product, product_type, creation_date_time, created_by_user, base_unit)
+        VALUES ${values.join(", ")};
+      `;
+
+      try {
+        // Execute the batch insert query
+        await pool.query(query, params);
+      } catch (err) {
+        // Collect the error, but continue with the next batch
+        errors.push({ batch, error: err.message });
+      }
+    }
+
+    // If any errors occurred, return them in the response
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Some batches failed", errors });
+    }
+
+    return res.status(200).json({ message: "Successfully added all entries!" });
+  } catch (err) {
+    next(err); // Handle unexpected errors outside the loop
+  }
 });
 
 module.exports = router;
