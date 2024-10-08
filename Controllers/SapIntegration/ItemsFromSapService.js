@@ -142,11 +142,11 @@ router.post("/add/all", async (req, res, next) => {
       // Prepare the values and params for each batch insert
       batch.forEach((element, index) => {
         const {
-          product,
-          productType,
-          creationDateTime,
-          createdByUser,
-          baseUnit,
+          Product,
+          ProductType,
+          CreationDateTime,
+          CreatedByUser,
+          BaseUnit,
         } = element;
         values.push(
           `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${
@@ -154,11 +154,11 @@ router.post("/add/all", async (req, res, next) => {
           }, $${index * 5 + 5})`
         );
         params.push(
-          product,
-          productType,
-          creationDateTime,
-          createdByUser,
-          baseUnit
+          Product,
+          ProductType,
+          CreationDateTime,
+          CreatedByUser,
+          BaseUnit
         );
       });
 
