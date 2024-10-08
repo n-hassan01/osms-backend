@@ -136,7 +136,7 @@ router.post("/add", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.product_from_sap(business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type) VALUES ($1, $2, $3, $4, $5, $6);",
+    "INSERT INTO public.customer_from_sap(business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type) VALUES ($1, $2, $3, $4, $5, $6);",
     [
       BusinessPartner,
       BusinessPartnerFullName,
@@ -189,11 +189,14 @@ router.post("/add/all", async (req, res, next) => {
           BusinessPartnerIDByExtSystem,
           BusinessPartnerType,
         } = element;
+
+        // Correct parameter indexing, 6 fields per record
         values.push(
-          `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${
-            index * 5 + 4
-          }, $${index * 5 + 5})`
+          `($${index * 6 + 1}, $${index * 6 + 2}, $${index * 6 + 3}, $${index * 6 + 4
+          }, $${index * 6 + 5}, $${index * 6 + 6})`
         );
+
+        // Correct order of params: matching the number of placeholders
         params.push(
           BusinessPartner,
           BusinessPartnerFullName,
@@ -206,8 +209,8 @@ router.post("/add/all", async (req, res, next) => {
 
       // Generate the query for the batch insert
       const query = `
-        INSERT INTO public.product_from_sap
-        (business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type)
+        INSERT INTO public.customer_from_sap
+        (business_partner, business_partner_fullname, business_partner_category, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type)
         VALUES ${values.join(", ")};
       `;
 
