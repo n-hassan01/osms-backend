@@ -7,28 +7,7 @@ const Joi = require("joi");
 const username = process.env.USERNAME_TO_GET_CUSTOMER_FROM_SAP;
 const password = process.env.PASSWORD_TO_GET_CUSTOMER_FROM_SAP;
 
-// router.get("/", async (req, res, next) => {
-//   const auth = Buffer.from(`${username}:${password}`).toString("base64");
-
-//   try {
-//     const response = await axios.get(
-//       "https://my411141-api.s4hana.cloud.sap:443/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?$inlinecount=allpages&$format=json",
-//       {
-//         headers: {
-//           Authorization: `Basic ${auth}`,
-//         },
-//       }
-//     );
-
-//     const customers = response.data.d.results;
-//     res.json(customers);
-//   } catch (error) {
-//     console.error(error);
-//     next(error);
-//   }
-// });
-
-router.get("/", async (req, res, next) => {
+async function getCustomers(filteredData) {
   const auth = Buffer.from(`${username}:${password}`).toString("base64");
   const chunkSize = 500;
   let allItems = [];
@@ -43,25 +22,66 @@ router.get("/", async (req, res, next) => {
         {
           headers: {
             Authorization: `Basic ${auth}`,
-            "Content-Type": "application/json", // Optional but good practice
+            "Content-Type": "application/json",
           },
         }
       );
 
-      const items = response.data.d.results || []; // Ensure response is valid
+      const items = response?.data?.d?.results || []; // Ensure response is valid
       allItems = allItems.concat(items); // Append the chunk of data to the full result
 
-      // If the returned items are less than the chunk size, it means we've retrieved all the data
+      // If the returned items are less than the chunk size, stop fetching
       hasMoreData = items.length === chunkSize;
 
       // Update skip value for the next request
       skip += chunkSize;
     }
 
-    res.json({ customers: allItems });
+    if (filteredData) {
+      const filteredItems = allItems.filter((element) => {
+        return (
+          element.BusinessPartnerGrouping === "ZDOC" &&
+          element.BusinessPartnerType === filteredData.toString()
+        );
+      });
+      return filteredItems;
+    }
+
+    return allItems; // Return all collected customer data
   } catch (error) {
     console.error("Error fetching data:", error.message);
-    res.status(500).json({ error: "Failed to fetch customer data" });
+    return []; // Return empty array on failure to keep response consistent
+  }
+}
+
+router.get("/", async (req, res, next) => {
+  try {
+    const allItems = await getCustomers(null);
+
+    if (allItems.length > 0) {
+      res.json({ customers: allItems });
+    } else {
+      res.status(404).json({ message: "No customers found" });
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    next(error);
+  }
+});
+
+router.get("/filter/:id", async (req, res, next) => {
+  try {
+    const filteredBy = req.params.id;
+    const filteredItems = await getCustomers(filteredBy);
+
+    if (filteredItems.length > 0) {
+      res.json({ customers: filteredItems });
+    } else {
+      res.status(404).json({ message: "No customers found" });
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    next(error);
   }
 });
 
@@ -116,7 +136,7 @@ router.post("/add", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO public.product_from_sap(business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type) VALUES ($1, $2, $3, $4, $5, $6);",
+    "INSERT INTO public.customer_from_sap(business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type) VALUES ($1, $2, $3, $4, $5, $6);",
     [
       BusinessPartner,
       BusinessPartnerFullName,
@@ -169,11 +189,14 @@ router.post("/add/all", async (req, res, next) => {
           BusinessPartnerIDByExtSystem,
           BusinessPartnerType,
         } = element;
+
+        // Correct parameter indexing, 6 fields per record
         values.push(
-          `($${index * 5 + 1}, $${index * 5 + 2}, $${index * 5 + 3}, $${
-            index * 5 + 4
-          }, $${index * 5 + 5})`
+          `($${index * 6 + 1}, $${index * 6 + 2}, $${index * 6 + 3}, $${index * 6 + 4
+          }, $${index * 6 + 5}, $${index * 6 + 6})`
         );
+
+        // Correct order of params: matching the number of placeholders
         params.push(
           BusinessPartner,
           BusinessPartnerFullName,
@@ -186,8 +209,8 @@ router.post("/add/all", async (req, res, next) => {
 
       // Generate the query for the batch insert
       const query = `
-        INSERT INTO public.product_from_sap
-        (business_partner, business_partner_category, business_partner_fullname, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type)
+        INSERT INTO public.customer_from_sap
+        (business_partner, business_partner_fullname, business_partner_category, business_partner_grouping, business_partner_id_by_ext_system, business_partner_type)
         VALUES ${values.join(", ")};
       `;
 
