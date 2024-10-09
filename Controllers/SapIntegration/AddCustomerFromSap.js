@@ -39,10 +39,7 @@ async function getCustomers(filteredData) {
 
     if (filteredData) {
       const filteredItems = allItems.filter((element) => {
-        return (
-          element.BusinessPartnerGrouping === "ZDOC" &&
-          element.BusinessPartnerType === filteredData.toString()
-        );
+        return element.BusinessPartnerType === filteredData.toString();
       });
       return filteredItems;
     }
