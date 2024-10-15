@@ -135,6 +135,7 @@ const GetMtlCategoriesBService = require("./Controllers/AdminPanel/getMtlCategor
 const AddReconsiledDataService = require("./Controllers/AdminPanel/addReconciledDataService.js");
 const GetBankReconDetailsService = require("./Controllers/AdminPanel/getBankReconIdService.js");
 const AddCustomerFromSap = require("./Controllers/SapIntegration/AddCustomerFromSap.js");
+const ItemsFromSapService = require("./Controllers/SapIntegration/ItemsFromSapService.js");
 const CustomerSummaryList = require("./Controllers/AdminPanel/getSummaryCustomerListService.js");
 
 //routing api for branding assets management
@@ -268,6 +269,7 @@ app.use("/beat", BeatService);
 
 ///////////////////////// sap
 app.use("/add-customer-from-sap", AddCustomerFromSap);
+app.use("/item-from-sap", ItemsFromSapService);
 
 app.use("/add-po-action-history", AddPoActionHistory);
 app.use("/update-po-action-history", UpdatePoActionHistory);
