@@ -137,6 +137,8 @@ const GetBankReconDetailsService = require("./Controllers/AdminPanel/getBankReco
 const AddCustomerFromSap = require("./Controllers/SapIntegration/AddCustomerFromSap.js");
 const ItemsFromSapService = require("./Controllers/SapIntegration/ItemsFromSapService.js");
 const CustomerSummaryList = require("./Controllers/AdminPanel/getSummaryCustomerListService.js");
+const GetTerritoryInsights = require("./Controllers/AdminPanel/getTerritoryInsights.js");
+const GetTerritoryCompetitors = require("./Controllers/AdminPanel/getTerritoryCompetitors.js");
 
 //routing api for branding assets management
 const GetDivisionDistrictThana = require("./Controllers/AdminPanel/getDivisionDistrictThanaService");
@@ -254,6 +256,8 @@ app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
 app.use("/add-updatedreconciled-excel-data", AddReconsiledDataService);
 app.use("/get-bank_recon_details", GetBankReconDetailsService);
 app.use("/customer-summary", CustomerSummaryList);
+app.use("/get-territory-insights", GetTerritoryInsights);
+app.use("/get-territory-competitors", GetTerritoryCompetitors);
 
 // routing middleware for branding assets management
 app.use("/get-bd-area-lists", GetDivisionDistrictThana);
