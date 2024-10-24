@@ -6,6 +6,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const { env } = require("process");
+const getPrimaryKey = require("../Utils/getPrimaryKeyFn");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -66,7 +67,11 @@ router.post("/add", async (req, res, next) => {
     contactNumber: Joi.string().min(0),
     imagePath: Joi.string().min(0),
     geoLocation: Joi.string().min(0),
-    routeId: Joi.number().allow(null),
+    regionId: Joi.number().allow(null),
+    areaId: Joi.number().allow(null),
+    territoryId: Joi.number().allow(null),
+    townId: Joi.number().allow(null),
+    beatId: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -87,14 +92,20 @@ router.post("/add", async (req, res, next) => {
     contactNumber,
     imagePath,
     geoLocation,
-    routeId,
+    regionId,
+    areaId,
+    territoryId,
+    townId,
+    beatId,
   } = req.body;
 
-  const date = new Date();
+  const primaryKey = await getPrimaryKey("shop_id", "shop_master");
+  console.log("Generated Primary Key:", primaryKey);
 
   await pool.query(
-    "INSERT INTO public.shop_master(shop_name, owner_name, address, division_id, district_id, thana_id, contact_number, image_path, geo_location, route_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);",
+    "INSERT INTO public.shop_master(shop_id, shop_name, owner_name, address, division_id, district_id, thana_id, contact_number, image_path, geo_location, region_id, area_id, territory_id, town_id, beat_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15);",
     [
+      primaryKey,
       shopName,
       ownerName,
       address,
@@ -104,7 +115,11 @@ router.post("/add", async (req, res, next) => {
       contactNumber,
       imagePath,
       geoLocation,
-      routeId,
+      regionId,
+      areaId,
+      territoryId,
+      townId,
+      beatId,
     ],
     (error, result) => {
       try {
