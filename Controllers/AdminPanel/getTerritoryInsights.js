@@ -19,7 +19,10 @@ router.get("/allIds", async (req, res, next) => {
 });
 
 router.post("/territoryLists", async (req, res, next) => {
-  // const { territory_id } = req.body;
+  console.log(req.body);
+
+  const { selectedTerritoryId } = req.body;
+  console.log(selectedTerritoryId);
 
   await pool.query(
     `SELECT 
@@ -35,9 +38,9 @@ JOIN
 JOIN 
     per_all_peoples p ON t.tsm_code = p.employee_number
 WHERE 
-    t.territory_id = 1;
+    t.territory_id = $1;
 `,
-    //  [territory_id],
+    [selectedTerritoryId],
 
     (error, result) => {
       try {
@@ -52,18 +55,19 @@ WHERE
 });
 
 router.post("/perInsights", async (req, res, next) => {
-  // const { territory_id } = req.body;
+  const { selectedTerritoryId } = req.body;
 
   await pool.query(
-    `SELECT t.territory_id, t.territory_name, pap.full_name tsm_name,
-ti.distributor_count, ti.sales_officer_count, 
-    ti.total_outlet_count, ti.company_outlet_count, 
-    ti.population_count, ti.monthly_sales_actual, ti.monthly_sales_target, 
-	ti.monthly_collection_actual, ti.monthly_collection_target
-    FROM territory t 
-    JOIN territory_insights ti ON t.territory_id = ti.territory_id 
-    JOIN per_all_peoples pap ON t.tsm_code = pap.employee_number;`,
-    //  [territory_id],
+    `SELECT t.territory_id, t.territory_name, pap.full_name AS tsm_name,
+       ti.distributor_count, ti.sales_officer_count, 
+       ti.total_outlet_count, ti.company_outlet_count, 
+       ti.population_count, ti.monthly_sales_actual, ti.monthly_sales_target, 
+       ti.monthly_collection_actual, ti.monthly_collection_target
+FROM territory t 
+JOIN territory_insights ti ON t.territory_id = ti.territory_id 
+JOIN per_all_peoples pap ON t.tsm_code = pap.employee_number
+WHERE t.territory_id =$1;`,
+    [selectedTerritoryId],
 
     (error, result) => {
       try {
@@ -78,13 +82,14 @@ ti.distributor_count, ti.sales_officer_count,
 });
 
 router.post("/perCompetitors", async (req, res, next) => {
-  // const { territory_id } = req.body;
+  const { selectedTerritoryId } = req.body;
 
   await pool.query(
     `SELECT t.territory_id, tc.competitor_name, tc.competitor_monthly_sales, tc.bill_board_count 
 FROM public.territory t 
-JOIN public.territory_competitors tc ON t.territory_id = tc.territory_id;`,
-    //  [territory_id],
+JOIN public.territory_competitors tc ON t.territory_id = tc.territory_id
+WHERE t.territory_id =$1;`,
+    [selectedTerritoryId],
 
     (error, result) => {
       try {
