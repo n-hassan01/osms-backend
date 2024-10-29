@@ -19,7 +19,7 @@ router.get("/allIds", async (req, res, next) => {
 });
 
 router.post("/territoryLists", async (req, res, next) => {
-  console.log(req.body);
+  console.log("hola", req.body);
 
   const { selectedTerritoryId } = req.body;
   console.log(selectedTerritoryId);
@@ -127,6 +127,48 @@ router.post("/percompetitors/sql", async (req, res, next) => {
         if (error) throw error;
 
         res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/getRatings", async (req, res, next) => {
+  const { territoryId, rating } = req.body;
+  console.log(territoryId);
+  console.log(rating);
+
+  await pool.query(
+    "SELECT * FROM territoy ",
+    // [territoryId, rating],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        console.log(result);
+
+        res.status(200).send({ message: "Successfully updated!" });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.post("/updateRatings", async (req, res, next) => {
+  const { territoryId, rating } = req.body;
+  console.log(territoryId);
+  console.log(rating);
+
+  await pool.query(
+    "UPDATE territory SET rating=$2 WHERE territory_id=$1;",
+    [territoryId, rating],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        console.log(result);
+
+        res.status(200).send({ message: "Successfully updated!" });
       } catch (err) {
         next(err);
       }
