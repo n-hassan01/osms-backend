@@ -19,8 +19,6 @@ router.get("/allIds", async (req, res, next) => {
 });
 
 router.post("/territoryLists", async (req, res, next) => {
-  console.log("hola", req.body);
-
   const { selectedTerritoryId } = req.body;
   console.log(selectedTerritoryId);
 
@@ -136,8 +134,6 @@ router.post("/percompetitors/sql", async (req, res, next) => {
 
 router.get("/getRatings", async (req, res, next) => {
   const { territoryId, rating } = req.body;
-  console.log(territoryId);
-  console.log(rating);
 
   await pool.query(
     "SELECT * FROM territoy ",
@@ -157,8 +153,6 @@ router.get("/getRatings", async (req, res, next) => {
 
 router.post("/updateRatings", async (req, res, next) => {
   const { territoryId, rating } = req.body;
-  console.log(territoryId);
-  console.log(rating);
 
   await pool.query(
     "UPDATE territory SET rating=$2 WHERE territory_id=$1;",
