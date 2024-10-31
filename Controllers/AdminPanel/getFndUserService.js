@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const getCurrentDate = require("../Utils/getCurrentDateFn");
 const router = express.Router();
+const Joi = require("joi");
 
 router.get("/", async (req, res, next) => {
   await pool.query(
@@ -56,8 +57,8 @@ router.put("/", async (req, res, next) => {
   const today = getCurrentDate();
 
   pool.query(
-    "UPDATE public.fnd_user SET last_update_date=$1, last_updated_by=$2, last_update_login=$3 end_date=$4, status=$5 WHERE user_id=$6;",
-    [today, lastUpdatedBy, lastUpdatedBy, endDate || today, status, userId],
+    "UPDATE public.fnd_user SET last_update_date=$1, last_updated_by=$2, last_update_login=$3, end_date=$4, status=$5 WHERE user_id=$6;",
+    [today, lastUpdatedBy, lastUpdatedBy, endDate, status, userId],
     (error, result) => {
       try {
         if (error) throw error;
