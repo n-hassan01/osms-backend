@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/all", async (req, res, next) => {
   await pool.query(
-    "SELECT clsv.cust_account_id, clsv.account_number, clsv.full_name, clsv.ship_to_address FROM customer_list_security_v clsv;",
+    "SELECT clsv.cust_account_id, clsv.account_number, clsv.full_name, clsv.ship_to_address, clsv.cust_group_id FROM customer_list_security_v clsv;",
     (error, result) => {
       try {
         if (error) throw error;
