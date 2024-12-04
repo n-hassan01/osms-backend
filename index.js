@@ -155,6 +155,8 @@ const TownService = require("./Controllers/BandingAssetsManagement/TownService")
 // Routing for BA Incentive Modules
 const salesTargetService = require("./Controllers/BA Incentive Module/salesTargetService");
 const inventiveFormulaService = require("./Controllers/BA Incentive Module/inventiveFormulaService");
+const incentiveTypesService = require("./Controllers/BA Incentive Module/incentiveTypesService.js");
+const incentiveConditionsService = require("./Controllers/BA Incentive Module/incentiveConditionsService.js");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -211,6 +213,8 @@ app.use("/getAll", salesTargetService);
 app.use("/get", salesTargetService);
 app.use("/update", salesTargetService);
 app.use("/inventiveFormula", inventiveFormulaService);
+app.use("/incentiveTypes", incentiveTypesService);
+app.use("/incentiveConditions", incentiveConditionsService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
