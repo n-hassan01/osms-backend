@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/", (req, res, next) => {
   pool.query(
-    'SELECT * FROM "fnd_user" as u full join per_all_peoples as e ON u.user_name=e.employee_number WHERE u.user_name=$1',
+    'SELECT * FROM "fnd_user" as u full join per_all_peoples as e ON u.user_name=e.employee_number WHERE u.user_name ILIKE $1',
     [req.body.id],
     async (error, result) => {
       try {

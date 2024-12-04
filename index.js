@@ -152,6 +152,10 @@ const TerritoryService = require("./Controllers/BandingAssetsManagement/territor
 const BeatService = require("./Controllers/BandingAssetsManagement/BeatService");
 const TownService = require("./Controllers/BandingAssetsManagement/TownService");
 
+// Routing for BA Incentive Modules
+const salesTargetService = require("./Controllers/BA Incentive Module/salesTargetService");
+const inventiveFormulaService = require("./Controllers/BA Incentive Module/inventiveFormulaService");
+
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
 const LoginToken = require("./middlewares/getLoginTokenMiddleware");
@@ -200,6 +204,13 @@ app.use("/undefined-bank-deposit", UndefinedBankDepositService);
 app.use("/ap-invoice-all", ApInvoiceAllService);
 app.use("/apInvoiceLinesAll", ApInvoiceLinesAllService);
 app.use("/arCashRecCustomerAll", ArCashRecCustomerAllervice);
+
+//routing for BA Incentive
+app.use("/add", salesTargetService);
+app.use("/getAll", salesTargetService);
+app.use("/get", salesTargetService);
+app.use("/update", salesTargetService);
+app.use("/inventiveFormula", inventiveFormulaService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
