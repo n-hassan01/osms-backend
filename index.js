@@ -157,7 +157,7 @@ const salesTargetService = require("./Controllers/BA Incentive Module/salesTarge
 const inventiveFormulaService = require("./Controllers/BA Incentive Module/inventiveFormulaService");
 const incentiveTypesService = require("./Controllers/BA Incentive Module/incentiveTypesService.js");
 const incentiveConditionsService = require("./Controllers/BA Incentive Module/incentiveConditionsService.js");
-const incentiveRecipientGroups = require("./Controllers/BA Incentive Module/incentiveRecipientGroupsService.js");
+const incentiveRecipientGroupsService = require("./Controllers/BA Incentive Module/incentiveRecipientGroupsService.js");
 const incentiveAchievementSlabAll = require("./Controllers/BA Incentive Module/incentiveAchievementSlabAllService");
 const salesTargetsSkuAll = require("./Controllers/BA Incentive Module/salesTargetsSKUAllService.js");
 const salesDetailsAll = require("./Controllers/BA Incentive Module/salesDetailsAllService");
@@ -216,7 +216,7 @@ app.use("/salesTarget", salesTargetService);
 app.use("/inventiveFormula", inventiveFormulaService);
 app.use("/incentiveTypes", incentiveTypesService);
 app.use("/incentiveConditions", incentiveConditionsService);
-app.use("/incentiveRecipientGroups", incentiveRecipientGroups);
+app.use("/incentiveRecipientGroups", incentiveRecipientGroupsService);
 app.use("/incentiveAchievementSlabAll", incentiveAchievementSlabAll);
 app.use("/salesTargetsSkuAll", salesTargetsSkuAll);
 app.use("/salesDetailsAll", salesDetailsAll);
