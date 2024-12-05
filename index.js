@@ -157,6 +157,10 @@ const salesTargetService = require("./Controllers/BA Incentive Module/salesTarge
 const inventiveFormulaService = require("./Controllers/BA Incentive Module/inventiveFormulaService");
 const incentiveTypesService = require("./Controllers/BA Incentive Module/incentiveTypesService.js");
 const incentiveConditionsService = require("./Controllers/BA Incentive Module/incentiveConditionsService.js");
+const incentiveRecipientGroups = require("./Controllers/BA Incentive Module/incentiveRecipientGroupsService.js");
+const incentiveAchievementSlabAll = require("./Controllers/BA Incentive Module/incentiveAchievementSlabAllService");
+const salesTargetsSkuAll = require("./Controllers/BA Incentive Module/salesTargetsSKUAllService.js");
+const salesDetailsAll = require("./Controllers/BA Incentive Module/salesDetailsAllService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -208,13 +212,14 @@ app.use("/apInvoiceLinesAll", ApInvoiceLinesAllService);
 app.use("/arCashRecCustomerAll", ArCashRecCustomerAllervice);
 
 //routing for BA Incentive
-app.use("/add", salesTargetService);
-app.use("/getAll", salesTargetService);
-app.use("/get", salesTargetService);
-app.use("/update", salesTargetService);
+app.use("/salesTarget", salesTargetService);
 app.use("/inventiveFormula", inventiveFormulaService);
 app.use("/incentiveTypes", incentiveTypesService);
 app.use("/incentiveConditions", incentiveConditionsService);
+app.use("/incentiveRecipientGroups", incentiveRecipientGroups);
+app.use("/incentiveAchievementSlabAll", incentiveAchievementSlabAll);
+app.use("/salesTargetsSkuAll", salesTargetsSkuAll);
+app.use("/salesDetailsAll", salesDetailsAll);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);

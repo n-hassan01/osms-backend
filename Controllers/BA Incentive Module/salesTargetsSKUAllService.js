@@ -5,7 +5,7 @@ const router = express.Router();
 
 // get api for all sales target
 router.get("/getAll", async (req, res, next) => {
-  await pool.query("SELECT * FROM sales_targets_all;", (error, result) => {
+  await pool.query("SELECT * FROM sales_targets_sku_all;", (error, result) => {
     try {
       if (error) throw error;
 
@@ -17,12 +17,12 @@ router.get("/getAll", async (req, res, next) => {
 });
 
 // get api for specific sales target
-router.get("/getPer/:cust_account_id", async (req, res, next) => {
-  const customerAccountId = req.params.cust_account_id;
+router.get("/getPer/:incentive_type_id", async (req, res, next) => {
+  const incentiveTypeId = req.params.incentive_type_id;
 
   await pool.query(
-    "SELECT * FROM sales_targets_all where cust_account_id=$1;",
-    [customerAccountId],
+    "SELECT * FROM sales_targets_sku_all where incentive_type_id=$1;",
+    [incentiveTypeId],
     (error, result) => {
       try {
         if (error) throw error;
@@ -38,16 +38,18 @@ router.get("/getPer/:cust_account_id", async (req, res, next) => {
 // add sales target api
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
+    incentiveTypeId: Joi.number().required(),
     custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    startDate: Joi.string().min(0),
+    endDate: Joi.string().min(0),
+    inventoryItemId: Joi.number().required(),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
     createdBy: Joi.number().required(),
     lastUpdateLogin: Joi.number().allow(null),
-    custgroupid: Joi.number().allow(null),
-    startDate: Joi.string().min(0),
-    endDate: Joi.string().min(0),
-    amount: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -59,32 +61,37 @@ router.post("/add", async (req, res, next) => {
   }
 
   const {
+    incentiveTypeId,
     custAccountId,
+    custgroupid,
+    startDate,
+    endDate,
+    inventoryItemId,
+    amount,
+    lastUpdateDate,
     lastUpdatedBy,
     creationDate,
     createdBy,
     lastUpdateLogin,
-    custgroupid,
-    startDate,
-    endDate,
-    amount,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO sales_targets_all(cust_account_id, last_update_date,  last_updated_by, creation_date, created_by,  last_update_login, cust_group_id, start_date, end_date, amount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;",
+    "INSERT INTO sales_targets_sku_all(incentive_type_id,cust_account_id,cust_group_id,start_date,end_date,inventory_item_id,amount, last_update_date,  last_updated_by, creation_date, created_by,  last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *;",
     [
+      incentiveTypeId,
       custAccountId,
-      date,
+      custgroupid,
+      startDate,
+      endDate,
+      inventoryItemId,
+      amount,
+      lastUpdateDate,
       lastUpdatedBy,
       creationDate,
       createdBy,
       lastUpdateLogin,
-      custgroupid,
-      startDate,
-      endDate,
-      amount,
     ],
     (error, result) => {
       try {
@@ -100,19 +107,21 @@ router.post("/add", async (req, res, next) => {
   );
 });
 
-router.put("/update/:cust_account_id", async (req, res, next) => {
-  const custAccountId = req.params.cust_account_id;
+router.put("/update/:incentive_type_id", async (req, res, next) => {
+  const incentiveTypeId = req.params.incentive_type_id;
 
   const schema = Joi.object({
+    custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    startDate: Joi.string().min(0),
+    endDate: Joi.string().min(0),
+    inventoryItemId: Joi.number().required(),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
     createdBy: Joi.number().required(),
     lastUpdateLogin: Joi.number().allow(null),
-    custgroupid: Joi.number().allow(null),
-    startDate: Joi.string().min(0),
-    endDate: Joi.string().min(0),
-    amount: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -124,31 +133,36 @@ router.put("/update/:cust_account_id", async (req, res, next) => {
   }
 
   const {
+    custAccountId,
+    custgroupid,
+    startDate,
+    endDate,
+    inventoryItemId,
+    amount,
+    lastUpdateDate,
     lastUpdatedBy,
     creationDate,
     createdBy,
     lastUpdateLogin,
-    custgroupid,
-    startDate,
-    endDate,
-    amount,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE sales_targets_all SET last_update_date=$1,  last_updated_by=$2, creation_date=$3, created_by=$4,  last_update_login=$5, cust_group_id=$6, start_date=$7, end_date=$8, amount=$9 where cust_account_id=$10  RETURNING *;",
+    "UPDATE sales_targets_sku_all SET cust_account_id=$1,cust_group_id=$2,start_date=$3, end_date=$4,inventory_item_id=$5,amount=$6, last_update_date=$7,  last_updated_by=$8, creation_date=$9, created_by=$10,  last_update_login=$11  where incentive_type_id=$12  RETURNING *;",
     [
-      date,
+      custAccountId,
+      custgroupid,
+      startDate,
+      endDate,
+      inventoryItemId,
+      amount,
+      lastUpdateDate,
       lastUpdatedBy,
       creationDate,
       createdBy,
       lastUpdateLogin,
-      custgroupid,
-      startDate,
-      endDate,
-      amount,
-      custAccountId,
+      incentiveTypeId,
     ],
     (error, result) => {
       try {
