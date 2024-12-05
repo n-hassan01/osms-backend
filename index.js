@@ -216,7 +216,6 @@ app.use("/salesTarget", salesTargetService);
 app.use("/inventiveFormula", inventiveFormulaService);
 app.use("/incentiveTypes", incentiveTypesService);
 app.use("/incentiveConditions", incentiveConditionsService);
-app.use("/incentiveRecipientGroups", incentiveRecipientGroupsService);
 app.use("/incentiveAchievementSlabAll", incentiveAchievementSlabAll);
 app.use("/salesTargetsSkuAll", salesTargetsSkuAll);
 app.use("/salesDetailsAll", salesDetailsAll);
