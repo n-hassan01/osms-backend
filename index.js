@@ -219,6 +219,7 @@ app.use("/incentiveConditions", incentiveConditionsService);
 app.use("/incentiveAchievementSlabAll", incentiveAchievementSlabAll);
 app.use("/salesTargetsSkuAll", salesTargetsSkuAll);
 app.use("/salesDetailsAll", salesDetailsAll);
+app.use("/incentiveRecipientGroups", incentiveRecipientGroupsService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
