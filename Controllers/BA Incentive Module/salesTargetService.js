@@ -17,7 +17,7 @@ router.get("/getAll", async (req, res, next) => {
 });
 
 // get api for specific sales target
-router.get("/:cust_account_id", async (req, res, next) => {
+router.get("/getPer/:cust_account_id", async (req, res, next) => {
   const customerAccountId = req.params.cust_account_id;
 
   await pool.query(
@@ -100,7 +100,7 @@ router.post("/add", async (req, res, next) => {
   );
 });
 
-router.put("/:cust_account_id", async (req, res, next) => {
+router.put("/update/:cust_account_id", async (req, res, next) => {
   const custAccountId = req.params.cust_account_id;
 
   const schema = Joi.object({

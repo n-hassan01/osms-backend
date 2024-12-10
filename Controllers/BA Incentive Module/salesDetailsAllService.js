@@ -5,44 +5,25 @@ const router = express.Router();
 
 // get api for all sales target
 router.get("/getAll", async (req, res, next) => {
-  await pool.query(
-    "SELECT * FROM incentive_recipient_groups;",
-    (error, result) => {
-      try {
-        if (error) throw error;
+  await pool.query("SELECT * FROM sales_details_all;", (error, result) => {
+    try {
+      if (error) throw error;
 
-        res.status(200).json(result.rows);
-      } catch (err) {
-        next(err);
-      }
+      res.status(200).json(result.rows);
+    } catch (err) {
+      next(err);
     }
-  );
-});
-
-// get api for specific sales target
-router.get("/getPer/:recipient_groups_id", async (req, res, next) => {
-  const recipientGroupsId = req.params.recipient_groups_id;
-
-  await pool.query(
-    "SELECT * FROM incentive_recipient_groups where recipient_groups_id=$1;",
-    [recipientGroupsId],
-    (error, result) => {
-      try {
-        if (error) throw error;
-
-        res.status(200).json(result.rows);
-      } catch (err) {
-        next(err);
-      }
-    }
-  );
+  });
 });
 
 // add sales target api
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
-    recipientGroupsId: Joi.number().required(),
-    recipientGroupsName: Joi.string().max(50),
+    orderDate: Joi.string().min(0),
+    orderNumber: Joi.number().allow(null),
+    custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
@@ -59,8 +40,11 @@ router.post("/add", async (req, res, next) => {
   }
 
   const {
-    recipientGroupsId,
-    recipientGroupsName,
+    orderDate,
+    orderNumber,
+    custAccountId,
+    custgroupid,
+    amount,
     lastUpdateDate,
     lastUpdatedBy,
     creationDate,
@@ -71,10 +55,13 @@ router.post("/add", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO incentive_recipient_groups(recipient_groups_id,recipient_groups_name, last_update_date,  last_updated_by, creation_date, created_by,  last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;",
+    "INSERT INTO sales_details_all(order_date,order_number,cust_account_id,cust_group_id,amount, last_update_date,  last_updated_by, creation_date, created_by, last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;",
     [
-      recipientGroupsId,
-      recipientGroupsName,
+      orderDate,
+      orderNumber,
+      custAccountId,
+      custgroupid,
+      amount,
       lastUpdateDate,
       lastUpdatedBy,
       creationDate,
@@ -95,11 +82,14 @@ router.post("/add", async (req, res, next) => {
   );
 });
 
-router.put("/update/:recipient_groups_id", async (req, res, next) => {
-  const recipientGroupsId = req.params.recipient_groups_id;
+router.put("/update/:order_number", async (req, res, next) => {
+  const orderNumber = req.params.order_number;
 
   const schema = Joi.object({
-    recipientGroupsName: Joi.string().min(0).max(50),
+    orderDate: Joi.string().min(0),
+    custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
@@ -116,7 +106,10 @@ router.put("/update/:recipient_groups_id", async (req, res, next) => {
   }
 
   const {
-    recipientGroupsName,
+    orderDate,
+    custAccountId,
+    custgroupid,
+    amount,
     lastUpdateDate,
     lastUpdatedBy,
     creationDate,
@@ -127,15 +120,18 @@ router.put("/update/:recipient_groups_id", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "UPDATE incentive_recipient_groups SET recipient_groups_name=$1,  last_update_date=$2, last_updated_by=$3, creation_date=$4, created_by=$5,  last_update_login=$6 where recipient_groups_id=$7  RETURNING *;",
+    "UPDATE sales_details_all SET orderDate=$1, cust_account_id=$2,cust_group_id=$3,amount=$4, last_update_date=$5,  last_updated_by=$6, creation_date=$7, created_by=$8,  last_update_login=$9  where order_number=$10  RETURNING *;",
     [
-      recipientGroupsName,
+      orderDate,
+      custAccountId,
+      custgroupid,
+      amount,
       lastUpdateDate,
       lastUpdatedBy,
       creationDate,
       createdBy,
       lastUpdateLogin,
-      recipientGroupsId,
+      orderNumber,
     ],
     (error, result) => {
       try {
