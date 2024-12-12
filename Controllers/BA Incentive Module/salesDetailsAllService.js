@@ -5,7 +5,7 @@ const router = express.Router();
 
 // get api for all sales target
 router.get("/getAll", async (req, res, next) => {
-  await pool.query("SELECT * FROM sales_targets_all;", (error, result) => {
+  await pool.query("SELECT * FROM sales_details_all;", (error, result) => {
     try {
       if (error) throw error;
 
@@ -16,38 +16,19 @@ router.get("/getAll", async (req, res, next) => {
   });
 });
 
-// get api for specific sales target
-router.get("/getPer/:cust_account_id", async (req, res, next) => {
-  const customerAccountId = req.params.cust_account_id;
-
-  await pool.query(
-    "SELECT * FROM sales_targets_all where cust_account_id=$1;",
-    [customerAccountId],
-    (error, result) => {
-      try {
-        if (error) throw error;
-
-        res.status(200).json(result.rows);
-      } catch (err) {
-        next(err);
-      }
-    }
-  );
-});
-
 // add sales target api
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
+    orderDate: Joi.string().min(0),
+    orderNumber: Joi.number().allow(null),
     custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
     createdBy: Joi.number().required(),
     lastUpdateLogin: Joi.number().allow(null),
-    custgroupid: Joi.number().allow(null),
-    startDate: Joi.string().min(0),
-    endDate: Joi.string().min(0),
-    amount: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -59,32 +40,33 @@ router.post("/add", async (req, res, next) => {
   }
 
   const {
+    orderDate,
+    orderNumber,
     custAccountId,
+    custgroupid,
+    amount,
+    lastUpdateDate,
     lastUpdatedBy,
     creationDate,
     createdBy,
     lastUpdateLogin,
-    custgroupid,
-    startDate,
-    endDate,
-    amount,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO sales_targets_all(cust_account_id, last_update_date,  last_updated_by, creation_date, created_by,  last_update_login, cust_group_id, start_date, end_date, amount) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;",
+    "INSERT INTO sales_details_all(order_date,order_number,cust_account_id,cust_group_id,amount, last_update_date,  last_updated_by, creation_date, created_by, last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *;",
     [
+      orderDate,
+      orderNumber,
       custAccountId,
-      date,
+      custgroupid,
+      amount,
+      lastUpdateDate,
       lastUpdatedBy,
       creationDate,
       createdBy,
       lastUpdateLogin,
-      custgroupid,
-      startDate,
-      endDate,
-      amount,
     ],
     (error, result) => {
       try {
@@ -100,19 +82,19 @@ router.post("/add", async (req, res, next) => {
   );
 });
 
-router.put("/update/:cust_account_id", async (req, res, next) => {
-  const custAccountId = req.params.cust_account_id;
+router.put("/update/:order_number", async (req, res, next) => {
+  const orderNumber = req.params.order_number;
 
   const schema = Joi.object({
+    orderDate: Joi.string().min(0),
+    custAccountId: Joi.number().required(),
+    custgroupid: Joi.number().allow(null),
+    amount: Joi.number().allow(null),
     lastUpdateDate: Joi.string().min(0),
     lastUpdatedBy: Joi.number().required(),
     creationDate: Joi.string().min(0),
     createdBy: Joi.number().required(),
     lastUpdateLogin: Joi.number().allow(null),
-    custgroupid: Joi.number().allow(null),
-    startDate: Joi.string().min(0),
-    endDate: Joi.string().min(0),
-    amount: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -124,31 +106,32 @@ router.put("/update/:cust_account_id", async (req, res, next) => {
   }
 
   const {
+    orderDate,
+    custAccountId,
+    custgroupid,
+    amount,
+    lastUpdateDate,
     lastUpdatedBy,
     creationDate,
     createdBy,
     lastUpdateLogin,
-    custgroupid,
-    startDate,
-    endDate,
-    amount,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "UPDATE sales_targets_all SET last_update_date=$1,  last_updated_by=$2, creation_date=$3, created_by=$4,  last_update_login=$5, cust_group_id=$6, start_date=$7, end_date=$8, amount=$9 where cust_account_id=$10  RETURNING *;",
+    "UPDATE sales_details_all SET orderDate=$1, cust_account_id=$2,cust_group_id=$3,amount=$4, last_update_date=$5,  last_updated_by=$6, creation_date=$7, created_by=$8,  last_update_login=$9  where order_number=$10  RETURNING *;",
     [
-      date,
+      orderDate,
+      custAccountId,
+      custgroupid,
+      amount,
+      lastUpdateDate,
       lastUpdatedBy,
       creationDate,
       createdBy,
       lastUpdateLogin,
-      custgroupid,
-      startDate,
-      endDate,
-      amount,
-      custAccountId,
+      orderNumber,
     ],
     (error, result) => {
       try {
