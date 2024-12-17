@@ -5,7 +5,7 @@ const router = express.Router();
 
 // get api for all sales target
 router.get("/getAll", async (req, res, next) => {
-  await pool.query("SELECT * FROM inventive_formula;", (error, result) => {
+  await pool.query("SELECT * FROM incentive_formula;", (error, result) => {
     try {
       if (error) throw error;
 
@@ -21,7 +21,7 @@ router.get("/getPerFormula/:so_pct ", async (req, res, next) => {
   const soPct = req.params.so_pct;
 
   await pool.query(
-    "SELECT * FROM inventive_formula where so_pct =$1;",
+    "SELECT * FROM incentive_formula where so_pct =$1;",
     [soPct],
     (error, result) => {
       try {
@@ -76,7 +76,7 @@ router.post("/addFormula", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "INSERT INTO inventive_formula(so_pct, asm_pct ,  dsm_pct , sales_admin_pct , expantion_team_pct ,  planning_team_pct , incentive_pct ,achievement_pct , start_date, end_date, cust_group_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;",
+    "INSERT INTO incentive_formula(so_pct, asm_pct ,  dsm_pct , sales_admin_pct , expantion_team_pct ,  planning_team_pct , incentive_pct ,achievement_pct , start_date, end_date, cust_group_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *;",
     [
       soPct,
       asmPct,
@@ -144,7 +144,7 @@ router.put("/updateFormula/:so_pct", async (req, res, next) => {
   const date = new Date();
 
   await pool.query(
-    "UPDATE inventive_formula SET asm_pct=$1,  dsm_pct =$2, sales_admin_pct =$3, expantion_team_pct =$4,  planning_team_pct =$5, incentive_pct =$6, achievement_pct =$7, start_date =$8, end_date=$9, cust_group_id =$10 where so_pct =$11  RETURNING *;",
+    "UPDATE incentive_formula SET asm_pct=$1,  dsm_pct =$2, sales_admin_pct =$3, expantion_team_pct =$4,  planning_team_pct =$5, incentive_pct =$6, achievement_pct =$7, start_date =$8, end_date=$9, cust_group_id =$10 where so_pct =$11  RETURNING *;",
     [
       asmPct,
       dsmPct,
