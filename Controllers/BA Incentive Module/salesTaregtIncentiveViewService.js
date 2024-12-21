@@ -6,7 +6,7 @@ const router = express.Router();
 // get api for all sales target
 router.get("/", async (req, res, next) => {
   await pool.query(
-    "SELECT * FROM so_sale_target_incentive;",
+    "SELECT * FROM so_sale_target_incentive_v;",
     (error, result) => {
       try {
         if (error) throw error;
