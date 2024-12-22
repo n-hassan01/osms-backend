@@ -22,6 +22,21 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.post("/audit", async (req, res, next) => {
+  const { pDistributionId, pApprovalType } = req.body;
+
+  try {
+    const result = await pool.query("CALL public.proc_ba_approval($1, $2)", [
+      pDistributionId,
+      pApprovalType,
+    ]);
+
+    res.status(200).json({ message: "Procedure executed successfully" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get("/layouts", async (req, res, next) => {
   await pool.query(
     "SELECT * FROM brand_store_layouts;",
