@@ -23,7 +23,7 @@ router.get("/:emp_code", async (req, res, next) => {
   const empCode = req.params.emp_code;
 
   await pool.query(
-    "SELECT * FROM so_sale_target_incentive where emp_code=$1;",
+    "SELECT * FROM so_sale_target_incentive_v where emp_code=$1;",
     [empCode],
     (error, result) => {
       try {
