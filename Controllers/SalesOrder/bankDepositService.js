@@ -260,7 +260,7 @@ router.post("/customer/view/filterByFromDate", async (req, res, next) => {
   const { fromDepositDate } = req.body;
 
   await pool.query(
-    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date >= $1",
+    "SELECT * FROM public.customer_deposit_all_v WHERE creation_date >= $1",
     [fromDepositDate],
     (error, result) => {
       try {
@@ -277,7 +277,7 @@ router.post("/customer/view/filterByToDate", async (req, res, next) => {
   const { toDepositDate } = req.body;
 
   await pool.query(
-    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date <= $1",
+    "SELECT * FROM public.customer_deposit_all_v WHERE creation_date <= $1",
     [toDepositDate],
     (error, result) => {
       try {
@@ -528,6 +528,72 @@ router.get("/get-doc-number", async (req, res, next) => {
 
         const value = result.rows[0].fn_create_deposit_number;
         res.status(200).send({ value });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.post("/filterByDepositDate", async (req, res, next) => {
+  const { toDepositDate, fromDepositDate, userName } = req.body;
+
+  if (userName) {
+    await pool.query(
+      "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date BETWEEN $1 AND $2 AND user_name=$3 ORDER BY deposit_date ASC",
+      [fromDepositDate, toDepositDate, userName],
+      (error, result) => {
+        try {
+          if (error) throw error;
+          res.status(200).send(result.rows);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+  } else {
+    await pool.query(
+      "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date BETWEEN $1 AND $2 ORDER BY deposit_date ASC",
+      [fromDepositDate, toDepositDate],
+      (error, result) => {
+        try {
+          if (error) throw error;
+          res.status(200).send(result.rows);
+        } catch (err) {
+          next(err);
+        }
+      }
+    );
+  }
+});
+
+router.post("/filterByByDepositFromDate", async (req, res, next) => {
+  const { fromDepositDate } = req.body;
+
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date >= $1",
+    [fromDepositDate],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.post("/filterByByDepositToDate", async (req, res, next) => {
+  const { toDepositDate } = req.body;
+
+  await pool.query(
+    "SELECT * FROM public.customer_deposit_all_v WHERE deposit_date <= $1",
+    [toDepositDate],
+    (error, result) => {
+      try {
+        if (error) throw error;
+        res.status(200).send(result.rows);
       } catch (err) {
         next(err);
       }
