@@ -163,7 +163,9 @@ const salesTargetsSkuAll = require("./Controllers/BA Incentive Module/salesTarge
 const salesAchievedTargetsSkuAll = require("./Controllers/BA Incentive Module/salesAchviedTargetsSkuAllService.js");
 const salesDetailsAll = require("./Controllers/BA Incentive Module/salesDetailsAllService");
 const soSalesTargetIncentive = require("./Controllers/BA Incentive Module/salesTaregtIncentiveViewService.js");
-const filterService = require("./Controllers/BA Incentive Module/filterService");
+const salesTargetAllDetailsService = require("./Controllers/BA Incentive Module/salesTargetAllFilterService.js");
+const salesDetailsAllDetailsService = require("./Controllers/BA Incentive Module/salesDetailsFilterService");
+const salesTargetsSKUAllDetailsService = require("./Controllers/BA Incentive Module/salesTargetsSKUAllFilterService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -224,7 +226,9 @@ app.use("/salesTargetsSkuAll", salesTargetsSkuAll);
 app.use("/salesDetailsAll", salesDetailsAll);
 app.use("/incentiveRecipientGroups", incentiveRecipientGroupsService);
 app.use("/salesTargetIncentiveView", soSalesTargetIncentive);
-app.use("/filterService", filterService);
+app.use("/salestargetallfilter", salesTargetAllDetailsService);
+app.use("/salesdetailsallfilter", salesDetailsAllDetailsService);
+app.use("/salestargetsskullfilter", salesTargetsSKUAllDetailsService);
 app.use("/salesAchievedTargetsSkuAll", salesAchievedTargetsSkuAll);
 
 // routing middleware for admin
