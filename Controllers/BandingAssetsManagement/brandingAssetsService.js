@@ -139,6 +139,38 @@ router.get("/getChildItem/:item_id", async (req, res, next) => {
   );
 });
 
+router.post("/viewItemsPerShop", async (req, res, next) => {
+  const schema = Joi.object({
+    assetId: Joi.number().allow(null),
+    shopId: Joi.number().allow(null),
+  });
+
+  const validation = schema.validate(req.body);
+
+  if (validation.error) {
+    console.log(validation.error);
+
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const { assetId, shopId } = req.body;
+  console.log(req.body);
+
+  await pool.query(
+    "SELECT * FROM fa_distribution_history WHERE asset_id=$1 AND shop_id=$2 ORDER BY creation_date DESC;",
+    [assetId, shopId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/viewReviewStatus/:asset_id", async (req, res, next) => {
   const assetId = req.params.asset_id;
 
@@ -213,7 +245,7 @@ router.post("/add", async (req, res, next) => {
     reviewStatus,
     createdBy,
     brandCode,
-    layoutId
+    layoutId,
   } = req.body;
 
   try {
@@ -242,7 +274,7 @@ router.post("/add", async (req, res, next) => {
         createdBy,
         today,
         brandCode,
-        layoutId
+        layoutId,
       ]
     );
 
