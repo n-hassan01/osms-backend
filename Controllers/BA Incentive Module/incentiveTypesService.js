@@ -2,7 +2,7 @@ const express = require("express");
 const pool = require("../../dbConnection");
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/getAll", async (req, res, next) => {
   try {
     await pool.query(
       "SELECT * FROM public.incentive_types;",
@@ -22,11 +22,30 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/add", async (req, res, next) => {
-  const { incentiveTypeId, incentiveType, incentiveDesc } = req.body;
+  const {
+    incentiveTypeId,
+    incentiveType,
+    incentiveDesc,
+    lastUpdateDate,
+    lastUpdatedBy,
+    creationDate,
+    createdBy,
+    lastUpdateLogin,
+  } = req.body;
   try {
     await pool.query(
-      "INSERT INTO public.incentive_types(incentive_type_id, incentive_type, incentive_desc) VALUES ($1, $2, $3);",
-      [incentiveTypeId, incentiveType, incentiveDesc],
+      "INSERT INTO public.incentive_types(incentive_type_id, incentive_type, incentive_desc,last_update_date,last_updated_by,creation_date,created_by,last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);",
+      [
+        incentiveTypeId,
+        incentiveType,
+        incentiveDesc,
+        lastUpdateDate,
+        lastUpdatedBy,
+        creationDate,
+        createdBy,
+        lastUpdateLogin,
+      ],
+
       (error, result) => {
         try {
           if (error) throw error;
