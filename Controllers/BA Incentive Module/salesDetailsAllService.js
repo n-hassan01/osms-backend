@@ -16,82 +16,282 @@ router.get("/getAll", async (req, res, next) => {
   });
 });
 
-// add sales target api
-router.post("/add", async (req, res, next) => {
-  const schema = Joi.object({
-    orderDate: Joi.string().min(0),
-    orderNumber: Joi.number().allow(null),
-    custAccountId: Joi.number().required(),
-    quantity: Joi.number().required(),
-    inventoryItemId: Joi.number().required(),
-    custgroupid: Joi.number().allow(null),
-    amount: Joi.number().allow(null),
-    unitPrice: Joi.number().allow(null),
-    empCode: Joi.string().min(0),
-    lastUpdateDate: Joi.string().min(0),
-    lastUpdatedBy: Joi.number().required(),
-    creationDate: Joi.string().min(0),
-    createdBy: Joi.number().required(),
-    lastUpdateLogin: Joi.number().allow(null),
-  });
+// router.post("/add/all", async (req, res, next) => {
+//   console.log(req.body);
 
-  const validation = schema.validate(req.body);
+//   const schema = Joi.object({
+//     order_date: Joi.string().min(0).required(),
+//     order_number: Joi.number().allow(null),
+//     cust_account_id: Joi.number().allow(null),
+//     quantity: Joi.number().allow(null),
+//     inventory_item_id: Joi.number().allow(null),
+//     cust_group_id: Joi.number().allow(null),
+//     amount: Joi.number().allow(null),
+//     unit_price: Joi.number().allow(null),
+//     emp_code: Joi.string().min(0).allow(""),
+//     last_update_date: Joi.string().min(0).required(),
+//     last_updated_by: Joi.number().allow(null),
+//     creation_date: Joi.string().min(0).required(),
+//     created_by: Joi.number().allow(null),
+//     last_update_login: Joi.number().allow(null),
+//     invoiceDt: Joi.string().min(0).required(), // Date
+//     invoiceTime: Joi.string().min(0).allow(null), // Time (without time zone)
+//     invoiceNo: Joi.number().allow(null), // Integer
+//     customerName: Joi.string().allow(null), // Character varying, default to empty string if not available
+//     mobileNo: Joi.number().allow(null), // Character varying, default to empty string if not available
+//     styleCode: Joi.string().allow(null), // Character varying
+//     netAmt: Joi.number().allow(null), // Numeric (can be float, no need for additional formatting)
+//     discAmt: Joi.number().allow(null),
+//   });
 
-  if (validation.error) {
-    console.log(validation.error.message);
+//   const validation = schema.validate(req.body);
 
-    return res.status(400).send("Invalid inputs");
-  }
+//   if (validation.error) {
+//     console.log(validation.error.message);
+//     return res.status(400).send("Invalid inputs");
+//   }
 
-  const {
-    orderDate,
-    orderNumber,
-    custAccountId,
-    quantity,
-    inventoryItemId,
-    custgroupid,
-    amount,
-    unitPrice,
-    empCode,
-    lastUpdateDate,
-    lastUpdatedBy,
-    creationDate,
-    createdBy,
-    lastUpdateLogin,
-  } = req.body;
+//   const {
+//     order_date,
+//     order_number,
+//     cust_account_id,
+//     quantity,
+//     inventory_item_id,
+//     cust_group_id,
+//     amount,
+//     unit_price,
+//     emp_code,
+//     last_update_date,
+//     last_updated_by,
+//     creation_date,
+//     created_by,
+//     last_update_login,
+//     invoiceDt, // Date
+//     invoiceTime, // Time (without time zone)
+//     invoiceNo, // Integer
+//     customerName, // Character varying, default to empty string if not available
+//     mobileNo, // Character varying, default to empty string if not available
+//     styleCode, // Character varying
+//     netAmt, // Numeric (can be float, no need for additional formatting)
+//     discAmt,
+//   } = req.body;
 
-  const date = new Date();
+//   await pool.query(
+//     `INSERT INTO sales_details_all (
+//         order_date,
+//         order_number,
+//         cust_account_id,
+//         quantity,
+//         inventory_item_id,
+//         cust_group_id,
+//         amount,
+//         unit_price,
+//         emp_code,
+//         last_update_date,
+//         last_updated_by,
+//         creation_date,
+//         created_by,
+//         last_update_login,
+//         invoice_dt,
+//         invoice_time,
+//         invoice_no,
+//         customer_name,
+//         mobile_no,
+//         style_code,
+//         net_amt,
+//         disc_amt
+//       ) VALUES (
+//         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
+//       ) RETURNING *;`,
+//     [
+//       order_date,
+//       order_number,
+//       cust_account_id,
+//       quantity,
+//       inventory_item_id,
+//       cust_group_id,
+//       amount,
+//       unit_price,
+//       emp_code,
+//       last_update_date,
+//       last_updated_by,
+//       creation_date,
+//       created_by,
+//       last_update_login,
+//       invoiceDt,
+//       invoiceTime,
+//       invoiceNo,
+//       customerName,
+//       mobileNo,
+//       styleCode,
+//       netAmt,
+//       discAmt,
+//     ],
+//     (error, result) => {
+//       try {
+//         if (error) throw error;
 
-  await pool.query(
-    "INSERT INTO sales_details_all(order_date,order_number,cust_account_id,quantity,inventory_item_id,cust_group_id,amount,unit_price,emp_code, last_update_date,  last_updated_by, creation_date, created_by, last_update_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;",
-    [
-      orderDate,
-      orderNumber,
-      custAccountId,
-      quantity,
-      inventoryItemId,
-      custgroupid,
-      amount,
-      unitPrice,
-      empCode,
-      lastUpdateDate,
-      lastUpdatedBy,
-      creationDate,
-      createdBy,
-      lastUpdateLogin,
-    ],
-    (error, result) => {
+//         return res
+//           .status(200)
+//           .json({ message: "Successfully added!", headerInfo: result.rows });
+//       } catch (err) {
+//         next(err);
+//       }
+//     }
+//   );
+// });
+
+router.post("/add/all", async (req, res, next) => {
+  const { content } = req.body; // Assuming the request body has a 'content' array
+  console.log(content);
+
+  const errors = [];
+  const BATCH_SIZE = 500; // Batch size for each insert
+
+  // Helper function to split content into smaller chunks
+  const chunkArray = (array, chunkSize) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      chunks.push(array.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
+  // Helper function to cast to integer, fallback to null if invalid
+  const castToInteger = (value) => {
+    const castedValue = parseInt(value, 10);
+    return isNaN(castedValue) ? null : castedValue; // Return null if invalid integer
+  };
+
+  // Split the content into smaller chunks
+  const batches = chunkArray(content, BATCH_SIZE);
+
+  try {
+    // Process each batch sequentially
+    for (const batch of batches) {
+      const values = [];
+      const params = [];
+
+      // Prepare values and params for each batch insert
+      for (const element of batch) {
+        const {
+          order_date,
+          order_number,
+          cust_account_id,
+          quantity,
+          inventory_item_id,
+          cust_group_id,
+          amount,
+          unit_price,
+          emp_code,
+          last_update_date,
+          last_updated_by,
+          creation_date,
+          created_by,
+          last_update_login,
+          invoiceDt,
+          invoiceTime,
+          invoiceNo,
+          customerName,
+          mobileNo,
+          styleCode,
+          netAmt,
+          discAmt,
+          data_source,
+        } = element;
+
+        // Cast to integer for order_number, inventory_item_id, and cust_group_id
+        const validOrderNumber = castToInteger(order_number);
+        const validInventoryItemId = castToInteger(inventory_item_id);
+        const validCustGroupId = castToInteger(cust_group_id);
+
+        // Check if any required fields are invalid
+        if (
+          validOrderNumber === null ||
+          validInventoryItemId === null ||
+          validCustGroupId === null
+        ) {
+          // Skip invalid entries and log the error
+          errors.push({
+            element,
+            error:
+              "Invalid integer input for order_number, inventory_item_id, or cust_group_id",
+          });
+          continue; // Skip to the next iteration (continue with valid data)
+        }
+
+        // Add placeholders for this row (23 fields per row)
+        values.push(
+          `($${params.length + 1}, $${params.length + 2}, $${
+            params.length + 3
+          }, $${params.length + 4}, $${params.length + 5}, $${
+            params.length + 6
+          }, $${params.length + 7}, $${params.length + 8}, $${
+            params.length + 9
+          }, $${params.length + 10}, $${params.length + 11}, $${
+            params.length + 12
+          }, $${params.length + 13}, $${params.length + 14}, $${
+            params.length + 15
+          }, $${params.length + 16}, $${params.length + 17}, $${
+            params.length + 18
+          }, $${params.length + 19}, $${params.length + 20}, $${
+            params.length + 21
+          }, $${params.length + 22}, $${params.length + 23})`
+        );
+
+        // Push the corresponding values to the params array
+        params.push(
+          order_date,
+          validOrderNumber, // Use the valid (casted) order_number
+          cust_account_id,
+          quantity,
+          validInventoryItemId, // Use the valid (casted) inventory_item_id
+          validCustGroupId, // Use the valid (casted) cust_group_id
+          amount,
+          unit_price,
+          emp_code,
+          last_update_date,
+          last_updated_by,
+          creation_date,
+          created_by,
+          last_update_login,
+          invoiceDt,
+          invoiceTime,
+          invoiceNo,
+          customerName,
+          mobileNo,
+          styleCode,
+          netAmt,
+          discAmt,
+          data_source // Ensure data_source is correctly added
+        );
+      }
+
+      // Generate the SQL query for the batch insert
+      const query = `
+        INSERT INTO sales_details_all
+        (order_date, order_number, cust_account_id, quantity, inventory_item_id, cust_group_id, amount, unit_price, emp_code, last_update_date, last_updated_by, creation_date, created_by, last_update_login, invoice_dt, invoice_time, invoice_no, customer_name, mobile_no, style_code, net_amt, disc_amt, data_source)
+        VALUES ${values.join(", ")};
+      `;
+
       try {
-        if (error) throw error;
-
-        return res
-          .status(200)
-          .json({ message: "Successfully added!", headerInfo: result.rows });
+        // Execute the batch insert query
+        await pool.query(query, params);
       } catch (err) {
-        next(err);
+        // Collect the error, but continue with the next batch
+        errors.push({ batch, error: err.message });
       }
     }
-  );
+
+    // If any errors occurred, return them in the response
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Some batches failed", errors });
+    }
+
+    return res.status(200).json({ message: "Successfully added all entries!" });
+  } catch (err) {
+    next(err); // Handle unexpected errors outside the loop
+  }
 });
 
 router.put("/update/:order_number", async (req, res, next) => {
