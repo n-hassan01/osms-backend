@@ -17,131 +17,6 @@ router.get("/getAll", async (req, res, next) => {
   });
 });
 
-// router.post("/add/all", async (req, res, next) => {
-//   console.log(req.body);
-
-//   const schema = Joi.object({
-//     order_date: Joi.string().min(0).required(),
-//     order_number: Joi.number().allow(null),
-//     cust_account_id: Joi.number().allow(null),
-//     quantity: Joi.number().allow(null),
-//     inventory_item_id: Joi.number().allow(null),
-//     cust_group_id: Joi.number().allow(null),
-//     amount: Joi.number().allow(null),
-//     unit_price: Joi.number().allow(null),
-//     emp_code: Joi.string().min(0).allow(""),
-//     last_update_date: Joi.string().min(0).required(),
-//     last_updated_by: Joi.number().allow(null),
-//     creation_date: Joi.string().min(0).required(),
-//     created_by: Joi.number().allow(null),
-//     last_update_login: Joi.number().allow(null),
-//     invoiceDt: Joi.string().min(0).required(), // Date
-//     invoiceTime: Joi.string().min(0).allow(null), // Time (without time zone)
-//     invoiceNo: Joi.number().allow(null), // Integer
-//     customerName: Joi.string().allow(null), // Character varying, default to empty string if not available
-//     mobileNo: Joi.number().allow(null), // Character varying, default to empty string if not available
-//     styleCode: Joi.string().allow(null), // Character varying
-//     netAmt: Joi.number().allow(null), // Numeric (can be float, no need for additional formatting)
-//     discAmt: Joi.number().allow(null),
-//   });
-
-//   const validation = schema.validate(req.body);
-
-//   if (validation.error) {
-//     console.log(validation.error.message);
-//     return res.status(400).send("Invalid inputs");
-//   }
-
-//   const {
-//     order_date,
-//     order_number,
-//     cust_account_id,
-//     quantity,
-//     inventory_item_id,
-//     cust_group_id,
-//     amount,
-//     unit_price,
-//     emp_code,
-//     last_update_date,
-//     last_updated_by,
-//     creation_date,
-//     created_by,
-//     last_update_login,
-//     invoiceDt, // Date
-//     invoiceTime, // Time (without time zone)
-//     invoiceNo, // Integer
-//     customerName, // Character varying, default to empty string if not available
-//     mobileNo, // Character varying, default to empty string if not available
-//     styleCode, // Character varying
-//     netAmt, // Numeric (can be float, no need for additional formatting)
-//     discAmt,
-//   } = req.body;
-
-//   await pool.query(
-//     `INSERT INTO sales_details_all (
-//         order_date,
-//         order_number,
-//         cust_account_id,
-//         quantity,
-//         inventory_item_id,
-//         cust_group_id,
-//         amount,
-//         unit_price,
-//         emp_code,
-//         last_update_date,
-//         last_updated_by,
-//         creation_date,
-//         created_by,
-//         last_update_login,
-//         invoice_dt,
-//         invoice_time,
-//         invoice_no,
-//         customer_name,
-//         mobile_no,
-//         style_code,
-//         net_amt,
-//         disc_amt
-//       ) VALUES (
-//         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
-//       ) RETURNING *;`,
-//     [
-//       order_date,
-//       order_number,
-//       cust_account_id,
-//       quantity,
-//       inventory_item_id,
-//       cust_group_id,
-//       amount,
-//       unit_price,
-//       emp_code,
-//       last_update_date,
-//       last_updated_by,
-//       creation_date,
-//       created_by,
-//       last_update_login,
-//       invoiceDt,
-//       invoiceTime,
-//       invoiceNo,
-//       customerName,
-//       mobileNo,
-//       styleCode,
-//       netAmt,
-//       discAmt,
-//     ],
-//     (error, result) => {
-//       try {
-//         if (error) throw error;
-
-//         return res
-//           .status(200)
-//           .json({ message: "Successfully added!", headerInfo: result.rows });
-//       } catch (err) {
-//         next(err);
-//       }
-//     }
-//   );
-// });
-
 router.post("/add/all", async (req, res, next) => {
   const { content } = req.body; // Assuming the request body has a 'content' array
   console.log(content);
@@ -408,15 +283,26 @@ router.get("/pos/:date", async (req, res, next) => {
   }
 });
 
+// Helper function to chunk the array
+function chunkArray(array, chunkSize) {
+  console.log("type", typeof array);
+
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
 router.post("/pos/add/all", async (req, res, next) => {
-  const { content } = req.body;
+  const { content, userId } = req.body;
   const errors = [];
   const BATCH_SIZE = 500;
 
-  // Split content into smaller chunks
-  const batches = chunkArray(content, BATCH_SIZE);
-
   try {
+    // Split content into smaller chunks
+    const batches = chunkArray(content, BATCH_SIZE);
+
     for (const batch of batches) {
       const values = [];
       const params = [];
@@ -427,7 +313,6 @@ router.post("/pos/add/all", async (req, res, next) => {
           StoreID,
           SalesQty,
           MRPAmt,
-          userId,
           BAID,
           TransactionDate,
           TransactionTime,
@@ -459,9 +344,9 @@ router.post("/pos/add/all", async (req, res, next) => {
           SKUID,
           SalesQty,
           MRPAmt,
-          NetAmt,
-          1,
-          1,
+          0,
+          userId,
+          userId,
           BAID,
           TransactionDate,
           TransactionTime,
