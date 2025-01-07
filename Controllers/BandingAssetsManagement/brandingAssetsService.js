@@ -22,6 +22,24 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/byGroup/:group_id", async (req, res, next) => {
+  const groupId = req.params.group_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE cust_group_id=$1;",
+    [groupId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/audit", async (req, res, next) => {
   const { pDistributionId, pApprovalType } = req.body;
 
@@ -91,6 +109,24 @@ router.get("/byShop/:shop_name", async (req, res, next) => {
   await pool.query(
     "SELECT * FROM branding_assets_details_v WHERE shop_name=$1",
     [shopName],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/shop/:shop_id", async (req, res, next) => {
+  const shopId = req.params.shop_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE shop_id=$1",
+    [shopId],
     (error, result) => {
       try {
         if (error) throw error;
