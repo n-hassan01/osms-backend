@@ -22,11 +22,25 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/add", async (req, res, next) => {
-  const { incentiveTypeId, parentIncentiveTypeId } = req.body;
+  const {
+    incentiveTypeId,
+    parentIncentiveTypeId,
+    lastUpdateDate,
+    lastUpdatedBy,
+    creationDate,
+    createdBy,
+  } = req.body;
   try {
     await pool.query(
-      "INSERT INTO public.incentive_conditions(incentive_type_id, parent_incentive_type_id) VALUES ($1, $2);",
-      [incentiveTypeId, parentIncentiveTypeId],
+      "INSERT INTO public.incentive_conditions(incentive_type_id, parent_incentive_type_id,last_update_date,last_updated_by,creation_date,created_by) VALUES ($1, $2,$3,$4,$5,$6);",
+      [
+        incentiveTypeId,
+        parentIncentiveTypeId,
+        lastUpdateDate,
+        lastUpdatedBy,
+        creationDate,
+        createdBy,
+      ],
       (error, result) => {
         try {
           if (error) throw error;
