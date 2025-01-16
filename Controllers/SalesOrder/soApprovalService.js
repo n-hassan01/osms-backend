@@ -14,6 +14,8 @@ router.post("/call", async (req, res, next) => {
     pEmpid: Joi.number().required(),
     pNote: Joi.string().required(),
     pAuthorizationStatus: Joi.string().required(),
+    pCustGroupId: Joi.number().required(),
+    pTrxType: Joi.string().required(),
   });
 
   const validation = schema.validate(req.body);
@@ -34,12 +36,14 @@ router.post("/call", async (req, res, next) => {
     pEmpid,
     pNote,
     pAuthorizationStatus,
+    pCustGroupId,
+    pTrxType,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "CALL proc_so_approval_all($1,$2,$3,$4,$5,$6,$7,$8,$9);",
+    "CALL proc_so_approval_all($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);",
     [
       pHierarchyId,
       pTransactionId,
@@ -50,6 +54,8 @@ router.post("/call", async (req, res, next) => {
       pEmpid,
       pNote,
       pAuthorizationStatus,
+      pCustGroupId,
+      pTrxType,
     ],
     (error, result) => {
       try {
@@ -90,6 +96,8 @@ router.post("/submit-approval", async (req, res, next) => {
     pApprovalType: Joi.string().required(),
     pEmpid: Joi.number().required(),
     pNote: Joi.string().required(),
+    pCustGroupId: Joi.number().required(),
+    pTrxType: Joi.string().required(),
   });
 
   const validation = schema.validate(req.body);
@@ -109,12 +117,14 @@ router.post("/submit-approval", async (req, res, next) => {
     pApprovalType,
     pEmpid,
     pNote,
+    pCustGroupId,
+    pTrxType,
   } = req.body;
 
   const date = new Date();
 
   await pool.query(
-    "CALL proc_so_approval_from_panel($1,$2,$3,$4,$5,$6,$7,$8);",
+    "CALL proc_so_approval_from_panel($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);",
     [
       pHierarchyId,
       pTransactionID,
@@ -124,6 +134,8 @@ router.post("/submit-approval", async (req, res, next) => {
       pApprovalType,
       pEmpid,
       pNote,
+      pCustGroupId,
+      pTrxType,
     ],
     (error, result) => {
       try {
@@ -138,5 +150,3 @@ router.post("/submit-approval", async (req, res, next) => {
 });
 
 module.exports = router;
-
-
