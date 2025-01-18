@@ -22,6 +22,24 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/byGroup/:group_id", async (req, res, next) => {
+  const groupId = req.params.group_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE cust_group_id=$1;",
+    [groupId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/audit", async (req, res, next) => {
   const { pDistributionId, pApprovalType } = req.body;
 
@@ -91,6 +109,24 @@ router.get("/byShop/:shop_name", async (req, res, next) => {
   await pool.query(
     "SELECT * FROM branding_assets_details_v WHERE shop_name=$1",
     [shopName],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/shop/:shop_id", async (req, res, next) => {
+  const shopId = req.params.shop_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE shop_id=$1",
+    [shopId],
     (error, result) => {
       try {
         if (error) throw error;
@@ -189,6 +225,24 @@ router.get("/viewReviewStatus/:asset_id", async (req, res, next) => {
   );
 });
 
+router.get("/get/:distribution_id", async (req, res, next) => {
+  const distributionId = req.params.distribution_id;
+
+  await pool.query(
+    "SELECT * FROM fa_distribution_history WHERE distribution_id=$1;",
+    [distributionId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
@@ -222,7 +276,9 @@ router.post("/add", async (req, res, next) => {
     shopId: Joi.number().allow(null),
     createdBy: Joi.number().allow(null),
     brandCode: Joi.string().max(30).min(0),
+    brandCode: Joi.string().max(30).min(0),
     layoutId: Joi.number().allow(null),
+    parentDistributionId: Joi.number().allow(null),
   });
 
   const validation = schema.validate(req.body);
@@ -246,6 +302,7 @@ router.post("/add", async (req, res, next) => {
     createdBy,
     brandCode,
     layoutId,
+    parentDistributionId,
   } = req.body;
 
   try {
@@ -257,9 +314,9 @@ router.post("/add", async (req, res, next) => {
 
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
-          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, "RECORD_TYPE", 
-          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING distribution_id;`,
+          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, record_type, 
+          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -275,6 +332,7 @@ router.post("/add", async (req, res, next) => {
         today,
         brandCode,
         layoutId,
+        parentDistributionId,
       ]
     );
 
@@ -327,7 +385,7 @@ router.post("/update", async (req, res, next) => {
   try {
     await pool.query(
       `UPDATE public.fa_distribution_history
-	      SET asset_id=$1, date_effective=$2, shop_name=$3, remarks=$4, date_ineffective=$5, shop_id=$6, "RECORD_TYPE"=$7, 
+	      SET asset_id=$1, date_effective=$2, shop_name=$3, remarks=$4, date_ineffective=$5, shop_id=$6, record_type=$7, 
         uploaded_filename=$8, review_status=$9, brand_code=$10
 	    WHERE distribution_id=$10;`,
       [
