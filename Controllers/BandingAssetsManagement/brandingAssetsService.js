@@ -229,7 +229,7 @@ router.get("/get/:distribution_id", async (req, res, next) => {
   const distributionId = req.params.distribution_id;
 
   await pool.query(
-    "SELECT * FROM fa_distribution_history WHERE distribution_id=$1;",
+    "SELECT * FROM branding_assets_details_v WHERE distribution_id=$1;",
     [distributionId],
     (error, result) => {
       try {
@@ -342,6 +342,42 @@ router.post("/add", async (req, res, next) => {
   } catch (error) {
     console.error(error);
     return next(error);
+  }
+});
+
+router.post("/replace", async (req, res, next) => {
+  console.log("Request Body:", req.body); // Log the incoming body to debug
+
+  const schema = Joi.object({
+    parentDistributionId: Joi.number().allow(null).required(), // Ensure this field is required and is a number or null
+  });
+
+  // Validate incoming request body against the schema
+  const validation = schema.validate(req.body);
+  if (validation.error) {
+    console.log(validation.error);
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const { parentDistributionId } = req.body; // Destructure the value from body
+
+  // Ensure parentDistributionId is valid
+  if (!parentDistributionId) {
+    return res
+      .status(400)
+      .json({ message: "parentDistributionId is required" });
+  }
+
+  try {
+    // Call the stored procedure and pass parentDistributionId as a parameter
+    await pool.query("CALL proc_ba_item_replacement($1)", [
+      parentDistributionId,
+    ]);
+
+    return res.status(200).json({ message: "Successfully assigned!" }); // Success response
+  } catch (error) {
+    console.error("Error executing stored procedure:", error);
+    return next(error); // Pass to next error handler
   }
 });
 
