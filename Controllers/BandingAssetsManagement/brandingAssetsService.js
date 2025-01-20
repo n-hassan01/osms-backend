@@ -263,7 +263,7 @@ router.get("/getParent/:distribution_id", async (req, res, next) => {
   const distributionId = req.params.distribution_id;
 
   await pool.query(
-    "SELECT * FROM branding_assets_details_v WHERE parent_distribution_id=$1;",
+    "SELECT * FROM branding_assets_details_all_v WHERE parent_distribution_id=$1;",
     [distributionId],
     (error, result) => {
       try {
