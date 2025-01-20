@@ -295,6 +295,7 @@ router.post("/add", async (req, res, next) => {
     brandCode: Joi.string().max(30).min(0),
     layoutId: Joi.number().allow(null),
     parentDistributionId: Joi.number().allow(null),
+    authorizationStatus: Joi.string().max(25).min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -319,6 +320,7 @@ router.post("/add", async (req, res, next) => {
     brandCode,
     layoutId,
     parentDistributionId,
+    authorizationStatus,
   } = req.body;
 
   try {
@@ -331,8 +333,8 @@ router.post("/add", async (req, res, next) => {
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
           distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, record_type, 
-          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING distribution_id;`,
+          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id, authorization_status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -349,6 +351,7 @@ router.post("/add", async (req, res, next) => {
         brandCode,
         layoutId,
         parentDistributionId,
+        authorizationStatus,
       ]
     );
 
