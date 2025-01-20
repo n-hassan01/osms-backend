@@ -259,6 +259,24 @@ router.get("/get/:distribution_id", async (req, res, next) => {
   );
 });
 
+router.get("/getParent/:distribution_id", async (req, res, next) => {
+  const distributionId = req.params.distribution_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE parent_distribution_id=$1;",
+    [distributionId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
@@ -295,6 +313,7 @@ router.post("/add", async (req, res, next) => {
     brandCode: Joi.string().max(30).min(0),
     layoutId: Joi.number().allow(null),
     parentDistributionId: Joi.number().allow(null),
+    authorizationStatus: Joi.string().max(25).min(0),
   });
 
   const validation = schema.validate(req.body);
@@ -319,6 +338,7 @@ router.post("/add", async (req, res, next) => {
     brandCode,
     layoutId,
     parentDistributionId,
+    authorizationStatus,
   } = req.body;
 
   try {
@@ -331,8 +351,8 @@ router.post("/add", async (req, res, next) => {
     await pool.query(
       `INSERT INTO public.fa_distribution_history(
           distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, record_type, 
-          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING distribution_id;`,
+          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id, authorization_status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING distribution_id;`,
       [
         distributionId,
         assetId,
@@ -349,6 +369,7 @@ router.post("/add", async (req, res, next) => {
         brandCode,
         layoutId,
         parentDistributionId,
+        authorizationStatus,
       ]
     );
 
