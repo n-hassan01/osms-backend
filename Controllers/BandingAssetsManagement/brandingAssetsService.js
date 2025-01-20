@@ -22,6 +22,22 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/all", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM branding_assets_details_all_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/byGroup/:group_id", async (req, res, next) => {
   const groupId = req.params.group_id;
 
