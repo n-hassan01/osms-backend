@@ -259,6 +259,24 @@ router.get("/get/:distribution_id", async (req, res, next) => {
   );
 });
 
+router.get("/getParent/:distribution_id", async (req, res, next) => {
+  const distributionId = req.params.distribution_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_v WHERE parent_distribution_id=$1;",
+    [distributionId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     // bookTypeCode: Joi.string().min(0).max(60),
