@@ -307,6 +307,7 @@ router.post("/add", async (req, res, next) => {
     dateEffective,
     shopName,
     remarks,
+    // dateIneffective is actually renew_date
     dateIneffective,
     shopId,
     recordType,
@@ -340,7 +341,7 @@ router.post("/add", async (req, res, next) => {
 
     const insertQuery = `
       INSERT INTO public.fa_distribution_history(
-        distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, record_type, 
+        distribution_id, asset_id, date_effective, shop_name, remarks, renew_date, shop_id, record_type, 
         uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id, authorization_status
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) 
       RETURNING distribution_id;
