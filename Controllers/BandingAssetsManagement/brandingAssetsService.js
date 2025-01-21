@@ -280,10 +280,10 @@ router.get("/getParent/:distribution_id", async (req, res, next) => {
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
     assetId: Joi.number().allow(null),
-    dateEffective: Joi.date().allow(null, ""),
+    dateEffective: Joi.string().allow(null).min(0),
     shopName: Joi.string().min(1).allow(null),
     remarks: Joi.string().min(0).allow(null),
-    dateIneffective: Joi.date().allow(null, ""),
+    dateIneffective: Joi.string().allow(null).min(0),
     recordType: Joi.string().min(1).allow(null),
     uploadedFileName: Joi.string().min(1).allow(null),
     reviewStatus: Joi.string().min(1).allow(null),
@@ -338,6 +338,8 @@ router.post("/add", async (req, res, next) => {
     }
 
     const today = new Date();
+    const effectiveDate = dateEffective ? new Date(dateEffective) : null;
+    const renewDate = dateIneffective ? new Date(dateIneffective) : null;
 
     const insertQuery = `
       INSERT INTO public.fa_distribution_history(
@@ -350,10 +352,10 @@ router.post("/add", async (req, res, next) => {
     const insertValues = [
       distributionId,
       assetId,
-      dateEffective,
+      effectiveDate,
       shopName,
       remarks,
-      dateIneffective,
+      renewDate,
       shopId,
       recordType,
       uploadedFileName,
