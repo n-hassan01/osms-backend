@@ -5,7 +5,7 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   try {
     await pool.query(
-      "SELECT * FROM public.incentive_conditions;",
+      "SELECT  ic.incentive_type_id, it1.incentive_type AS incentive_type_name, ic.parent_incentive_type_id,it2.incentive_type AS parent_incentive_type_name FROM public.incentive_conditions AS ic JOIN public.incentive_types AS it1 ON ic.incentive_type_id = it1.incentive_type_id JOIN public.incentive_types AS it2 ON ic.parent_incentive_type_id = it2.incentive_type_id;",
       (error, result) => {
         try {
           if (error) throw error;
