@@ -22,6 +22,22 @@ router.get("/", async (req, res, next) => {
   );
 });
 
+router.get("/all", async (req, res, next) => {
+  await pool.query(
+    "SELECT * FROM branding_assets_details_all_v;",
+
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
 router.get("/byGroup/:group_id", async (req, res, next) => {
   const groupId = req.params.group_id;
 
@@ -229,7 +245,25 @@ router.get("/get/:distribution_id", async (req, res, next) => {
   const distributionId = req.params.distribution_id;
 
   await pool.query(
-    "SELECT * FROM fa_distribution_history WHERE distribution_id=$1;",
+    "SELECT * FROM branding_assets_details_v WHERE distribution_id=$1;",
+    [distributionId],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).json(result.rows);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+router.get("/getParent/:distribution_id", async (req, res, next) => {
+  const distributionId = req.params.distribution_id;
+
+  await pool.query(
+    "SELECT * FROM branding_assets_details_all_v WHERE parent_distribution_id=$1;",
     [distributionId],
     (error, result) => {
       try {
@@ -245,48 +279,27 @@ router.get("/get/:distribution_id", async (req, res, next) => {
 
 router.post("/add", async (req, res, next) => {
   const schema = Joi.object({
-    // bookTypeCode: Joi.string().min(0).max(60),
     assetId: Joi.number().allow(null),
-    // unitsAssigned: Joi.number().allow(null),
-    dateEffective: Joi.string().min(0),
-    // codeCombinationId: Joi.number().allow(null),
-    // locationId: Joi.number().allow(null),
-    shopName: Joi.string().min(0),
-    // brand: Joi.string().min(0),
-    // assetCost: Joi.number().allow(null),
-    // periodicExpense: Joi.number().allow(null),
-    // executionDate: Joi.string().min(0),
-    // renewDate: Joi.string().min(0),
-    remarks: Joi.string().min(0),
-    // supplierName: Joi.string().min(0),
-    // transactionHeaderIdIn: Joi.number().allow(null),
-    // lastUpdateDate: Joi.string().min(0),
-    // lastUpdatedBy: Joi.number().allow(null),
-    dateIneffective: Joi.string().min(0),
-    recordType: Joi.string().min(0),
-    uploadedFileName: Joi.string().min(0),
-    reviewStatus: Joi.string().min(0),
-    // assignedTo: Joi.number().allow(null),
-    // transactionHeaderIdOut: Joi.number().allow(null),
-    // transactionUnits: Joi.number().allow(null),
-    // retirementId: Joi.number().allow(null),
-    // lastUpdateLogin: Joi.number().allow(null),
-    // capitalAdjAccountCcid: Joi.number().allow(null),
-    // generalFundAccountCcid: Joi.number().allow(null),
+    dateEffective: Joi.string().allow(null).min(0),
+    shopName: Joi.string().min(1).allow(null),
+    remarks: Joi.string().min(0).allow(null),
+    dateIneffective: Joi.string().allow(null).min(0),
+    recordType: Joi.string().min(1).allow(null),
+    uploadedFileName: Joi.string().min(1).allow(null),
+    reviewStatus: Joi.string().min(1).allow(null),
     shopId: Joi.number().allow(null),
     createdBy: Joi.number().allow(null),
-    brandCode: Joi.string().max(30).min(0),
-    brandCode: Joi.string().max(30).min(0),
+    brandCode: Joi.string().max(30).min(1).allow(null),
     layoutId: Joi.number().allow(null),
     parentDistributionId: Joi.number().allow(null),
+    authorizationStatus: Joi.string().max(25).min(1).allow(null),
   });
 
   const validation = schema.validate(req.body);
 
   if (validation.error) {
-    console.log(validation.error);
-
-    return res.status(400).send("Invalid inputs");
+    console.error("Validation Error:", validation.error.details);
+    return res.status(400).send(`Invalid inputs: ${validation.error.message}`);
   }
 
   const {
@@ -294,6 +307,7 @@ router.post("/add", async (req, res, next) => {
     dateEffective,
     shopName,
     remarks,
+    // dateIneffective is actually renew_date
     dateIneffective,
     shopId,
     recordType,
@@ -303,45 +317,104 @@ router.post("/add", async (req, res, next) => {
     brandCode,
     layoutId,
     parentDistributionId,
+    authorizationStatus,
   } = req.body;
 
   try {
+    if (parentDistributionId) {
+      await pool.query(
+        "UPDATE public.fa_distribution_history SET review_status='To Be Replaced', authorization_status='In Progress' WHERE distribution_id=$1;",
+        [parentDistributionId]
+      );
+    }
+
     const result = await pool.query(
       "SELECT public.fn_new_seq_id('distribution_id', 'fa_distribution_history')"
     );
-    const distributionId = result.rows[0].fn_new_seq_id;
+
+    const distributionId = result.rows[0]?.fn_new_seq_id;
+    if (!distributionId) {
+      throw new Error("Failed to generate a new distribution ID");
+    }
+
     const today = new Date();
+    const effectiveDate = dateEffective ? new Date(dateEffective) : null;
+    const renewDate = dateIneffective ? new Date(dateIneffective) : null;
 
-    await pool.query(
-      `INSERT INTO public.fa_distribution_history(
-          distribution_id, asset_id, date_effective, shop_name, remarks, date_ineffective, shop_id, record_type, 
-          uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING distribution_id;`,
-      [
-        distributionId,
-        assetId,
-        dateEffective,
-        shopName,
-        remarks,
-        dateIneffective,
-        shopId,
-        recordType,
-        uploadedFileName,
-        reviewStatus,
-        createdBy,
-        today,
-        brandCode,
-        layoutId,
-        parentDistributionId,
-      ]
-    );
+    const insertQuery = `
+      INSERT INTO public.fa_distribution_history(
+        distribution_id, asset_id, date_effective, shop_name, remarks, renew_date, shop_id, record_type, 
+        uploaded_filename, review_status, created_by, creation_date, brand_code, layout_id, parent_distribution_id, authorization_status
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) 
+      RETURNING distribution_id;
+    `;
 
-    return res
-      .status(200)
-      .json({ message: "Successfully assigned!", value: distributionId });
+    const insertValues = [
+      distributionId,
+      assetId,
+      effectiveDate,
+      shopName,
+      remarks,
+      renewDate,
+      shopId,
+      recordType,
+      uploadedFileName,
+      reviewStatus,
+      createdBy,
+      today,
+      brandCode,
+      layoutId,
+      parentDistributionId,
+      authorizationStatus,
+    ];
+
+    const insertResult = await pool.query(insertQuery, insertValues);
+
+    return res.status(200).json({
+      message: "Successfully assigned!",
+      value: insertResult.rows[0].distribution_id,
+    });
   } catch (error) {
-    console.error(error);
-    return next(error);
+    console.error("Error occurred:", error);
+    return res
+      .status(500)
+      .send("An error occurred while processing your request.");
+  }
+});
+
+router.post("/replace", async (req, res, next) => {
+  console.log("Request Body:", req.body); // Log the incoming body to debug
+
+  const schema = Joi.object({
+    parentDistributionId: Joi.number().allow(null).required(), // Ensure this field is required and is a number or null
+  });
+
+  // Validate incoming request body against the schema
+  const validation = schema.validate(req.body);
+  if (validation.error) {
+    console.log(validation.error);
+    return res.status(400).send("Invalid inputs");
+  }
+
+  const { parentDistributionId } = req.body; // Destructure the value from body
+
+  // Ensure parentDistributionId is valid
+  if (!parentDistributionId) {
+    return res
+      .status(400)
+      .json({ message: "parentDistributionId is required" });
+  }
+
+  try {
+    // Call the stored procedure and pass parentDistributionId as a parameter
+    await pool.query("CALL proc_ba_item_replacement($1)", [
+      parentDistributionId,
+    ]);
+
+    return res.status(200).json({ message: "Successfully assigned!" }); // Success response
+  } catch (error) {
+    console.error("Error executing stored procedure:", error);
+    return next(error); // Pass to next error handler
   }
 });
 
