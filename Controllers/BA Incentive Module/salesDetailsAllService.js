@@ -341,7 +341,7 @@ router.post("/pos/add/all", async (req, res, next) => {
           InvoiceID,
           StoreID,
           17,
-          SKUID,
+          null,
           SalesQty,
           MRPAmt,
           0,
