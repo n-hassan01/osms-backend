@@ -322,6 +322,7 @@ router.post("/pos/add/all", async (req, res, next) => {
           SKUID,
           NetAmt,
           DiscountAmt,
+          SAP_STORE_CODE
         } = element;
 
         const offset = index * 20; // Each batch entry uses 20 placeholders
@@ -339,7 +340,7 @@ router.post("/pos/add/all", async (req, res, next) => {
         params.push(
           TransactionDate,
           InvoiceID,
-          StoreID,
+          SAP_STORE_CODE,
           17,
           null,
           SalesQty,
@@ -356,7 +357,9 @@ router.post("/pos/add/all", async (req, res, next) => {
           SKUID,
           NetAmt,
           DiscountAmt,
-          "POS"
+          "POS",
+          BAID,
+          StoreID
         );
       });
 
@@ -364,7 +367,8 @@ router.post("/pos/add/all", async (req, res, next) => {
       const query = `
         INSERT INTO public.sales_details_all (
           order_date, order_number, cust_account_id, cust_group_id, inventory_item_id, quantity, unit_price, amount, 
-          last_updated_by, created_by, emp_code, invoice_dt, invoice_time, invoice_no, customer_name, mobile_no, style_code, net_amt, disc_amt, data_source
+          last_updated_by, created_by, emp_code, invoice_dt, invoice_time, invoice_no, customer_name, mobile_no, style_code, 
+          net_amt, disc_amt, data_source, pos_emp_code, pos_store_code
         ) 
         VALUES ${values.join(", ")};
       `;
