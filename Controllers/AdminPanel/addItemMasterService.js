@@ -2,6 +2,10 @@ const express = require("express");
 const Joi = require("joi");
 const pool = require("../../dbConnection");
 const router = express.Router();
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const { env } = require("process");
 
 router.post("/", async (req, res, next) => {
   const schema = Joi.object({
@@ -285,6 +289,7 @@ router.post("/child", async (req, res, next) => {
     maximumOrderQuantity: Joi.number().allow(null),
     paymentTermsId: Joi.number().allow(null),
     categoryId: Joi.number().allow(null),
+    uploadedFilename: Joi.string().min(0),
   });
   const validation = schema.validate(req.body);
 
@@ -341,6 +346,7 @@ router.post("/child", async (req, res, next) => {
     maximumOrderQuantity,
     paymentTermsId,
     categoryId,
+    uploadedFilename,
   } = req.body;
 
   try {
@@ -350,7 +356,7 @@ router.post("/child", async (req, res, next) => {
     const inventoryItemId = result.rows[0].fn_new_seq_id;
 
     await pool.query(
-      "INSERT INTO mtl_system_items_child(category_id, inventory_item_id, organization_id, parent_inventory_item_id, inventory_item_code, description, primary_uom_code, primary_unit_of_measure, last_update_date, last_updated_by, creation_date, created_by, last_update_login, enabled_flag, start_date_active, end_date_active, buyer_id, segment1, segment2, segment3, segment4, segment5, purchasing_item_flag, service_item_flag, inventory_item_flag, allow_item_desc_update_flag, inspection_required_flag, receipt_required_flag, rfq_required_flag, qty_rcv_tolerance, unit_of_issue, days_early_receipt_allowed, days_late_receipt_allowed, receiving_routing_id, shelf_life_code, shelf_life_days, source_organization_id, source_subinventory, acceptable_early_days, fixed_lead_time, variable_lead_time, min_minmax_quantity, max_minmax_quantity, minimum_order_quantity, maximum_order_quantity, payment_terms_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46);",
+      "INSERT INTO mtl_system_items_child(category_id, inventory_item_id, organization_id, parent_inventory_item_id, inventory_item_code, description, primary_uom_code, primary_unit_of_measure, last_update_date, last_updated_by, creation_date, created_by, last_update_login, enabled_flag, start_date_active, end_date_active, buyer_id, segment1, segment2, segment3, segment4, segment5, purchasing_item_flag, service_item_flag, inventory_item_flag, allow_item_desc_update_flag, inspection_required_flag, receipt_required_flag, rfq_required_flag, qty_rcv_tolerance, unit_of_issue, days_early_receipt_allowed, days_late_receipt_allowed, receiving_routing_id, shelf_life_code, shelf_life_days, source_organization_id, source_subinventory, acceptable_early_days, fixed_lead_time, variable_lead_time, min_minmax_quantity, max_minmax_quantity, minimum_order_quantity, maximum_order_quantity, payment_terms_id, uploaded_filename) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $46);",
       [
         categoryId,
         inventoryItemId,
@@ -398,6 +404,7 @@ router.post("/child", async (req, res, next) => {
         minimumOrderQuantity,
         maximumOrderQuantity,
         paymentTermsId,
+        uploadedFilename,
       ]
     );
 
@@ -411,11 +418,12 @@ router.post("/child", async (req, res, next) => {
 router.post("/call/procedure", async (req, res, next) => {
   const schema = Joi.object({
     inventoryItemCode: Joi.string().max(40).required(),
-    description: Joi.string().max(240).min(0),
+    description: Joi.string().max(240).required(),
     primaryUomCode: Joi.string().max(3).min(0),
     startDateActive: Joi.date().allow(null, ""),
     // endDateActive: Joi.date().allow(null, ""),
-    categoryId: Joi.number().allow(null),
+    categoryId: Joi.number().required(),
+    pUploadedFilename: Joi.string().min(0),
   });
   const validation = schema.validate(req.body);
 
@@ -431,24 +439,27 @@ router.post("/call/procedure", async (req, res, next) => {
     primaryUomCode,
     startDateActive,
     categoryId,
+    pUploadedFilename,
   } = req.body;
 
   const userName = req.id;
+  const today = new Date();
 
   await pool.query(
-    "CALL public.proc_manage_mtl_system_items($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);",
+    "CALL public.proc_manage_mtl_system_items($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);",
     [
       2,
       inventoryItemCode,
       description,
-      primaryUomCode,
+      primaryUomCode || "PC",
       "Y",
-      startDateActive,
+      startDateActive || today,
       "Y",
       "Y",
       "Y",
       categoryId,
       userName,
+      pUploadedFilename || "",
     ],
     (error, result) => {
       try {
@@ -460,6 +471,123 @@ router.post("/call/procedure", async (req, res, next) => {
       }
     }
   );
+});
+
+router.put("/update/parent", async (req, res, next) => {
+  // const schema = Joi.object({
+  //   inventoryItemId: Joi.number().required(),
+  //   inventoryItemCode: Joi.string().max(40).required(),
+  //   description: Joi.string().max(240).required(),
+  //   primaryUomCode: Joi.string().max(3).min(0),
+  //   startDateActive: Joi.date().allow(null, ""),
+  //   endDateActive: Joi.date().allow(null, ""),
+  //   categoryId: Joi.number().required(),
+  //   pUploadedFilename: Joi.string().min(0),
+  // });
+  // const validation = schema.validate(req.body);
+
+  // if (validation.error) {
+  //   console.log(validation.error.message);
+  //   res.status(400).send("Invalid inputs");
+  // }
+  // console.log(req.body);
+
+  const {
+    inventoryItemId,
+    inventoryItemCode,
+    description,
+    primaryUomCode,
+    startDateActive,
+    endDateActive,
+    categoryId,
+    pUploadedFilename,
+  } = req.body;
+
+  await pool.query(
+    "UPDATE mtl_system_items SET inventory_item_code = $1, description = $2, primary_uom_code=$3, start_date_active=$4, end_date_active=$5, category_id=$6, uploaded_filename=$7 WHERE inventory_item_id=$8;",
+    [
+      inventoryItemCode,
+      description,
+      primaryUomCode,
+      startDateActive,
+      endDateActive,
+      categoryId,
+      pUploadedFilename,
+      inventoryItemId,
+    ],
+    (error, result) => {
+      try {
+        if (error) throw error;
+
+        res.status(200).send("Successfully updated!");
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+});
+
+const coverStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, path.join(__dirname, process.env.ITEM_MASTER_PATH));
+  },
+  filename(req, file, cb) {
+    console.log(file);
+
+    cb(null, `items_${file.originalname}`);
+  },
+});
+
+const coverUpload = multer({ storage: coverStorage });
+
+router.post("/upload", coverUpload.single("file"), async (req, res, next) => {
+  const fileInfo = req.file;
+
+  if (fileInfo) {
+    try {
+      res
+        .status(200)
+        .send({ message: "Uploaded successfully!", value: fileInfo.filename });
+    } catch (error) {
+      console.error(error.message);
+      next(error);
+    }
+  } else {
+    res.status(400).send({ message: "File not provided or upload failed!" });
+  }
+});
+
+router.post("/download", (req, res) => {
+  const location = process.env.ITEM_MASTER_PATH;
+  const filename = req.body.fileName;
+
+  console.log(location, " + ", filename);
+
+  const filePath = path.join(__dirname, location, filename);
+  // res.download(`${location}${filename}`, filename);
+  res.download(filePath, filename);
+});
+
+router.delete("/delete", (req, res) => {
+  const location = process.env.ITEM_MASTER_PATH;
+  const filename = req.body.fileName;
+
+  const filePath = path.join(__dirname, location, filename);
+
+  if (!filePath) {
+    return res.status(400).json({ error: "File path is required" });
+  }
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: "File not found" });
+  }
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to delete file" });
+    }
+    res.status(200).json({ message: "File deleted successfully" });
+  });
 });
 
 module.exports = router;
