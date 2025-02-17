@@ -300,15 +300,14 @@ router.post("/pos/add/all", async (req, res, next) => {
   const BATCH_SIZE = 500;
 
   try {
-    // Split content into smaller chunks
     const batches = chunkArray(content, BATCH_SIZE);
 
     for (const batch of batches) {
       const values = [];
       const params = [];
+      let paramIndex = 1; // Dynamic index for placeholders
 
-      // Prepare the values and params for each batch insert
-      batch.forEach((element, index) => {
+      batch.forEach((element) => {
         const {
           StoreID,
           SalesQty,
@@ -322,32 +321,28 @@ router.post("/pos/add/all", async (req, res, next) => {
           SKUID,
           NetAmt,
           DiscountAmt,
-          SAP_STORE_CODE
+          SAP_STORE_CODE,
         } = element;
 
-        const offset = index * 20; // Each batch entry uses 20 placeholders
         values.push(
-          `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4}, $${
-            offset + 5
-          }, $${offset + 6}, $${offset + 7}, $${offset + 8}, 
-            $${offset + 9}, $${offset + 10}, $${offset + 11}, $${
-            offset + 12
-          }, $${offset + 13}, $${offset + 14}, $${offset + 15}, $${
-            offset + 16
-          }, 
-            $${offset + 17}, $${offset + 18}, $${offset + 19}, $${offset + 20})`
+          `($${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, 
+            $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, 
+            $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, 
+            $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, $${paramIndex++}, 
+            $${paramIndex++}, $${paramIndex++})`
         );
+
         params.push(
           TransactionDate,
           InvoiceID,
           SAP_STORE_CODE,
-          17,
-          null,
+          17, // cust_group_id (static)
+          null, // inventory_item_id (static)
           SalesQty,
           MRPAmt,
-          0,
-          userId,
-          userId,
+          0, // amount (static)
+          userId, // last_updated_by
+          userId, // created_by
           BAID,
           TransactionDate,
           TransactionTime,
@@ -363,7 +358,6 @@ router.post("/pos/add/all", async (req, res, next) => {
         );
       });
 
-      // Generate the query for the batch insert
       const query = `
         INSERT INTO public.sales_details_all (
           order_date, order_number, cust_account_id, cust_group_id, inventory_item_id, quantity, unit_price, amount, 
@@ -374,10 +368,8 @@ router.post("/pos/add/all", async (req, res, next) => {
       `;
 
       try {
-        // Execute the batch insert query
         await pool.query(query, params);
       } catch (err) {
-        // Collect the error details for debugging
         errors.push({
           batch: batch.map((b) => b.InvoiceID),
           error: err.message,
@@ -385,7 +377,6 @@ router.post("/pos/add/all", async (req, res, next) => {
       }
     }
 
-    // If any errors occurred, return them in the response
     if (errors.length > 0) {
       return res.status(400).json({
         message: "Some batches failed",
@@ -396,8 +387,9 @@ router.post("/pos/add/all", async (req, res, next) => {
     return res.status(200).json({ message: "Successfully added all entries!" });
   } catch (err) {
     console.error("Unexpected error:", err.message || err);
-    next(err); // Pass unexpected errors to the Express error handler
+    next(err);
   }
 });
+
 
 module.exports = router;
