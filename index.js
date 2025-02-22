@@ -170,6 +170,7 @@ const incentiveDistributionAllService = require("./Controllers/BA Incentive Modu
 const baSalesDetailsAllService = require("./Controllers/BA Incentive Module/getSalesDataService");
 const getDayNameService = require("./Controllers/BA Incentive Module/getDayNameService");
 const getMonthNameService = require("./Controllers/BA Incentive Module/getMonthNameService");
+const getYearlyDateService = require("./Controllers/BA Incentive Module/getYearlyDateService");
 
 // middlewares api
 const AuthGuard = require("./middlewares/authGuard");
@@ -238,6 +239,7 @@ app.use("/incentivedistributionall", incentiveDistributionAllService);
 app.use("/baSalesAllData", baSalesDetailsAllService);
 app.use("/days", getDayNameService);
 app.use("/months", getMonthNameService);
+app.use("/yearly-dates", getYearlyDateService);
 
 // routing middleware for admin
 app.use("/add-hr-locations-all", AddHrLocationsAll);
