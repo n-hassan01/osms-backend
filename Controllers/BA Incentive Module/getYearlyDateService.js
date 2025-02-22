@@ -3,7 +3,7 @@ const pool = require("../../dbConnection");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  await pool.query("SELECT * FROM d_week_days to d_yearly_dates;", (error, result) => {
+  await pool.query("SELECT * FROM d_yearly_dates;", (error, result) => {
     try {
       if (error) throw error;
 
